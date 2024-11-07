@@ -4,6 +4,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus, faUser, faMap } from "@fortawesome/free-solid-svg-icons";
 import { auth } from "../utils/firebase";
 import { signOut } from "firebase/auth";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function NavBar() {
   const navigate = useNavigate();
@@ -14,10 +16,21 @@ function NavBar() {
     setShowLogout(!showLogout);
   };
 
-  const logOut = () => {
-    signOut(auth);
-    alert("Logged out!");
-    navigate("/");
+  const logOut = async () => {
+    // signOut(auth);
+    // localStorage.removeItem("authToken"); // Clear the auth token
+    // navigate("/login"); // Redirect to the login page
+    // alert("Logged out!");
+
+    try {
+      await signOut(auth);
+      localStorage.removeItem("authToken"); // Clear the auth token
+      navigate("/login"); // Redirect to the login page
+      alert("Logged out!");
+    } catch (err) {
+      console.error("Error during logout:", err.message || err);
+      toast.error("Logout error. Please try again.");
+    }
   };
 
   return (
