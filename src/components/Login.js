@@ -3,27 +3,18 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 import { React, useState } from "react";
-// import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { auth, db } from "../utils/firebase";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore"; // Import necessary Firestore functions
-
-// import { UserContext } from "../../../context/UserContext";
+import { doc, getDoc } from "firebase/firestore";
 
 const Login = ({ navigate }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const { token, setToken } = useContext(UserContext);
-
-  // let navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
-    const formData = new FormData(e.target);
-    const { email, password } = Object.fromEntries(formData);
 
     try {
       const userCredential = await signInWithEmailAndPassword(
@@ -32,55 +23,19 @@ const Login = ({ navigate }) => {
         password
       );
       const user = userCredential.user;
-      const userDocRef = doc(db, "LenderUsers", user.uid); // Assuming user data is stored in "users" collection with UID as document ID
-      const userDoc = await getDoc(userDocRef);
 
-      if (userDoc.exists()) {
-        const userData = userDoc.data();
-        if (userData.home_buyer !== false) {
-          window.confirm(
-            "Home buyers cannot log into this site. Please log in using the mobile app for Hombaez"
-          );
-          await signOut(auth);
-          // console.log("Sign out initiated.");
-          return;
-        }
-      }
+      // Store the auth token in localStorage
+      localStorage.setItem("authToken", user.accessToken);
 
-      if (userDoc.exists()) {
-        const userData = userDoc.data();
-        const expirationDate = new Date(userData.expirationDate);
-        const today = new Date();
+      const userDocRef = doc(db, "BrewUsers", user.uid);
+      await getDoc(userDocRef);
 
-        if (expirationDate < today) {
-          window.confirm(
-            `${userData.firstName}, You are receiving this notification because your NMLS license has expired. After several attempts to notify you, we have locked your account. Please contact help@hombaez.com and one of our representatives can assist you.`
-          );
-          await signOut(auth);
-          // console.log("Sign out initiated.");
-          return;
-        }
-      }
-
-      navigate("/");
+      navigate("/home"); // Navigate to /home on successful login
     } catch (err) {
-      console.error("Error during login:", err.response || err.message || err);
-      if (err.response && err.response.status === 401) {
-        toast.error("Unauthorized: Invalid token.");
-      } else {
-        toast.error("Network error or internal server error.");
-      }
+      console.error("Error during login:", err.message || err);
+      toast.error("Login error. Please check your credentials and try again.");
     }
   };
-
-  // const handleLogout = async () => {
-  //   try {
-  //     await signOut(auth);
-  //     console.log("logged out");
-  //   } catch (error) {
-  //     console.error("Error logging out:", error);
-  //   }
-  // };
 
   const forgotPassword = () => {
     navigate("/forgotpassword");
@@ -157,7 +112,7 @@ const Login = ({ navigate }) => {
           }}
           onClick={needToRegister}
         >
-          <em>Creat Account</em>
+          <em>Create Account</em>
         </p>
       </div>
     </div>

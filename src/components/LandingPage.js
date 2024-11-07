@@ -12,6 +12,10 @@ export const LandingPage = ({ navigate }) => {
     navigate("/login");
   };
 
+  const viewMap = () => {
+    navigate("/home");
+  };
+
   return (
     <div className="landingpage-container">
       <h3>Welcome to BrewMap</h3>
@@ -22,7 +26,7 @@ export const LandingPage = ({ navigate }) => {
           <p>Sign in/up</p>
         </div>
         <div className="icon-wrapper">
-          <FontAwesomeIcon icon={faMap} className="icon" />
+          <FontAwesomeIcon icon={faMap} className="icon" onClick={viewMap} />
           <p>View Map</p>
         </div>
         <div className="icon-wrapper">

@@ -10,7 +10,7 @@ import {
   onAuthStateChanged,
 } from "firebase/auth";
 
-const Signup = () => {
+const Signup = ({ navigate }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmationPassword, setConfirmationPassword] = useState("");
@@ -19,6 +19,9 @@ const Signup = () => {
   // const userContext = useContext(UserContext);
   // const { token, setToken } = userContext;
 
+  const logIn = () => {
+    navigate("/login");
+  };
   // -----------------------------------------------------------------
   //handles Signuping new member with firebase
   // -----------------------------------------------------------------
@@ -61,7 +64,6 @@ const Signup = () => {
     }
   };
 
-
   return (
     <div className="create_user" style={{ height: "30rem", color: "black" }}>
       <h3>Create an Account</h3>
@@ -84,21 +86,22 @@ const Signup = () => {
           className="input_styling"
         />
 
-    
-        <div      style={{
+        <div
+          style={{
             display: "flex",
             flexDirection: "row",
             alignItems: "center",
             height: "1.3rem",
-          }}> 
-        <input
-          type="email"
-          name="email"
-          placeholder="Enter email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="input_styling"
-        />
+          }}
+        >
+          <input
+            type="email"
+            name="email"
+            placeholder="Enter email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="input_styling"
+          />
         </div>
         <br />
         <br />
@@ -123,7 +126,8 @@ const Signup = () => {
         <br />
         <button type="submit">Create User</button>
       </form>
-
+      <br />
+      <em onClick={logIn}>Already have an account?</em>
     </div>
   );
 };

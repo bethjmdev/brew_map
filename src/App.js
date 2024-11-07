@@ -26,9 +26,10 @@ function MainContent() {
   const navigate = useNavigate();
 
   const location = useLocation();
+
   const hideNavBar =
     location.pathname === "/login" ||
-    location.pathname === "/newaccount" ||
+    location.pathname === "/register" ||
     location.pathname === "/";
 
   return (
@@ -43,7 +44,7 @@ function MainContent() {
           }
         />
         <Route path="/login" element={<Login navigate={navigate} />} />
-        <Route path="/newaccount" element={<Signup navigate={navigate} />} />
+        <Route path="/register" element={<Signup navigate={navigate} />} />
       </Routes>
     </div>
   );
