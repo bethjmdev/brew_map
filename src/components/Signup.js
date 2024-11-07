@@ -1,8 +1,8 @@
 // Signup.js
 import React, { useState } from "react";
 import { auth, db } from "../utils/firebase";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc, addDoc, collection } from "firebase/firestore";
 
 function Signup() {
   const [name, setName] = useState("");
@@ -13,29 +13,29 @@ function Signup() {
     e.preventDefault();
     try {
       console.log("Creating user...");
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
+    //   const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+    //   const user = userCredential.user;
+    const res = await createUserWithEmailAndPassword(auth, email, password);
+    const user = res.user;
   
       console.log("User created:", user);
   
       // Update display name
-      await updateProfile(user, { displayName: name });
-      console.log("User profile updated with name:", name);
-  
-      // Log the user ID to verify it's correct before setting the document
-      console.log("User ID:", user.uid); // Add this line
-  
-      // Save user data to Firestore
-      console.log("Saving user data to BrewUsers collection...");
-      await setDoc(doc(db, "BrewUsers", user.uid), {
-        name: name,
-        email: email,
-        uid: user.uid,
-        // createdAt: new Date(),
-      });
+      // await updateProfile(user, { displayName: name });
+      // console.log("User profile updated with name:", name);
+    
+      // Save user data to Firestore with a random document ID
+      console.log("Attempting to save user data to CoffeeShops collection...");
+      console.log("Data to save:", { name, email, id: user.uid });
+      console.log("Document reference:", doc(db, "CoffeeShops", user.uid));
+
+      // await setDoc(doc(db, "CoffeeShops"), { name, email, id: user.uid });
+
+      await addDoc(collection(db, "CoffeeShops"), { name, email, id: user.uid });
+
       console.log("User data saved to Firestore.");
       
-      alert("Sign-up successful! User data saved to BrewUsers.");
+      alert("Sign-up successful! User data saved to CoffeeShops.");
     } catch (error) {
       console.error("Error creating user or saving data:", error);
       alert("Sign-up failed: " + error.message);
