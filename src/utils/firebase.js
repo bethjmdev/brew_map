@@ -5,10 +5,10 @@ import { getFirestore } from "firebase/firestore";
 import { getFunctions } from "firebase/functions";
 import { getStorage } from 'firebase/storage';
 
-// const apiKey = process.env.REACT_APP_FIREBASE_API;
+const apiKey = process.env.REACT_APP_FIREBASE_API;
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDLnwoYRTRKCcPp88lNH2MWyZCPURCzQ8U",
+    apiKey: apiKey,
     authDomain: "brewmap-81a41.firebaseapp.com",
     projectId: "brewmap-81a41",
     storageBucket: "brewmap-81a41.firebasestorage.app",
