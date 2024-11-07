@@ -11,7 +11,6 @@ const firebaseConfig = {
     authDomain: "brewmap-81a41.firebaseapp.com",
     projectId: "brewmap-81a41",
     storageBucket: "brewmap-81a41.firebasestorage.app",
-    // storageBucket: "brewmap-81a41.appspot.com",
     messagingSenderId: "253669566802",
     appId: "1:253669566802:web:eadcdc280860081930f28b",
     measurementId: "G-C4DB740VQ8"
