@@ -2,8 +2,8 @@
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { React, useState} from "react";
-import { useNavigate } from "react-router-dom";
+import { React, useState } from "react";
+// import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { auth, db } from "../utils/firebase";
@@ -12,12 +12,12 @@ import { doc, getDoc } from "firebase/firestore"; // Import necessary Firestore 
 
 // import { UserContext } from "../../../context/UserContext";
 
-const Login = () => {
+const Login = ({ navigate }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   // const { token, setToken } = useContext(UserContext);
 
-  let navigate = useNavigate();
+  // let navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -86,10 +86,14 @@ const Login = () => {
     navigate("/forgotpassword");
   };
 
+  const needToRegister = () => {
+    navigate("/register");
+  };
+
   return (
     <div className="auth_user">
       <div className="auth_user_container">
-        <h3>Sign In</h3>
+        <h3>Log In</h3>
         <ToastContainer position="bottom-right" />
 
         <form onSubmit={handleLogin}>
@@ -142,6 +146,18 @@ const Login = () => {
           onClick={forgotPassword}
         >
           <em>Forgot Password?</em>
+        </p>
+        <p
+          style={{
+            color: "black",
+            textDecoration: "underline",
+            fontSize: "13px",
+            lineHeight: "7px",
+            cursor: "pointer",
+          }}
+          onClick={needToRegister}
+        >
+          <em>Creat Account</em>
         </p>
       </div>
     </div>

@@ -7,6 +7,7 @@ import {
   Navigate,
   useLocation,
 } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
 import HomePage from "./components/HomePage";
@@ -22,21 +23,27 @@ function App() {
 }
 
 function MainContent() {
+  const navigate = useNavigate();
+
   const location = useLocation();
   const hideNavBar =
-    location.pathname === "/login" || location.pathname === "/newaccount";
+    location.pathname === "/login" ||
+    location.pathname === "/newaccount" ||
+    location.pathname === "/";
 
   return (
-    <div>
+    <div style={{ marginTop: "-10px" }}>
       {!hideNavBar && <NavBar />}
       <Routes>
-        <Route path="/" element={<LandingPage />} />
+        <Route path="/" element={<LandingPage navigate={navigate} />} />
         <Route
           path="/home"
-          element={<PrivateRoute component={<HomePage />} />}
+          element={
+            <PrivateRoute component={<HomePage navigate={navigate} />} />
+          }
         />
-        <Route path="/login" element={<Login />} />
-        <Route path="/newaccount" element={<Signup />} />
+        <Route path="/login" element={<Login navigate={navigate} />} />
+        <Route path="/newaccount" element={<Signup navigate={navigate} />} />
       </Routes>
     </div>
   );

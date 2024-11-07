@@ -1,13 +1,23 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCirclePlus, faUser, faMap } from "@fortawesome/free-solid-svg-icons";
 import { auth } from "../utils/firebase";
+import { signOut } from "firebase/auth";
 
 function NavBar() {
+  const navigate = useNavigate();
+
   const [showLogout, setShowLogout] = useState(false);
 
   const handleUserClick = () => {
     setShowLogout(!showLogout);
+  };
+
+  const logOut = () => {
+    signOut(auth);
+    alert("Logged out!");
+    navigate("/");
   };
 
   return (
@@ -53,10 +63,7 @@ function NavBar() {
                 cursor: "pointer",
                 marginRight: "0.5rem",
               }}
-              onClick={() => {
-                auth.signOut();
-                alert("Logged out!");
-              }}
+              onClick={logOut}
             >
               Logout
             </div>

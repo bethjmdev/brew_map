@@ -1,0 +1,87 @@
+/* Main container */
+
+.landingpage-container {
+  width: 100vw;
+  height: 110vh;
+  background-color: #806d5b;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+/* Header */
+.landingpage-container h3 {
+  text-align: center;
+  margin-top: 15rem;
+  color: white;
+  font-size: 5rem;
+}
+
+/* Icon container */
+.icon-container {
+  display: flex;
+  flex-direction: row;
+  width: 60rem;
+  max-width: 100%;
+  justify-content: space-between;
+  margin: 0 auto;
+  gap: 1rem; /* Add gap between icons */
+  margin-top: 8rem;
+  /* justify-content: center;
+  align-items: center;
+  height: 110vh; */
+}
+
+/* Icon wrapper for each section */
+.icon-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.icon {
+  font-size: 5rem;
+  color: #4f3e31;
+}
+
+.icon-wrapper p {
+  margin-top: 0.5rem;
+  color: white;
+  font-size: 2rem;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  /* Header */
+  .landingpage-container h3 {
+    text-align: center;
+    margin-top: 10rem;
+    color: white;
+    font-size: 3rem;
+  }
+
+  /* Icon container */
+  .icon-container {
+    width: 16rem;
+    margin-top: 3.5rem;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+
+  /* Icon wrapper for each section */
+  .icon-wrapper {
+    margin-top: 2rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+  }
+
+  .icon {
+    font-size: 4rem;
+  }
+
+  .icon-wrapper p {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+  }
+}
