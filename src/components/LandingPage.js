@@ -16,6 +16,14 @@ export const LandingPage = ({ navigate }) => {
     navigate("/home");
   };
 
+  const goToAddShop = () => {
+    navigate("/addshop");
+  };
+
+  const goToAddReview = () => {
+    navigate("/addreview");
+  };
+
   return (
     <div className="landingpage-container">
       <h3>Welcome to BrewMap</h3>
@@ -30,11 +38,19 @@ export const LandingPage = ({ navigate }) => {
           <p>View Map</p>
         </div>
         <div className="icon-wrapper">
-          <FontAwesomeIcon icon={faShop} className="icon" />
+          <FontAwesomeIcon
+            icon={faShop}
+            className="icon"
+            onClick={goToAddShop}
+          />
           <p>Add a Shop</p>
         </div>
         <div className="icon-wrapper">
-          <FontAwesomeIcon icon={faMugHot} className="icon" />
+          <FontAwesomeIcon
+            icon={faMugHot}
+            className="icon"
+            onClick={goToAddReview}
+          />
           <p>Add a review</p>
         </div>
       </div>
