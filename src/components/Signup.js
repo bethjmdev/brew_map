@@ -3,11 +3,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "../utils/firebase";
-import {
-  createUserWithEmailAndPassword,
-  signOut,
-  onAuthStateChanged,
-} from "firebase/auth";
+import { createUserWithEmailAndPassword, signOut } from "firebase/auth";
 import SignUpInfo from "../components/pages/signup/SignUpInfo";
 
 const Signup = ({ navigate }) => {
@@ -129,15 +125,30 @@ const Signup = ({ navigate }) => {
 
       await signOut(auth);
 
-      setTimeout(() => {
-        onAuthStateChanged(auth, (user) => {
-          if (!user) {
-            console.log("User successfully signed out.");
-          }
-        });
-      }, 1000);
+      // Clear form fields
+      setEmail("");
+      setPassword("");
+      setConfirmationPassword("");
+      setFirstName("");
+      setLastName("");
+      setSelectedRoast("");
+      setCafeDrink("");
+      setCafeMilk("");
+      setCafeTemp("");
+      setFavCafe("");
+      setHomeDrink("");
+      setHomeMilk("");
+      setHomeTemp("");
+      setYourCity("");
+      setAbout("");
 
+      // Display success toast message
       toast.success("Account Created!");
+
+      // Navigate to /login after a brief delay
+      setTimeout(() => {
+        navigate("/login");
+      }, 500);
     } catch (err) {
       console.error("Error during user registration:", err);
       toast.error(err.message);

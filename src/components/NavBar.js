@@ -173,7 +173,7 @@ function NavBar() {
           )}
         </div>
 
-        {location.pathname === "/profile" && (
+        {["/profile", "/addshop", "/addreview"].includes(location.pathname) && (
           <FontAwesomeIcon
             icon={faMap}
             style={{ fontSize: "3rem", color: "#806D5B" }}

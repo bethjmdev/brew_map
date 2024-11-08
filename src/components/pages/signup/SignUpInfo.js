@@ -1,6 +1,6 @@
 import React from "react";
 
-const SignUpOptions = ({ selections }) => (
+const SignUpInfo = ({ selections }) => (
   <div>
     {selections.map(({ label, options, selectedValue, onChange }, index) => (
       <div key={index} style={{ marginBottom: "1rem" }}>
@@ -40,4 +40,4 @@ const SignUpOptions = ({ selections }) => (
   </div>
 );
 
-export default SignUpOptions;
+export default SignUpInfo;
