@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-// import { UserContext } from "../../../context/UserContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { doc, setDoc } from "firebase/firestore";
@@ -9,6 +8,7 @@ import {
   signOut,
   onAuthStateChanged,
 } from "firebase/auth";
+import SignUpInfo from "../components/pages/signup/SignUpInfo";
 
 const Signup = ({ navigate }) => {
   const [email, setEmail] = useState("");
@@ -16,15 +16,91 @@ const Signup = ({ navigate }) => {
   const [confirmationPassword, setConfirmationPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  // const userContext = useContext(UserContext);
-  // const { token, setToken } = userContext;
+  const [selectedRoast, setSelectedRoast] = useState("");
+  const [cafeDrink, setCafeDrink] = useState("");
+  const [cafeMilk, setCafeMilk] = useState("");
+  const [cafeTemp, setCafeTemp] = useState("");
+  const [favCafe, setFavCafe] = useState("");
+  const [homeDrink, setHomeDrink] = useState("");
+  const [homeMilk, setHomeMilk] = useState("");
+  const [homeTemp, setHomeTemp] = useState("");
+  const [yourCity, setYourCity] = useState("");
+  const [about, setAbout] = useState("");
+
+  const roastOptions = ["Light", "Medium", "Dark"];
+  const drinkOptions = [
+    "Cold Brew",
+    "Latte",
+    "Macchiatto",
+    "French Press",
+    "Aeropress",
+    "Drip Coffee",
+    "Pour Over",
+    "Cortado",
+    "Espresso",
+    "Flat White",
+    "Americano",
+    "Other",
+  ];
+  const tempOptions = ["Hot", "Cold"];
+  const milkOptions = [
+    "Black",
+    "Oat",
+    "Almond",
+    "Cow",
+    "Cashew",
+    "Coconut",
+    "Flax",
+  ];
+
+  const selections = [
+    {
+      label: "Roast Preference",
+      options: roastOptions,
+      selectedValue: selectedRoast,
+      onChange: setSelectedRoast,
+    },
+    {
+      label: "Cafe Drink",
+      options: drinkOptions,
+      selectedValue: cafeDrink,
+      onChange: setCafeDrink,
+    },
+    {
+      label: "Cafe Milk",
+      options: milkOptions,
+      selectedValue: cafeMilk,
+      onChange: setCafeMilk,
+    },
+    {
+      label: "Cafe Temperature",
+      options: tempOptions,
+      selectedValue: cafeTemp,
+      onChange: setCafeTemp,
+    },
+    {
+      label: "Home Drink",
+      options: drinkOptions,
+      selectedValue: homeDrink,
+      onChange: setHomeDrink,
+    },
+    {
+      label: "Home Milk",
+      options: milkOptions,
+      selectedValue: homeMilk,
+      onChange: setHomeMilk,
+    },
+    {
+      label: "Home Temperature",
+      options: tempOptions,
+      selectedValue: homeTemp,
+      onChange: setHomeTemp,
+    },
+  ];
 
   const logIn = () => {
     navigate("/login");
   };
-  // -----------------------------------------------------------------
-  //handles Signuping new member with firebase
-  // -----------------------------------------------------------------
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -39,23 +115,27 @@ const Signup = ({ navigate }) => {
         firstName,
         lastName,
         is_active: true,
+        selectedRoast,
+        cafeDrink,
+        cafeMilk,
+        cafeTemp,
+        favCafe,
+        homeDrink,
+        homeMilk,
+        homeTemp,
+        yourCity,
+        about,
       });
 
-      // Sign out the user immediately after registration
       await signOut(auth);
-      console.log("Sign out initiated.");
 
-      // Delay to ensure sign out is processed
       setTimeout(() => {
         onAuthStateChanged(auth, (user) => {
           if (!user) {
             console.log("User successfully signed out.");
-            // Redirect to login or another page if needed
-          } else {
-            console.log("User still signed in.");
           }
         });
-      }, 1000); // 1-second delay
+      }, 1000);
 
       toast.success("Account Created!");
     } catch (err) {
@@ -85,7 +165,6 @@ const Signup = ({ navigate }) => {
           onChange={(e) => setLastName(e.target.value)}
           className="input_styling"
         />
-
         <div
           style={{
             display: "flex",
@@ -121,9 +200,38 @@ const Signup = ({ navigate }) => {
           onChange={(e) => setConfirmationPassword(e.target.value)}
           className="input_styling"
         />
+        <br />
+        <br />
 
-        <br />
-        <br />
+        {/* SignUpInfo for dynamic selections */}
+        <SignUpInfo selections={selections} />
+
+        {/* Additional input fields */}
+        <input
+          type="text"
+          name="favCafe"
+          placeholder="Favorite Cafe"
+          value={favCafe}
+          onChange={(e) => setFavCafe(e.target.value)}
+          className="input_styling"
+        />
+        <input
+          type="text"
+          name="yourCity"
+          placeholder="Your City"
+          value={yourCity}
+          onChange={(e) => setYourCity(e.target.value)}
+          className="input_styling"
+        />
+        <textarea
+          name="about"
+          placeholder="Tell us about yourself"
+          value={about}
+          onChange={(e) => setAbout(e.target.value)}
+          className="input_styling"
+          style={{ height: "5rem" }}
+        />
+
         <button type="submit">Create User</button>
       </form>
       <br />
