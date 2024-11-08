@@ -5,7 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { React, useState } from "react";
 import { toast } from "react-toastify";
 
-import { auth, db } from "../utils/firebase";
+import { auth, db } from "../utils/auth/firebase";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 

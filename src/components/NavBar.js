@@ -7,7 +7,7 @@ import {
   faMap,
   faFilter,
 } from "@fortawesome/free-solid-svg-icons";
-import { auth } from "../utils/firebase";
+import { auth } from "../utils/auth/firebase";
 import { signOut } from "firebase/auth";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";

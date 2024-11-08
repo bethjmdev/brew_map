@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { doc, setDoc } from "firebase/firestore";
-import { auth, db } from "../utils/firebase";
+import { auth, db } from "../utils/auth/firebase";
 import { createUserWithEmailAndPassword, signOut } from "firebase/auth";
 import SignUpInfo from "../components/pages/signup/SignUpInfo";
 

@@ -2,14 +2,15 @@ import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { doc, setDoc } from "firebase/firestore";
-import { db } from "../utils/firebase";
+import { db } from "../utils/auth/firebase";
+import { auth } from "../utils/auth/firebase"; // Import Firebase auth to access current user
+import SubmitButton from "./button/SubmitButton";
+import "./AddShop.css";
 
 const AddShop = () => {
   const [shopName, setShopName] = useState("");
-  const [photos, setPhotos] = useState("");
-  const [bio, setBio] = useState("");
-  const [userIDSubmitting, setUserIDSubmitting] = useState("");
-  const [userNameSubmitting, setUserNameSubmitting] = useState("");
+  // const [photos, setPhotos] = useState("");
+  // const [bio, setBio] = useState("");
   const [address, setAddress] = useState("");
   const [roastsOwnBeans, setRoastsOwnBeans] = useState(false);
   const [hours, setHours] = useState("");
@@ -18,14 +19,16 @@ const AddShop = () => {
   const [typicalFlavorNotes, setTypicalFlavorNotes] = useState([]);
   const [typicalRoastStyle, setTypicalRoastStyle] = useState("");
   const [popularBev, setPopularBev] = useState("");
-  const [has, setHas] = useState([]);
-  const [doesNotHave, setDoesNotHave] = useState([]);
   const [beansAvailable, setBeansAvailable] = useState([]);
+  const [dairyFreeOptions, setDairyFreeOptions] = useState(false);
+  const [glutenFriendly, setGlutenFriendly] = useState(false);
+  const [mealOptions, setMealOptions] = useState(false);
+  const [bakeryOptions, setBakeryOptions] = useState(false);
 
   const beverageOptions = [
     "Cold Brew",
     "Latte",
-    "Macchiatto",
+    "Macchiato",
     "French press",
     "Areopress",
     "Drip coffee",
@@ -37,13 +40,6 @@ const AddShop = () => {
     "Other",
   ];
 
-  const featureOptions = [
-    "bakery food",
-    "meal food",
-    "gluten friendly",
-    "dairy free options",
-  ];
-
   const roastOptions = ["light", "medium", "dark"];
 
   // Function to generate a 12-digit random ID
@@ -52,29 +48,28 @@ const AddShop = () => {
   };
 
   const handleCheckboxChange = (setter, value) => {
-    setter((prev) => {
-      if (prev.includes(value)) {
-        return prev.filter((item) => item !== value);
-      } else {
-        return [...prev, value];
-      }
-    });
+    setter((prev) =>
+      prev.includes(value)
+        ? prev.filter((item) => item !== value)
+        : [...prev, value]
+    );
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Generate a random 12-digit shop ID
     const shopId = generateShopId();
+
+    // Get current user info
+    const currentUser = auth.currentUser;
 
     try {
       await setDoc(doc(db, "CoffeeShops", shopId), {
         shop_name: shopName,
         shop_id: shopId,
-        photos,
-        bio,
-        userID_submitting: userIDSubmitting,
-        user_name_submitting: userNameSubmitting,
+        // photos,
+        // bio,
+        userID_submitting: currentUser.uid, // Set userIDSubmitting from current user
+        user_name_submitting: currentUser.displayName || "Anonymous", // Set userNameSubmitting from current user
         address,
         roasts_own_beans: roastsOwnBeans,
         hours,
@@ -83,17 +78,17 @@ const AddShop = () => {
         typical_flavor_notes: typicalFlavorNotes,
         typical_roast_style: typicalRoastStyle,
         popular_bev: popularBev,
-        has,
-        does_not_have: doesNotHave,
+        dairy_free_options: dairyFreeOptions,
+        gluten_friendly: glutenFriendly,
+        meal_options: mealOptions,
+        bakery_options: bakeryOptions,
         beans_available: beansAvailable,
       });
 
       // Clear the form
       setShopName("");
-      setPhotos("");
-      setBio("");
-      setUserIDSubmitting("");
-      setUserNameSubmitting("");
+      // setPhotos("");
+      // setBio("");
       setAddress("");
       setRoastsOwnBeans(false);
       setHours("");
@@ -102,8 +97,10 @@ const AddShop = () => {
       setTypicalFlavorNotes([]);
       setTypicalRoastStyle("");
       setPopularBev("");
-      setHas([]);
-      setDoesNotHave([]);
+      setDairyFreeOptions(false);
+      setGlutenFriendly(false);
+      setMealOptions(false);
+      setBakeryOptions(false);
       setBeansAvailable([]);
 
       toast.success("Shop added successfully!");
@@ -117,7 +114,7 @@ const AddShop = () => {
     <div>
       <h3>Add a New Coffee Shop</h3>
       <ToastContainer position="top-right" />
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="add-shop-form">
         <input
           type="text"
           placeholder="Shop Name"
@@ -125,29 +122,17 @@ const AddShop = () => {
           onChange={(e) => setShopName(e.target.value)}
           required
         />
-        <input
+        {/* <input
           type="text"
           placeholder="Photos URL"
           value={photos}
           onChange={(e) => setPhotos(e.target.value)}
-        />
-        <textarea
+        /> */}
+        {/* <textarea
           placeholder="Bio"
           value={bio}
           onChange={(e) => setBio(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="User ID Submitting"
-          value={userIDSubmitting}
-          onChange={(e) => setUserIDSubmitting(e.target.value)}
-        />
-        <input
-          type="text"
-          placeholder="User Name Submitting"
-          value={userNameSubmitting}
-          onChange={(e) => setUserNameSubmitting(e.target.value)}
-        />
+        /> */}
         <input
           type="text"
           placeholder="Address"
@@ -174,28 +159,21 @@ const AddShop = () => {
           value={website}
           onChange={(e) => setWebsite(e.target.value)}
         />
-
         <label>Types of Beverages:</label>
-        {beverageOptions.map((beverage) => (
-          <label key={beverage}>
-            <input
-              type="checkbox"
-              checked={typesOfBeverages.includes(beverage)}
-              onChange={() =>
-                handleCheckboxChange(setTypesOfBeverages, beverage)
-              }
-            />
-            {beverage}
-          </label>
-        ))}
-
-        <input
-          type="text"
-          placeholder="Typical Flavor Notes"
-          value={typicalFlavorNotes}
-          onChange={(e) => setTypicalFlavorNotes(e.target.value.split(","))}
-        />
-
+        <div className="beverage-grid">
+          {beverageOptions.map((beverage) => (
+            <label key={beverage}>
+              <input
+                type="checkbox"
+                checked={typesOfBeverages.includes(beverage)}
+                onChange={() =>
+                  handleCheckboxChange(setTypesOfBeverages, beverage)
+                }
+              />
+              {beverage}
+            </label>
+          ))}
+        </div>
         <label>Typical Roast Style:</label>
         <select
           value={typicalRoastStyle}
@@ -208,46 +186,39 @@ const AddShop = () => {
             </option>
           ))}
         </select>
-
-        <input
-          type="text"
-          placeholder="Popular Beverage"
-          value={popularBev}
-          onChange={(e) => setPopularBev(e.target.value)}
-        />
-
-        <label>Has:</label>
-        {featureOptions.map((feature) => (
-          <label key={feature}>
-            <input
-              type="checkbox"
-              checked={has.includes(feature)}
-              onChange={() => handleCheckboxChange(setHas, feature)}
-            />
-            {feature}
-          </label>
-        ))}
-
-        <label>Does Not Have:</label>
-        {featureOptions.map((feature) => (
-          <label key={feature}>
-            <input
-              type="checkbox"
-              checked={doesNotHave.includes(feature)}
-              onChange={() => handleCheckboxChange(setDoesNotHave, feature)}
-            />
-            {feature}
-          </label>
-        ))}
-
-        <input
-          type="text"
-          placeholder="Beans Available"
-          value={beansAvailable}
-          onChange={(e) => setBeansAvailable(e.target.value.split(","))}
-        />
-
-        <button type="submit">Add Shop</button>
+        <label>
+          Dairy Free Options:
+          <input
+            type="checkbox"
+            checked={dairyFreeOptions}
+            onChange={() => setDairyFreeOptions(!dairyFreeOptions)}
+          />
+        </label>
+        <label>
+          Gluten Friendly:
+          <input
+            type="checkbox"
+            checked={glutenFriendly}
+            onChange={() => setGlutenFriendly(!glutenFriendly)}
+          />
+        </label>
+        <label>
+          Meal Options:
+          <input
+            type="checkbox"
+            checked={mealOptions}
+            onChange={() => setMealOptions(!mealOptions)}
+          />
+        </label>
+        <label>
+          Bakery Options:
+          <input
+            type="checkbox"
+            checked={bakeryOptions}
+            onChange={() => setBakeryOptions(!bakeryOptions)}
+          />
+        </label>
+        <SubmitButton text="Add Shop" type="submit" />
       </form>
     </div>
   );
