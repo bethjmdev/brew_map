@@ -7,7 +7,7 @@ import { auth } from "../utils/auth/firebase"; // Import Firebase auth to access
 import SubmitButton from "./button/SubmitButton";
 import "./AddShop.css";
 
-const AddShop = () => {
+const AddShop = ({ navigate }) => {
   const [shopName, setShopName] = useState("");
   // const [photos, setPhotos] = useState("");
   // const [bio, setBio] = useState("");
@@ -57,19 +57,42 @@ const AddShop = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const shopId = generateShopId();
 
-    // Get current user info
+    // Check if required fields are filled
+    if (!shopName) {
+      toast.error("Please fill out the Shop Name field");
+      return;
+    }
+    if (!address) {
+      toast.error("Please fill out the Address field");
+      return;
+    }
+    if (!hours) {
+      toast.error("Please fill out the Hours field");
+      return;
+    }
+    if (!website) {
+      toast.error("Please fill out the Website field");
+      return;
+    }
+    if (!typesOfBeverages.length) {
+      toast.error("Please select at least one Type of Beverage");
+      return;
+    }
+    if (!typicalRoastStyle) {
+      toast.error("Please select a Typical Roast Style");
+      return;
+    }
+
+    const shopId = generateShopId();
     const currentUser = auth.currentUser;
 
     try {
       await setDoc(doc(db, "CoffeeShops", shopId), {
         shop_name: shopName,
         shop_id: shopId,
-        // photos,
-        // bio,
-        userID_submitting: currentUser.uid, // Set userIDSubmitting from current user
-        user_name_submitting: currentUser.displayName || "Anonymous", // Set userNameSubmitting from current user
+        userID_submitting: currentUser.uid,
+        user_name_submitting: currentUser.displayName || "Anonymous",
         address,
         roasts_own_beans: roastsOwnBeans,
         hours,
@@ -87,8 +110,6 @@ const AddShop = () => {
 
       // Clear the form
       setShopName("");
-      // setPhotos("");
-      // setBio("");
       setAddress("");
       setRoastsOwnBeans(false);
       setHours("");
@@ -103,6 +124,7 @@ const AddShop = () => {
       setBakeryOptions(false);
       setBeansAvailable([]);
 
+      navigate("/home");
       toast.success("Shop added successfully!");
     } catch (error) {
       console.error("Error adding shop:", error);
@@ -141,11 +163,20 @@ const AddShop = () => {
         />
         <label>
           Roasts Own Beans:
-          <input
-            type="checkbox"
-            checked={roastsOwnBeans}
-            onChange={() => setRoastsOwnBeans(!roastsOwnBeans)}
-          />
+          <button
+            type="button"
+            className={roastsOwnBeans ? "active-button" : ""}
+            onClick={() => setRoastsOwnBeans(true)}
+          >
+            Yes
+          </button>
+          <button
+            type="button"
+            className={!roastsOwnBeans ? "active-button" : ""}
+            onClick={() => setRoastsOwnBeans(false)}
+          >
+            No
+          </button>
         </label>
         <input
           type="text"
@@ -187,36 +218,72 @@ const AddShop = () => {
           ))}
         </select>
         <label>
-          Dairy Free Options:
-          <input
-            type="checkbox"
-            checked={dairyFreeOptions}
-            onChange={() => setDairyFreeOptions(!dairyFreeOptions)}
-          />
+          Dairy Free Milks:
+          <button
+            type="button"
+            className={dairyFreeOptions ? "active-button" : ""}
+            onClick={() => setDairyFreeOptions(true)}
+          >
+            Yes
+          </button>
+          <button
+            type="button"
+            className={!dairyFreeOptions ? "active-button" : ""}
+            onClick={() => setDairyFreeOptions(false)}
+          >
+            No
+          </button>
         </label>
         <label>
           Gluten Friendly:
-          <input
-            type="checkbox"
-            checked={glutenFriendly}
-            onChange={() => setGlutenFriendly(!glutenFriendly)}
-          />
+          <button
+            type="button"
+            className={glutenFriendly ? "active-button" : ""}
+            onClick={() => setGlutenFriendly(true)}
+          >
+            Yes
+          </button>
+          <button
+            type="button"
+            className={!glutenFriendly ? "active-button" : ""}
+            onClick={() => setGlutenFriendly(false)}
+          >
+            No
+          </button>
         </label>
         <label>
           Meal Options:
-          <input
-            type="checkbox"
-            checked={mealOptions}
-            onChange={() => setMealOptions(!mealOptions)}
-          />
+          <button
+            type="button"
+            className={mealOptions ? "active-button" : ""}
+            onClick={() => setMealOptions(true)}
+          >
+            Yes
+          </button>
+          <button
+            type="button"
+            className={!mealOptions ? "active-button" : ""}
+            onClick={() => setMealOptions(false)}
+          >
+            No
+          </button>
         </label>
         <label>
           Bakery Options:
-          <input
-            type="checkbox"
-            checked={bakeryOptions}
-            onChange={() => setBakeryOptions(!bakeryOptions)}
-          />
+          <button
+            type="button"
+            className={bakeryOptions ? "active-button" : ""}
+            onClick={() => setBakeryOptions(true)}
+          >
+            Yes
+          </button>
+          <button
+            type="button"
+            className={!bakeryOptions ? "active-button" : ""}
+            onClick={() => setBakeryOptions(false)}
+          >
+            No
+          </button>
         </label>
         <SubmitButton text="Add Shop" type="submit" />
       </form>

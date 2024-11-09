@@ -35,6 +35,10 @@ function NavBar() {
     setShowFilter(!showFilter);
   };
 
+  const handleAddShop = () => {
+    navigate("/addshop");
+  };
+
   const logOut = async () => {
     try {
       await signOut(auth);
@@ -86,7 +90,7 @@ function NavBar() {
               width: "8rem",
             }}
           >
-            <a>Add Shop</a>
+            <a onClick={handleAddShop}>Add Shop</a>
             <br />
             {isHome && (
               <>
