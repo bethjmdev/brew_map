@@ -51,7 +51,6 @@ const EditShop = ({ navigate }) => {
     types_of_beverages: [],
     typical_flavor_notes: [],
     typical_roast_style: "",
-    popular_bev: "",
     beans_available: [],
     // boolean fields are not initialized to any default values
   });
@@ -113,7 +112,6 @@ const EditShop = ({ navigate }) => {
           types_of_beverages: data.types_of_beverages || [],
           typical_flavor_notes: data.typical_flavor_notes || [],
           typical_roast_style: data.typical_roast_style || "",
-          popular_bev: data.popular_bev || "",
           dairy_free_options: data.dairy_free_options, // no default value
           gluten_friendly: data.gluten_friendly, // no default value
           meal_options: data.meal_options, // no default value
@@ -237,14 +235,7 @@ const EditShop = ({ navigate }) => {
               setShopData({ ...shopData, website: e.target.value })
             }
           />
-          <input
-            type="text"
-            placeholder="Popular Beverage"
-            value={shopData.popular_bev}
-            onChange={(e) =>
-              setShopData({ ...shopData, popular_bev: e.target.value })
-            }
-          />
+
           <label>Types of Beverages:</label>
           <div className="beverage-grid">
             {beverageOptions.map((beverage) => (

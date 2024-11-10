@@ -14,7 +14,18 @@ const AddShop = ({ navigate }) => {
   const [roastsOwnBeans, setRoastsOwnBeans] = useState(false);
   const [hours, setHours] = useState("");
   const [website, setWebsite] = useState("");
-  const [typesOfBeverages, setTypesOfBeverages] = useState([]);
+
+  // Set initial values for default drink options
+  const [typesOfBeverages, setTypesOfBeverages] = useState([
+    "Latte",
+    "Macchiato",
+    "Drip coffee",
+    "Pour over",
+    "Cortado",
+    "Espresso",
+    "Americano",
+  ]);
+
   const [typicalFlavorNotes, setTypicalFlavorNotes] = useState([]);
   const [typicalRoastStyle, setTypicalRoastStyle] = useState("");
   const [popularBev, setPopularBev] = useState("");
@@ -103,7 +114,15 @@ const AddShop = ({ navigate }) => {
       setRoastsOwnBeans(false);
       setHours("");
       setWebsite("");
-      setTypesOfBeverages([]);
+      setTypesOfBeverages([
+        "Latte",
+        "Macchiato",
+        "Drip coffee",
+        "Pour over",
+        "Cortado",
+        "Espresso",
+        "Americano",
+      ]);
       setTypicalFlavorNotes([]);
       setTypicalRoastStyle("");
       setPopularBev("");
@@ -145,6 +164,7 @@ const AddShop = ({ navigate }) => {
           placeholder="City"
           value={city}
           onChange={(e) => setCity(e.target.value)}
+          onBlur={() => setCity((prevCity) => prevCity.toUpperCase())}
           required
         />
         <input
