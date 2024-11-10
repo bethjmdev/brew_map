@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
   doc,
@@ -15,10 +15,12 @@ import SubmitButton from "../../button/SubmitButton";
 import "./EditShop.css";
 
 const EditShop = ({ navigate }) => {
+  const [state, setState] = useState("");
   const [city, setCity] = useState("");
-  const [shopId, setShopId] = useState("");
+  const [states, setStates] = useState([]);
   const [cities, setCities] = useState([]);
   const [shops, setShops] = useState([]);
+  const [shopId, setShopId] = useState("");
   const [selectedShop, setSelectedShop] = useState(null);
 
   const beverageOptions = [
@@ -38,7 +40,6 @@ const EditShop = ({ navigate }) => {
 
   const roastOptions = ["light", "medium", "dark"];
 
-  // Initialize shopData without default values for boolean fields
   const [shopData, setShopData] = useState({
     shop_name: "",
     shop_id: "",
@@ -52,31 +53,55 @@ const EditShop = ({ navigate }) => {
     typical_flavor_notes: [],
     typical_roast_style: "",
     beans_available: [],
-    // boolean fields are not initialized to any default values
   });
 
-  // Fetch unique cities with coffee shops for the dropdown
+  // Fetch unique states with coffee shops for the dropdown
   useEffect(() => {
-    const fetchCities = async () => {
+    const fetchStates = async () => {
       const shopsRef = collection(db, "CoffeeShops");
       const querySnapshot = await getDocs(shopsRef);
 
-      const uniqueCities = [
-        ...new Set(querySnapshot.docs.map((doc) => doc.data().city)),
+      const uniqueStates = [
+        ...new Set(querySnapshot.docs.map((doc) => doc.data().state)),
       ];
 
-      setCities(uniqueCities);
+      setStates(uniqueStates);
+    };
+
+    fetchStates();
+  }, []);
+
+  // Fetch cities based on selected state
+  useEffect(() => {
+    const fetchCities = async () => {
+      if (state) {
+        const shopsRef = collection(db, "CoffeeShops");
+        const q = query(shopsRef, where("state", "==", state));
+        const querySnapshot = await getDocs(q);
+
+        const uniqueCities = [
+          ...new Set(querySnapshot.docs.map((doc) => doc.data().city)),
+        ];
+
+        setCities(uniqueCities);
+      } else {
+        setCities([]);
+      }
     };
 
     fetchCities();
-  }, []);
+  }, [state]);
 
-  // Fetch shops based on selected city
+  // Fetch shops based on selected state and city
   useEffect(() => {
     const fetchShops = async () => {
-      if (city) {
+      if (state && city) {
         const shopsRef = collection(db, "CoffeeShops");
-        const q = query(shopsRef, where("city", "==", city));
+        const q = query(
+          shopsRef,
+          where("state", "==", state),
+          where("city", "==", city)
+        );
         const querySnapshot = await getDocs(q);
 
         const matchedShops = querySnapshot.docs.map((doc) => ({
@@ -85,11 +110,13 @@ const EditShop = ({ navigate }) => {
         }));
 
         setShops(matchedShops);
+      } else {
+        setShops([]);
       }
     };
 
     fetchShops();
-  }, [city]);
+  }, [state, city]);
 
   // Load selected shop data into form fields
   const selectShop = async (shopId) => {
@@ -112,10 +139,10 @@ const EditShop = ({ navigate }) => {
           types_of_beverages: data.types_of_beverages || [],
           typical_flavor_notes: data.typical_flavor_notes || [],
           typical_roast_style: data.typical_roast_style || "",
-          dairy_free_options: data.dairy_free_options, // no default value
-          gluten_friendly: data.gluten_friendly, // no default value
-          meal_options: data.meal_options, // no default value
-          bakery_options: data.bakery_options, // no default value
+          dairy_free_options: data.dairy_free_options,
+          gluten_friendly: data.gluten_friendly,
+          meal_options: data.meal_options,
+          bakery_options: data.bakery_options,
           beans_available: data.beans_available || [],
         });
       } else {
@@ -126,12 +153,13 @@ const EditShop = ({ navigate }) => {
     }
   };
 
-  const handleCheckboxChange = (setter, value) => {
-    setter((prev) =>
-      prev.includes(value)
-        ? prev.filter((item) => item !== value)
-        : [...prev, value]
-    );
+  const handleCheckboxChange = (field, value) => {
+    setShopData((prevData) => {
+      const updatedField = prevData[field]?.includes(value)
+        ? prevData[field].filter((item) => item !== value)
+        : [...(prevData[field] || []), value];
+      return { ...prevData, [field]: updatedField };
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -154,16 +182,27 @@ const EditShop = ({ navigate }) => {
       <ToastContainer position="top-right" />
 
       <div className="filter-section">
-        <select value={city} onChange={(e) => setCity(e.target.value)}>
-          <option value="">Select City</option>
-          {cities.map((city) => (
-            <option key={city} value={city}>
-              {city}
+        <select value={state} onChange={(e) => setState(e.target.value)}>
+          <option value="">Select State</option>
+          {states.map((state) => (
+            <option key={state} value={state}>
+              {state}
             </option>
           ))}
         </select>
 
-        {city && shops.length > 0 && (
+        {state && (
+          <select value={city} onChange={(e) => setCity(e.target.value)}>
+            <option value="">Select City</option>
+            {cities.map((city) => (
+              <option key={city} value={city}>
+                {city}
+              </option>
+            ))}
+          </select>
+        )}
+
+        {state && city && shops.length > 0 && (
           <select
             value={shopId}
             onChange={(e) => selectShop(e.target.value)}
@@ -179,7 +218,6 @@ const EditShop = ({ navigate }) => {
         )}
       </div>
 
-      {/* Conditionally render form only when shopData is populated */}
       {shopId && shopData && (
         <form onSubmit={handleSubmit} className="edit-shop-form">
           <input
@@ -246,15 +284,7 @@ const EditShop = ({ navigate }) => {
                     shopData.types_of_beverages?.includes(beverage) || false
                   }
                   onChange={() =>
-                    setShopData((prevData) => {
-                      const updatedTypes =
-                        prevData.types_of_beverages?.includes(beverage)
-                          ? prevData.types_of_beverages.filter(
-                              (item) => item !== beverage
-                            )
-                          : [...(prevData.types_of_beverages || []), beverage];
-                      return { ...prevData, types_of_beverages: updatedTypes };
-                    })
+                    handleCheckboxChange("types_of_beverages", beverage)
                   }
                 />
                 {beverage}

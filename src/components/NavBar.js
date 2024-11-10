@@ -47,6 +47,10 @@ function NavBar() {
     navigate("/editshop");
   };
 
+  const goToAddReview = () => {
+    navigate("/addreview");
+  };
+
   const logOut = async () => {
     try {
       await signOut(auth);
@@ -108,7 +112,7 @@ function NavBar() {
               </>
             )}
             <br />
-            <a>Add Review</a>
+            <a onClick={goToAddReview}>Add Review</a>
           </div>
         )}
         <FontAwesomeIcon
