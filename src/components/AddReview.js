@@ -180,15 +180,72 @@ function AddReview({ navigate }) {
     }
   };
 
-  // const handleCheckboxChange = (setter, value) => {
-  //   setter((prev) =>
-  //     prev.includes(value)
-  //       ? prev.filter((item) => item !== value)
-  //       : [...prev, value]
-  //   );
+  // // New function to handle submitting the review
+  // const submitReview = async () => {
+  //   try {
+  //     const shopReviewsRef = collection(db, "ShopReviews");
+
+  //     // Fetch existing reviews for the shop to calculate the document ID
+  //     const shopReviewQuerySnapshot = await getDocs(shopReviewsRef);
+  //     const reviewCount = shopReviewQuerySnapshot.docs.filter(
+  //       (doc) => doc.data().shop_id === selectedShop.shop_id
+  //     ).length;
+
+  //     // Create the custom document ID
+  //     const documentId = `${selectedShop.shop_id}-${
+  //       selectedShop.userID_submitting
+  //     }-${reviewCount + 1}`;
+
+  //     // Data to be saved
+  //     const reviewData = {
+  //       selectedBev,
+  //       selectedMilk,
+  //       selectedTemp,
+  //       selectedRoast,
+  //       selectedProcess,
+  //       flavoring,
+  //       drinkRating,
+  //       shopRating,
+  //       staffRating,
+  //       review,
+  //       shop_id: selectedShop.shop_id,
+  //       userID_submitting: selectedShop.userID_submitting,
+  //       shop_name: selectedShop.shop_name,
+  //       user_name_submitting: selectedShop.user_name_submitting,
+  //     };
+
+  //     // Save the review to Firestore with the custom document ID
+  //     await setDoc(doc(shopReviewsRef, documentId), reviewData);
+
+  //     console.log("Review submitted successfully!");
+  //     alert("review submited successfully");
+  //     // Clear all fields
+  //     setSelectedBev("");
+  //     setSelectedMilk("");
+  //     setSelectedTemp("");
+  //     setSelectedRoast("");
+  //     setSelectedProcess("");
+  //     setFlavoring("");
+  //     setDrinkRating("");
+  //     setShopRating("");
+  //     setStaffRating("");
+  //     setReview("");
+  //     setShopId(""); // Clear shop selection
+  //     setSelectedShop({
+  //       shop_name: "",
+  //       shop_id: "",
+  //       userID_submitting: "",
+  //       user_name_submitting: "",
+  //       firstName: "",
+  //       lastName: "",
+  //       cafeDrink: "",
+  //     });
+  //     navigate("/home");
+  //   } catch (error) {
+  //     console.error("Error submitting review:", error);
+  //   }
   // };
 
-  // New function to handle submitting the review
   const submitReview = async () => {
     try {
       const shopReviewsRef = collection(db, "ShopReviews");
@@ -204,8 +261,9 @@ function AddReview({ navigate }) {
         selectedShop.userID_submitting
       }-${reviewCount + 1}`;
 
-      // Data to be saved
+      // Data to be saved, including the document ID as review_id
       const reviewData = {
+        review_id: documentId, // New field for review_id
         selectedBev,
         selectedMilk,
         selectedTemp,
@@ -226,7 +284,8 @@ function AddReview({ navigate }) {
       await setDoc(doc(shopReviewsRef, documentId), reviewData);
 
       console.log("Review submitted successfully!");
-      alert("review submited successfully");
+      alert("Review submitted successfully");
+
       // Clear all fields
       setSelectedBev("");
       setSelectedMilk("");
@@ -248,6 +307,7 @@ function AddReview({ navigate }) {
         lastName: "",
         cafeDrink: "",
       });
+
       navigate("/home");
     } catch (error) {
       console.error("Error submitting review:", error);

@@ -1,17 +1,26 @@
 import React, { useEffect, useState } from "react";
-import { doc, getDoc } from "firebase/firestore";
-import { db, auth } from "../utils/auth/firebase"; // Ensure correct Firebase imports
+import {
+  doc,
+  getDoc,
+  collection,
+  query,
+  where,
+  getDocs,
+} from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { db } from "../utils/auth/firebase"; // Ensure correct Firebase imports
 
 export const Profile = () => {
   const [profileData, setProfileData] = useState(null);
+  const [reviews, setReviews] = useState([]);
+  const auth = getAuth();
+  const currentUser = auth.currentUser; // Get the current user
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const user = auth.currentUser;
-
-      if (user) {
+      if (currentUser) {
         try {
-          const userDoc = await getDoc(doc(db, "BrewUsers", user.uid));
+          const userDoc = await getDoc(doc(db, "BrewUsers", currentUser.uid));
           if (userDoc.exists()) {
             setProfileData(userDoc.data());
           } else {
@@ -24,7 +33,36 @@ export const Profile = () => {
     };
 
     fetchUserData();
-  }, []);
+  }, [currentUser]);
+
+  useEffect(() => {
+    const readUserReviews = async () => {
+      if (!currentUser) return;
+
+      const reviewRef = collection(db, "ShopReviews");
+      // Adjusted query to check for userID_submitting instead of participants
+      const q = query(
+        reviewRef,
+        where("userID_submitting", "==", currentUser.uid)
+      );
+
+      try {
+        const querySnapshot = await getDocs(q);
+        const reviewList = [];
+
+        querySnapshot.forEach((doc) => {
+          reviewList.push({ id: doc.id, ...doc.data() });
+        });
+
+        // Update reviews state with the fetched reviews
+        setReviews(reviewList);
+      } catch (error) {
+        console.error("Error fetching user reviews:", error);
+      }
+    };
+
+    readUserReviews();
+  }, [currentUser]);
 
   return (
     <section>
@@ -77,6 +115,53 @@ export const Profile = () => {
         </div>
       ) : (
         <p>Loading profile...</p>
+      )}
+
+      <h2>User Reviews</h2>
+      {reviews.length > 0 ? (
+        reviews.map((review) => (
+          <div key={review.id}>
+            <p>
+              <strong>Drink Rating:</strong> {review.drinkRating}
+            </p>
+            <p>
+              <strong>Flavoring:</strong> {review.flavoring ? "Yes" : "No"}
+            </p>
+            <p>
+              <strong>Review:</strong> {review.review}
+            </p>
+            <p>
+              <strong>Selected Beverage:</strong> {review.selectedBev}
+            </p>
+            <p>
+              <strong>Selected Milk:</strong> {review.selectedMilk}
+            </p>
+            <p>
+              <strong>Selected Process:</strong> {review.selectedProcess}
+            </p>
+            <p>
+              <strong>Selected Roast:</strong> {review.selectedRoast}
+            </p>
+            <p>
+              <strong>Selected Temperature:</strong> {review.selectedTemp}
+            </p>
+            <p>
+              <strong>Shop Rating:</strong> {review.shopRating}
+            </p>
+            <p>
+              <strong>Shop Name:</strong> {review.shop_name}
+            </p>
+            <p>
+              <strong>Staff Rating:</strong> {review.staffRating}
+            </p>
+            <p>
+              <strong>User Name:</strong> {review.user_name_submitting}
+            </p>
+            <hr />
+          </div>
+        ))
+      ) : (
+        <p>No reviews found.</p>
       )}
     </section>
   );
