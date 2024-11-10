@@ -2,16 +2,15 @@ import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { doc, setDoc } from "firebase/firestore";
-import { db } from "../utils/auth/firebase";
-import { auth } from "../utils/auth/firebase"; // Import Firebase auth to access current user
+import { db, auth } from "../utils/auth/firebase";
 import SubmitButton from "./button/SubmitButton";
 import "./AddShop.css";
 
 const AddShop = ({ navigate }) => {
   const [shopName, setShopName] = useState("");
-  // const [photos, setPhotos] = useState("");
-  // const [bio, setBio] = useState("");
-  const [address, setAddress] = useState("");
+  const [streetAddress, setStreetAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
   const [roastsOwnBeans, setRoastsOwnBeans] = useState(false);
   const [hours, setHours] = useState("");
   const [website, setWebsite] = useState("");
@@ -42,7 +41,6 @@ const AddShop = ({ navigate }) => {
 
   const roastOptions = ["light", "medium", "dark"];
 
-  // Function to generate a 12-digit random ID
   const generateShopId = () => {
     return Math.floor(100000000000 + Math.random() * 900000000000).toString();
   };
@@ -58,29 +56,17 @@ const AddShop = ({ navigate }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Check if required fields are filled
-    if (!shopName) {
-      toast.error("Please fill out the Shop Name field");
-      return;
-    }
-    if (!address) {
-      toast.error("Please fill out the Address field");
-      return;
-    }
-    if (!hours) {
-      toast.error("Please fill out the Hours field");
-      return;
-    }
-    if (!website) {
-      toast.error("Please fill out the Website field");
-      return;
-    }
-    if (!typesOfBeverages.length) {
-      toast.error("Please select at least one Type of Beverage");
-      return;
-    }
-    if (!typicalRoastStyle) {
-      toast.error("Please select a Typical Roast Style");
+    if (
+      !shopName ||
+      !streetAddress ||
+      !city ||
+      !state ||
+      !hours ||
+      !website ||
+      !typesOfBeverages.length ||
+      !typicalRoastStyle
+    ) {
+      toast.error("Please fill out all required fields.");
       return;
     }
 
@@ -93,7 +79,9 @@ const AddShop = ({ navigate }) => {
         shop_id: shopId,
         userID_submitting: currentUser.uid,
         user_name_submitting: currentUser.displayName || "Anonymous",
-        address,
+        street_address: streetAddress,
+        city,
+        state,
         roasts_own_beans: roastsOwnBeans,
         hours,
         website,
@@ -108,9 +96,10 @@ const AddShop = ({ navigate }) => {
         beans_available: beansAvailable,
       });
 
-      // Clear the form
       setShopName("");
-      setAddress("");
+      setStreetAddress("");
+      setCity("");
+      setState("");
       setRoastsOwnBeans(false);
       setHours("");
       setWebsite("");
@@ -123,12 +112,12 @@ const AddShop = ({ navigate }) => {
       setMealOptions(false);
       setBakeryOptions(false);
       setBeansAvailable([]);
+      alert("Shop added successfully!");
 
       navigate("/home");
-      toast.success("Shop added successfully!");
     } catch (error) {
       console.error("Error adding shop:", error);
-      toast.error("Failed to add shop.");
+      alert("Failed to add shop.");
     }
   };
 
@@ -144,22 +133,26 @@ const AddShop = ({ navigate }) => {
           onChange={(e) => setShopName(e.target.value)}
           required
         />
-        {/* <input
-          type="text"
-          placeholder="Photos URL"
-          value={photos}
-          onChange={(e) => setPhotos(e.target.value)}
-        /> */}
-        {/* <textarea
-          placeholder="Bio"
-          value={bio}
-          onChange={(e) => setBio(e.target.value)}
-        /> */}
         <input
           type="text"
-          placeholder="Address"
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
+          placeholder="Street Address"
+          value={streetAddress}
+          onChange={(e) => setStreetAddress(e.target.value)}
+          required
+        />
+        <input
+          type="text"
+          placeholder="City"
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
+          required
+        />
+        <input
+          type="text"
+          placeholder="State"
+          value={state}
+          onChange={(e) => setState(e.target.value)}
+          required
         />
         <label>
           Roasts Own Beans:
@@ -183,12 +176,14 @@ const AddShop = ({ navigate }) => {
           placeholder="Hours"
           value={hours}
           onChange={(e) => setHours(e.target.value)}
+          required
         />
         <input
           type="text"
           placeholder="Website"
           value={website}
           onChange={(e) => setWebsite(e.target.value)}
+          required
         />
         <label>Types of Beverages:</label>
         <div className="beverage-grid">
@@ -209,6 +204,7 @@ const AddShop = ({ navigate }) => {
         <select
           value={typicalRoastStyle}
           onChange={(e) => setTypicalRoastStyle(e.target.value)}
+          required
         >
           <option value="">Select Roast Style</option>
           {roastOptions.map((roast) => (

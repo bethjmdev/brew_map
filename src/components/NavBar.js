@@ -39,6 +39,14 @@ function NavBar() {
     navigate("/addshop");
   };
 
+  const goToEditProfile = () => {
+    navigate("/editprofile");
+  };
+
+  const goToEditShop = () => {
+    navigate("/editshop");
+  };
+
   const logOut = async () => {
     try {
       await signOut(auth);
@@ -95,7 +103,7 @@ function NavBar() {
             {isHome && (
               <>
                 <br />
-                <a>Edit Shop</a>
+                <a onClick={goToEditShop}>Edit Shop</a>
                 <br />
               </>
             )}
@@ -135,7 +143,7 @@ function NavBar() {
               <a onClick={goToProfile}>Profile</a>
               <br />
               <br />
-              <a onClick={goToProfile}>Edit Profile</a>
+              <a onClick={goToEditProfile}>Edit Profile</a>
               <br />
               <br />
               <a onClick={logOut}>Logout</a>
@@ -177,10 +185,21 @@ function NavBar() {
           )}
         </div>
 
-        {["/profile", "/addshop", "/addreview"].includes(location.pathname) && (
+        {[
+          "/profile",
+          "/editprofile",
+          "/addshop",
+          "/addreview",
+          "/editshop",
+        ].includes(location.pathname) && (
           <FontAwesomeIcon
             icon={faMap}
-            style={{ fontSize: "3rem", color: "#806D5B" }}
+            style={{
+              fontSize: "3rem",
+              color: "#806D5B",
+              marginTop: "-2rem",
+              marginLeft: "-.6rem",
+            }}
             onClick={goToMap}
           />
         )}

@@ -16,6 +16,8 @@ import LandingPage from "./components/LandingPage";
 import Profile from "./components/Profile";
 import AddReview from "./components/AddReview";
 import AddShop from "./components/AddShop";
+import EditProfile from "./components/pages/profile/EditProfile";
+import EditShop from "./components/pages/shop/EditShop";
 
 function App() {
   return (
@@ -51,6 +53,12 @@ function MainContent() {
           element={<PrivateRoute component={<Profile navigate={navigate} />} />}
         />
         <Route
+          path="/editprofile"
+          element={
+            <PrivateRoute component={<EditProfile navigate={navigate} />} />
+          }
+        />
+        <Route
           path="/addreview"
           element={
             <PrivateRoute component={<AddReview navigate={navigate} />} />
@@ -59,6 +67,12 @@ function MainContent() {
         <Route
           path="/addshop"
           element={<PrivateRoute component={<AddShop navigate={navigate} />} />}
+        />
+        <Route
+          path="/editshop"
+          element={
+            <PrivateRoute component={<EditShop navigate={navigate} />} />
+          }
         />
         <Route path="/login" element={<Login navigate={navigate} />} />
         <Route path="/register" element={<Signup navigate={navigate} />} />
