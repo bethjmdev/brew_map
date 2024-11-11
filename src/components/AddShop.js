@@ -185,6 +185,8 @@ const AddShop = ({ navigate }) => {
     }
   };
 
+  console.log("API Key:", process.env.REACT_APP_GOOGLE_MAPS_API_KEY);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
