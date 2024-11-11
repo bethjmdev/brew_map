@@ -26,10 +26,19 @@ const AddShop = ({ navigate }) => {
     "Americano",
   ]);
 
-  const [typicalFlavorNotes, setTypicalFlavorNotes] = useState([]);
+  const [
+    typicalFlavorNotes,
+    // setTypicalFlavorNotes
+  ] = useState([]);
   const [typicalRoastStyle, setTypicalRoastStyle] = useState("");
-  const [popularBev, setPopularBev] = useState("");
-  const [beansAvailable, setBeansAvailable] = useState([]);
+  const [
+    popularBev,
+    // setPopularBev
+  ] = useState("");
+  const [
+    beansAvailable,
+    // setBeansAvailable
+  ] = useState([]);
   const [dairyFreeOptions, setDairyFreeOptions] = useState(false);
   const [glutenFriendly, setGlutenFriendly] = useState(false);
   const [mealOptions, setMealOptions] = useState(false);
@@ -64,6 +73,118 @@ const AddShop = ({ navigate }) => {
     );
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   if (
+  //     !shopName ||
+  //     !streetAddress ||
+  //     !city ||
+  //     !state ||
+  //     !hours ||
+  //     !website ||
+  //     !typesOfBeverages.length ||
+  //     !typicalRoastStyle
+  //   ) {
+  //     toast.error("Please fill out all required fields.");
+  //     return;
+  //   }
+
+  //   const shopId = generateShopId();
+  //   const currentUser = auth.currentUser;
+
+  //   try {
+  //     await setDoc(doc(db, "CoffeeShops", shopId), {
+  //       shop_name: shopName,
+  //       shop_id: shopId,
+  //       userID_submitting: currentUser.uid,
+  //       user_name_submitting: currentUser.displayName || "Anonymous",
+  //       street_address: streetAddress,
+  //       city,
+  //       state,
+  //       roasts_own_beans: roastsOwnBeans,
+  //       hours,
+  //       website,
+  //       types_of_beverages: typesOfBeverages,
+  //       typical_flavor_notes: typicalFlavorNotes,
+  //       typical_roast_style: typicalRoastStyle,
+  //       popular_bev: popularBev,
+  //       dairy_free_options: dairyFreeOptions,
+  //       gluten_friendly: glutenFriendly,
+  //       meal_options: mealOptions,
+  //       bakery_options: bakeryOptions,
+  //       beans_available: beansAvailable,
+  //     });
+
+  //     // Save address and shop ID to Coordinates collection
+  //     await setDoc(doc(db, "Coordinates", shopId), {
+  //       shop_id: shopId,
+  //       street_address: `${streetAddress}, ${city}, ${state}`,
+  //     });
+
+  //     setShopName("");
+  //     setStreetAddress("");
+  //     setCity("");
+  //     setState("");
+  //     setRoastsOwnBeans(false);
+  //     setHours("");
+  //     setWebsite("");
+  //     setTypesOfBeverages([
+  //       "Latte",
+  //       "Macchiato",
+  //       "Drip coffee",
+  //       "Pour over",
+  //       "Cortado",
+  //       "Espresso",
+  //       "Americano",
+  //     ]);
+  //     setTypicalFlavorNotes([]);
+  //     setTypicalRoastStyle("");
+  //     setPopularBev("");
+  //     setDairyFreeOptions(false);
+  //     setGlutenFriendly(false);
+  //     setMealOptions(false);
+  //     setBakeryOptions(false);
+  //     setBeansAvailable([]);
+  //     alert("Shop added successfully!");
+
+  //     navigate("/home");
+  //   } catch (error) {
+  //     console.error("Error adding shop:", error);
+  //     alert("Failed to add shop.");
+  //   }
+  // };
+
+  // Function to get coordinates using Google Geocoding API
+  const getCoordinates = async (address) => {
+    const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY; // Securely use an environment variable
+    const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+      address
+    )}&key=${apiKey}`;
+
+    // Log the URL for debugging
+    console.log("Geocode URL:", geocodeUrl);
+
+    try {
+      const response = await fetch(geocodeUrl);
+      const data = await response.json();
+
+      // Log the full response for debugging
+      console.log("Geocode API response:", data);
+
+      if (data.status === "OK") {
+        const { lat, lng } = data.results[0].geometry.location;
+        return { latitude: lat, longitude: lng };
+      } else {
+        throw new Error(`Failed to get coordinates: ${data.status}`);
+      }
+    } catch (error) {
+      console.error("Error fetching coordinates:", error);
+      toast.error("Failed to get coordinates.");
+      return null;
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -83,6 +204,11 @@ const AddShop = ({ navigate }) => {
 
     const shopId = generateShopId();
     const currentUser = auth.currentUser;
+
+    const address = `${streetAddress}, ${city}, ${state}`;
+    const coordinates = await getCoordinates(address);
+
+    if (!coordinates) return; // Exit if coordinates fetching failed
 
     try {
       await setDoc(doc(db, "CoffeeShops", shopId), {
@@ -107,36 +233,19 @@ const AddShop = ({ navigate }) => {
         beans_available: beansAvailable,
       });
 
-      setShopName("");
-      setStreetAddress("");
-      setCity("");
-      setState("");
-      setRoastsOwnBeans(false);
-      setHours("");
-      setWebsite("");
-      setTypesOfBeverages([
-        "Latte",
-        "Macchiato",
-        "Drip coffee",
-        "Pour over",
-        "Cortado",
-        "Espresso",
-        "Americano",
-      ]);
-      setTypicalFlavorNotes([]);
-      setTypicalRoastStyle("");
-      setPopularBev("");
-      setDairyFreeOptions(false);
-      setGlutenFriendly(false);
-      setMealOptions(false);
-      setBakeryOptions(false);
-      setBeansAvailable([]);
-      alert("Shop added successfully!");
+      // Save coordinates to Firestore in the Coordinates collection
+      await setDoc(doc(db, "Coordinates", shopId), {
+        shop_id: shopId,
+        street_address: address,
+        latitude: coordinates.latitude,
+        longitude: coordinates.longitude,
+      });
 
+      toast.success("Shop added successfully!");
       navigate("/home");
     } catch (error) {
       console.error("Error adding shop:", error);
-      alert("Failed to add shop.");
+      toast.error("Failed to add shop.");
     }
   };
 
