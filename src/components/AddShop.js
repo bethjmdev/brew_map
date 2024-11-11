@@ -157,7 +157,7 @@ const AddShop = ({ navigate }) => {
 
   // Function to get coordinates using Google Geocoding API
   const getCoordinates = async (address) => {
-    const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API_KEY; // Securely use an environment variable
+    const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API; // Securely use an environment variable
     const geocodeUrl = `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
       address
     )}&key=${apiKey}`;
