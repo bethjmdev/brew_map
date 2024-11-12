@@ -73,87 +73,15 @@ const AddShop = ({ navigate }) => {
     );
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-
-  //   if (
-  //     !shopName ||
-  //     !streetAddress ||
-  //     !city ||
-  //     !state ||
-  //     !hours ||
-  //     !website ||
-  //     !typesOfBeverages.length ||
-  //     !typicalRoastStyle
-  //   ) {
-  //     toast.error("Please fill out all required fields.");
-  //     return;
-  //   }
-
-  //   const shopId = generateShopId();
-  //   const currentUser = auth.currentUser;
-
-  //   try {
-  //     await setDoc(doc(db, "CoffeeShops", shopId), {
-  //       shop_name: shopName,
-  //       shop_id: shopId,
-  //       userID_submitting: currentUser.uid,
-  //       user_name_submitting: currentUser.displayName || "Anonymous",
-  //       street_address: streetAddress,
-  //       city,
-  //       state,
-  //       roasts_own_beans: roastsOwnBeans,
-  //       hours,
-  //       website,
-  //       types_of_beverages: typesOfBeverages,
-  //       typical_flavor_notes: typicalFlavorNotes,
-  //       typical_roast_style: typicalRoastStyle,
-  //       popular_bev: popularBev,
-  //       dairy_free_options: dairyFreeOptions,
-  //       gluten_friendly: glutenFriendly,
-  //       meal_options: mealOptions,
-  //       bakery_options: bakeryOptions,
-  //       beans_available: beansAvailable,
-  //     });
-
-  //     // Save address and shop ID to Coordinates collection
-  //     await setDoc(doc(db, "Coordinates", shopId), {
-  //       shop_id: shopId,
-  //       street_address: `${streetAddress}, ${city}, ${state}`,
-  //     });
-
-  //     setShopName("");
-  //     setStreetAddress("");
-  //     setCity("");
-  //     setState("");
-  //     setRoastsOwnBeans(false);
-  //     setHours("");
-  //     setWebsite("");
-  //     setTypesOfBeverages([
-  //       "Latte",
-  //       "Macchiato",
-  //       "Drip coffee",
-  //       "Pour over",
-  //       "Cortado",
-  //       "Espresso",
-  //       "Americano",
-  //     ]);
-  //     setTypicalFlavorNotes([]);
-  //     setTypicalRoastStyle("");
-  //     setPopularBev("");
-  //     setDairyFreeOptions(false);
-  //     setGlutenFriendly(false);
-  //     setMealOptions(false);
-  //     setBakeryOptions(false);
-  //     setBeansAvailable([]);
-  //     alert("Shop added successfully!");
-
-  //     navigate("/home");
-  //   } catch (error) {
-  //     console.error("Error adding shop:", error);
-  //     alert("Failed to add shop.");
-  //   }
-  // };
+  // State abbreviation validation with automatic capitalization
+  const handleStateChange = (e) => {
+    const input = e.target.value.toUpperCase();
+    if (input.length > 2) {
+      toast.error("Please enter a valid 2-letter state abbreviation.");
+    } else {
+      setState(input);
+    }
+  };
 
   // Function to get coordinates using Google Geocoding API
   const getCoordinates = async (address) => {
@@ -184,8 +112,6 @@ const AddShop = ({ navigate }) => {
       return null;
     }
   };
-
-  console.log("API Key:", process.env.REACT_APP_GOOGLE_MAPS_API_KEY);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -282,7 +208,7 @@ const AddShop = ({ navigate }) => {
           type="text"
           placeholder="State"
           value={state}
-          onChange={(e) => setState(e.target.value)}
+          onChange={handleStateChange}
           required
         />
         <label>

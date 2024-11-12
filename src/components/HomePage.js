@@ -1,9 +1,11 @@
+import Map from "./pages/home/Map";
+
 export const HomePage = () => {
-    return (
-        <section>
-            <h2>Homepage</h2>
-        </section>
-    );
+  return (
+    <section>
+      <Map />
+    </section>
+  );
 };
 
-export default HomePage
+export default HomePage;
