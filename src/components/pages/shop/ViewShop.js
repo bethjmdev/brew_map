@@ -1,7 +1,8 @@
 import React from "react";
 import "./ViewShop.css";
 
-function ViewShop({ showCoffeeShow }) {
+function ViewShop({ showCoffeeShow, coffeeShop }) {
+  console.log("coffeeShop", coffeeShop);
   return (
     <div
       style={{
@@ -16,7 +17,7 @@ function ViewShop({ showCoffeeShow }) {
       }}
     >
       <p onClick={showCoffeeShow}>X</p>
-      <p>hi from</p>
+      <p>{coffeeShop.shop_name}</p>
       <p>View SHop</p>
     </div>
   );

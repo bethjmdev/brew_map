@@ -11,7 +11,9 @@ const HomePage = () => {
   const [zoom, setZoom] = useState(15);
   const [isVisible, setIsVisible] = useState(false);
   const [coordinates, setCoordinates] = useState([]); // state to hold coordinates
+  const [coffeeShop, setCoffeeShop] = useState(null); // state to hold shop details
 
+  //fetches long, lat, shop id's and name from coordinates collection
   useEffect(() => {
     const fetchCoordinates = async () => {
       const querySnapshot = await getDocs(collection(db, "Coordinates"));
@@ -20,11 +22,11 @@ const HomePage = () => {
         ...doc.data(),
       }));
       setCoordinates(pins);
-      console.log("Fetched Pins:", pins);
     };
     fetchCoordinates();
   }, []);
 
+  //manages search bar
   const handleSearch = (cityName) => {
     if (!window.google) return;
     const geocoder = new window.google.maps.Geocoder();
@@ -39,9 +41,19 @@ const HomePage = () => {
     });
   };
 
-  const showCoffeeShow = () => {
+  const getShopDetails = async (id) => {
+    const querySnapshot = await getDocs(collection(db, "CoffeeShops"));
+    const shop = querySnapshot.docs
+      .map((doc) => ({ id: doc.id, ...doc.data() }))
+      .find((doc) => doc.id === id);
+    setCoffeeShop(shop);
+  };
+
+  //shows coffee show info when shop is clicked
+  const showCoffeeShow = (id) => {
     setIsVisible(!isVisible);
-    console.log("showCoffeeShow running");
+    console.log("Shop ID:", id); // Log the shop ID here
+    getShopDetails(id);
   };
 
   return (
@@ -53,7 +65,9 @@ const HomePage = () => {
         showCoffeeShow={showCoffeeShow}
         coordinates={coordinates}
       />
-      {isVisible && <ViewShop showCoffeeShow={showCoffeeShow} />}
+      {isVisible && (
+        <ViewShop showCoffeeShow={showCoffeeShow} coffeeShop={coffeeShop} />
+      )}
     </LoadScript>
   );
 };

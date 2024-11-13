@@ -74,7 +74,7 @@ const Map = ({ searchQuery, coordinates, showCoffeeShow }) => {
                   boxShadow: "0 2px 5px rgba(0, 0, 0, 0.3)",
                   transform: "translate(20px, -50px)",
                 }}
-                onClick={showCoffeeShow}
+                onClick={() => showCoffeeShow(pin.id)}
               >
                 <p
                   style={{
