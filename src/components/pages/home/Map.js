@@ -42,10 +42,14 @@ const Map = () => {
     fetchCoordinates();
   }, []);
 
-  //I want the names of the coffee shop to show in palce of coffee shop name
-
-  //need identify the shop id
-  //access CoffeeShops and find the shop with the same shop_id
+  const truncateName = (shop_name) => {
+    if (!shop_name || shop_name.length === 0) {
+      return "";
+    }
+    return shop_name.length > 19
+      ? shop_name.substring(0, 19) + "..."
+      : shop_name;
+  };
 
   return (
     <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API}>
@@ -92,7 +96,7 @@ const Map = () => {
                       fontSize: ".7rem",
                     }}
                   >
-                    {pin.shop_name}
+                    {pin.shop_name ? truncateName(pin.shop_name) : ""}
                   </p>
                   <p
                     style={{
