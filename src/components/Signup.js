@@ -217,7 +217,6 @@ const Signup = ({ navigate }) => {
         {/* SignUpInfo for dynamic selections */}
         <SignUpInfo selections={selections} />
 
-        {/* Additional input fields */}
         <input
           type="text"
           name="favCafe"
