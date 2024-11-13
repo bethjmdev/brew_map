@@ -14,7 +14,6 @@ const Map = () => {
   const [coordinates, setCoordinates] = useState([]);
   const [zoom, setZoom] = useState(15); // Initial zoom level
   const mapRef = useRef(null); // Reference to store the map instance
-  // const [initialCenter] = useState({ lat: 42.3779725, lng: -71.1073006 }); // Set only once
   const [center, setCenter] = useState({ lat: 42.3779725, lng: -71.1073006 });
 
   const mapContainerStyle = { width: "100%", height: "100vh" };
@@ -28,8 +27,6 @@ const Map = () => {
         stylers: [{ visibility: "off" }],
       },
     ],
-    // zoomControl: true, // Enable zoom control buttons
-    // disableDefaultUI: false, // Ensure all default UI is enabled
     mapTypeControl: false, // Disable map/satellite toggle
     zoomControl: true, // Enable zoom control buttons
     disableDefaultUI: true,
@@ -75,14 +72,12 @@ const Map = () => {
   return (
     <>
       <SearchBar onSearch={handleSearch} />
-      {/* <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API}> */}
       <GoogleMap
         mapContainerStyle={mapContainerStyle}
         center={center}
-        // center={initialCenter}
         zoom={zoom}
         options={mapOptions}
-        onLoad={(map) => (mapRef.current = map)} // Set map instance to mapRef
+        onLoad={(map) => (mapRef.current = map)}
         onZoomChanged={() => {
           if (mapRef.current) {
             // Check if mapRef.current is defined
@@ -136,7 +131,6 @@ const Map = () => {
           </React.Fragment>
         ))}
       </GoogleMap>
-      {/* </LoadScript> */}
     </>
   );
 };
