@@ -12,6 +12,7 @@ const HomePage = () => {
   const [isVisible, setIsVisible] = useState(false);
   const [coordinates, setCoordinates] = useState([]); // state to hold coordinates
   const [coffeeShop, setCoffeeShop] = useState(null); // state to hold shop details
+  const [shopReviews, setShopReviews] = useState(null);
 
   //fetches long, lat, shop id's and name from coordinates collection
   useEffect(() => {
@@ -49,11 +50,30 @@ const HomePage = () => {
     setCoffeeShop(shop);
   };
 
+  // const getCoffeeShopReviews = async (id) => {
+  //   const querySnapshot = await getDocs(collection(db, "ShopReviews"));
+  //   const reviews = querySnapshot.docs
+  //     .map((doc) => ({ id: doc.id, ...doc.data() }))
+  //     .find((doc) => doc.id === id);
+  //   setShopReviews(reviews);
+  // };
+
+  const getCoffeeShopReviews = async (id) => {
+    console.log("Fetching reviews for shop ID:", id); // Confirm the ID
+    const querySnapshot = await getDocs(collection(db, "ShopReviews"));
+    const reviews = querySnapshot.docs
+      .map((doc) => ({ id: doc.id, ...doc.data() }))
+      .filter((doc) => doc.shop_id === id); // Adjust to match reviews by shop_id field
+    console.log("Fetched reviews:", reviews); // Log fetched reviews
+    setShopReviews(reviews);
+  };
+
   //shows coffee show info when shop is clicked
   const showCoffeeShow = (id) => {
     setIsVisible(!isVisible);
     console.log("Shop ID:", id); // Log the shop ID here
     getShopDetails(id);
+    getCoffeeShopReviews(id);
   };
 
   return (
@@ -66,7 +86,11 @@ const HomePage = () => {
         coordinates={coordinates}
       />
       {isVisible && (
-        <ViewShop showCoffeeShow={showCoffeeShow} coffeeShop={coffeeShop} />
+        <ViewShop
+          showCoffeeShow={showCoffeeShow}
+          coffeeShop={coffeeShop}
+          shopReviews={shopReviews}
+        />
       )}
     </LoadScript>
   );
