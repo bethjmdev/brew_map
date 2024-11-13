@@ -27,11 +27,17 @@ function ViewShop({ showCoffeeShow, coffeeShop, shopReviews }) {
       {shopReviews && shopReviews.length > 0 ? (
         shopReviews.map((review) => (
           <div key={review.id}>
-            <p>{review.user_name_submitting}'s fav drnk is...</p>
             <p>
-              {review.user_name_submitting} got drnk {review.selectedTemp}{" "}
+              {review.user_name_submitting}'s fav drink is{" "}
+              {review.user_fav_temp} {""}
+              {review.user_fav_milk} {review.user_fav_drink} that is{" "}
+              {review.user_fav_roast} roast
+            </p>
+            <p>
+              The drink {review.user_name_submitting} was {review.selectedTemp}{" "}
               {review.selectedMilk} {review.selectedBev} that was{" "}
-              {review.selectedProcess} process and {review.selectedRoast} roast
+              {/* {review.selectedProcess} process  */}
+              and {review.selectedRoast} roast
             </p>
 
             <p>{review.review}</p>

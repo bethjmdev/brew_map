@@ -133,6 +133,7 @@ function AddReview({ navigate }) {
               cafeMilk: userData.cafeMilk || "",
               cafeTemp: userData.cafeTemp || "",
               selectedRoast: userData.selectedRoast || "",
+              selectedProcess: userData.selectedRoast || "",
             }));
           } else {
             console.log("No user document found for the current user.");
@@ -273,6 +274,7 @@ function AddReview({ navigate }) {
         user_fav_temp: selectedShop.cafeTemp,
         user_fav_milk: selectedShop.cafeMilk,
         user_fav_roast: selectedShop.selectedRoast,
+        user_fav_process: selectedShop.selectedProcess,
       };
 
       // Save the review to Firestore with the custom document ID
