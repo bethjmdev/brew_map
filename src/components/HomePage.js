@@ -1,10 +1,12 @@
-import Map from "./pages/home/Map";
+import React from "react";
+import { LoadScript } from "@react-google-maps/api";
+import Map from "../components/pages/map/Map";
 
-export const HomePage = () => {
+const HomePage = () => {
   return (
-    <section>
+    <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API}>
       <Map />
-    </section>
+    </LoadScript>
   );
 };
 

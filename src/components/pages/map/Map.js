@@ -75,68 +75,68 @@ const Map = () => {
   return (
     <>
       <SearchBar onSearch={handleSearch} />
-      <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API}>
-        <GoogleMap
-          mapContainerStyle={mapContainerStyle}
-          center={center}
-          // center={initialCenter}
-          zoom={zoom}
-          options={mapOptions}
-          onLoad={(map) => (mapRef.current = map)} // Set map instance to mapRef
-          onZoomChanged={() => {
-            if (mapRef.current) {
-              // Check if mapRef.current is defined
-              const currentZoom = mapRef.current.getZoom(); // Get current zoom level
-              setZoom(currentZoom);
-            }
-          }}
-        >
-          {coordinates.map((pin) => (
-            <React.Fragment key={pin.id}>
-              <Marker position={{ lat: pin.latitude, lng: pin.longitude }} />
-              {(zoom < 1 || zoom > 13) && (
-                <OverlayView
-                  position={{ lat: pin.latitude, lng: pin.longitude }}
-                  mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+      {/* <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API}> */}
+      <GoogleMap
+        mapContainerStyle={mapContainerStyle}
+        center={center}
+        // center={initialCenter}
+        zoom={zoom}
+        options={mapOptions}
+        onLoad={(map) => (mapRef.current = map)} // Set map instance to mapRef
+        onZoomChanged={() => {
+          if (mapRef.current) {
+            // Check if mapRef.current is defined
+            const currentZoom = mapRef.current.getZoom(); // Get current zoom level
+            setZoom(currentZoom);
+          }
+        }}
+      >
+        {coordinates.map((pin) => (
+          <React.Fragment key={pin.id}>
+            <Marker position={{ lat: pin.latitude, lng: pin.longitude }} />
+            {(zoom < 1 || zoom > 13) && (
+              <OverlayView
+                position={{ lat: pin.latitude, lng: pin.longitude }}
+                mapPaneName={OverlayView.OVERLAY_MOUSE_TARGET}
+              >
+                <div
+                  style={{
+                    background: "white",
+                    width: "8rem",
+                    height: "3rem",
+                    borderRadius: "8px",
+                    boxShadow: "0 2px 5px rgba(0, 0, 0, 0.3)",
+                    transform: "translate(20px, -50px)",
+                  }}
                 >
-                  <div
+                  <p
                     style={{
-                      background: "white",
-                      width: "8rem",
-                      height: "3rem",
-                      borderRadius: "8px",
-                      boxShadow: "0 2px 5px rgba(0, 0, 0, 0.3)",
-                      transform: "translate(20px, -50px)",
+                      textAlign: "left",
+                      lineHeight: "1rem",
+                      marginLeft: ".5rem",
+                      paddingTop: ".5rem",
+                      fontWeight: "bold",
+                      fontSize: ".7rem",
                     }}
                   >
-                    <p
-                      style={{
-                        textAlign: "left",
-                        lineHeight: "1rem",
-                        marginLeft: ".5rem",
-                        paddingTop: ".5rem",
-                        fontWeight: "bold",
-                        fontSize: ".7rem",
-                      }}
-                    >
-                      {pin.shop_name ? truncateName(pin.shop_name) : ""}
-                    </p>
-                    <p
-                      style={{
-                        textAlign: "left",
-                        lineHeight: ".3rem",
-                        marginLeft: ".5rem",
-                      }}
-                    >
-                      {pin.roast_style}
-                    </p>
-                  </div>
-                </OverlayView>
-              )}
-            </React.Fragment>
-          ))}
-        </GoogleMap>
-      </LoadScript>
+                    {pin.shop_name ? truncateName(pin.shop_name) : ""}
+                  </p>
+                  <p
+                    style={{
+                      textAlign: "left",
+                      lineHeight: ".3rem",
+                      marginLeft: ".5rem",
+                    }}
+                  >
+                    {pin.roast_style}
+                  </p>
+                </div>
+              </OverlayView>
+            )}
+          </React.Fragment>
+        ))}
+      </GoogleMap>
+      {/* </LoadScript> */}
     </>
   );
 };
