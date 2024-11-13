@@ -3,7 +3,7 @@ import { GoogleMap, Marker, OverlayView } from "@react-google-maps/api";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../../utils/auth/firebase";
 
-const Map = ({ searchQuery }) => {
+const Map = ({ searchQuery, isVisible, setIsVisible, showCoffeeShow }) => {
   const [coordinates, setCoordinates] = useState([]);
   const [zoom, setZoom] = useState(15);
   const mapRef = useRef(null);
@@ -90,6 +90,7 @@ const Map = ({ searchQuery }) => {
                   boxShadow: "0 2px 5px rgba(0, 0, 0, 0.3)",
                   transform: "translate(20px, -50px)",
                 }}
+                onClick={showCoffeeShow}
               >
                 <p
                   style={{
