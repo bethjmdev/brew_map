@@ -3,12 +3,6 @@ import React, { useState } from "react";
 const SearchBar = ({ onSearch }) => {
   const [searchQuery, setSearchQuery] = useState("");
 
-  //   const handleSearchClick = () => {
-  //     if (searchQuery.trim()) {
-  //       onSearch(searchQuery);
-  //     }
-  //   };
-
   const handleSearch = () => {
     if (searchQuery.trim()) {
       onSearch(searchQuery);
