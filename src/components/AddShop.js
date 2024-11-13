@@ -164,7 +164,9 @@ const AddShop = ({ navigate }) => {
       // Save coordinates to Firestore in the Coordinates collection
       await setDoc(doc(db, "Coordinates", shopId), {
         shop_id: shopId,
+        shop_name: shopName,
         street_address: address,
+        typical_roast_style: typicalRoastStyle,
         latitude: coordinates.latitude,
         longitude: coordinates.longitude,
       });

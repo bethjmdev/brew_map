@@ -15,7 +15,6 @@ const Map = () => {
   const [initialCenter] = useState({ lat: 42.3779725, lng: -71.1073006 }); // Set only once
 
   const mapContainerStyle = { width: "100%", height: "100vh" };
-  // const center = { lat: 42.3779725, lng: -71.1073006 }; // Center on a default location if needed
 
   // Map options to hide points of interest (shops, restaurants, etc.)
   const mapOptions = {
@@ -42,6 +41,15 @@ const Map = () => {
     };
     fetchCoordinates();
   }, []);
+
+  const truncateName = (shop_name) => {
+    if (!shop_name || shop_name.length === 0) {
+      return "";
+    }
+    return shop_name.length > 19
+      ? shop_name.substring(0, 19) + "..."
+      : shop_name;
+  };
 
   return (
     <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API}>
@@ -88,7 +96,7 @@ const Map = () => {
                       fontSize: ".7rem",
                     }}
                   >
-                    Coffee Shop Name
+                    {pin.shop_name ? truncateName(pin.shop_name) : ""}
                   </p>
                   <p
                     style={{
@@ -97,7 +105,7 @@ const Map = () => {
                       marginLeft: ".5rem",
                     }}
                   >
-                    Roast Style
+                    {pin.roast_style}
                   </p>
                 </div>
               </OverlayView>
