@@ -1,8 +1,17 @@
 import React from "react";
+import "./ViewShop.css";
 
 function ViewShop() {
   return (
-    <div styles={{ backgroundColor: "white", height: "100vh", width: "40rem" }}>
+    <div
+      className="view-shop-container"
+      //   styles={{
+      //     backgroundColor: "var(--white)",
+      //     height: "100vh",
+      //     width: "40rem",
+      //     zIndex: "99",
+      //   }}
+    >
       <p>hi from</p>
       <p>View SHop</p>
     </div>

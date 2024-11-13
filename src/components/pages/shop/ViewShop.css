@@ -1,0 +1,6 @@
+.view-shop-container {
+  background-color: "var(--white)";
+  height: "100vh";
+  width: "40rem";
+  z-index: "99";
+}

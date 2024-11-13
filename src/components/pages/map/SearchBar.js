@@ -21,7 +21,7 @@ const SearchBar = ({ onSearch }) => {
         marginTop: "2rem",
         marginLeft: ".6rem",
         backgroundColor: "none",
-        zIndex: "4",
+        zIndex: "10",
         position: "absolute",
       }}
     >
