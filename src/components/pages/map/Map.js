@@ -1,10 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { GoogleMap, Marker, OverlayView } from "@react-google-maps/api";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../../../utils/auth/firebase";
 
-const Map = ({ searchQuery, isVisible, setIsVisible, showCoffeeShow }) => {
-  const [coordinates, setCoordinates] = useState([]);
+const Map = ({ searchQuery, coordinates, showCoffeeShow }) => {
   const [zoom, setZoom] = useState(15);
   const mapRef = useRef(null);
   const [center, setCenter] = useState({ lat: 42.3779725, lng: -71.1073006 });
@@ -23,19 +20,6 @@ const Map = ({ searchQuery, isVisible, setIsVisible, showCoffeeShow }) => {
     zoomControl: true,
     disableDefaultUI: true,
   };
-
-  useEffect(() => {
-    const fetchCoordinates = async () => {
-      const querySnapshot = await getDocs(collection(db, "Coordinates"));
-      const pins = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setCoordinates(pins);
-      console.log("Fetched Pins:", pins);
-    };
-    fetchCoordinates();
-  }, []);
 
   // Update map center based on search query
   useEffect(() => {
