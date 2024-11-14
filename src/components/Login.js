@@ -2,40 +2,25 @@
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
 import { auth, db } from "../utils/auth/firebase";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
+import { useUserStore } from "../utils/auth/userStore";
 
 const Login = ({ navigate }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { currentUser } = useUserStore();
 
-  // const handleLogin = async (e) => {
-  //   e.preventDefault();
-
-  //   try {
-  //     const userCredential = await signInWithEmailAndPassword(
-  //       auth,
-  //       email,
-  //       password
-  //     );
-  //     const user = userCredential.user;
-
-  //     // Store the auth token in localStorage
-  //     localStorage.setItem("authToken", user.accessToken);
-
-  //     const userDocRef = doc(db, "BrewUsers", user.uid);
-  //     await getDoc(userDocRef);
-
-  //     navigate("/home"); // Navigate to /home on successful login
-  //   } catch (err) {
-  //     console.error("Error during login:", err.message || err);
-  //     toast.error("Login error. Please check your credentials and try again.");
-  //   }
-  // };
+  useEffect(() => {
+    if (currentUser) {
+      alert("You are already logged in.");
+      navigate("/home");
+    }
+  }, [currentUser]);
 
   const handleLogin = async (e) => {
     e.preventDefault();

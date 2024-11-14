@@ -22,12 +22,6 @@ import EditProfile from "./components/pages/profile/EditProfile";
 import EditShop from "./components/pages/shop/EditShop";
 
 function App() {
-  // Call the initAuthListener on app load
-  // const { initAuthListener } = useUserStore();
-  // useEffect(() => {
-  //   initAuthListener(); // Start listening for auth state changes
-  // }, [initAuthListener]);
-
   return (
     <Router>
       <MainContent />
@@ -93,23 +87,6 @@ function MainContent() {
     </div>
   );
 }
-
-// // Mock authentication check (replace with actual authentication logic)
-// const isAuthenticated = () => {
-//   // Example: check for a token or authentication state here
-//   return Boolean(localStorage.getItem("authToken"));
-// };
-
-// // PrivateRoute component
-// function PrivateRoute({ component }) {
-//   return isAuthenticated() ? component : <Navigate to="/login" />;
-// }
-
-// PrivateRoute component
-// function PrivateRoute({ component }) {
-//   const { currentUser } = useUserStore();
-//   return currentUser ? component : <Navigate to="/login" />;
-// }
 
 function PrivateRoute({ component }) {
   const { currentUser, isLoading } = useUserStore();
