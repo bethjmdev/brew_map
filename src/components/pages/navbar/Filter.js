@@ -1,23 +1,8 @@
 import React, { useState } from "react";
 function Filter() {
   const [selectedRoast, setSelectedRoast] = useState("");
-  const [selectedDrink, setSelectedDrink] = useState("");
 
   const roastOptions = ["Light", "Medium", "Dark"];
-  const drinkOptions = [
-    "Cold Brew",
-    "Latte",
-    "Macchiatto",
-    "French Press",
-    "Aeropress",
-    "Drip Coffee",
-    "Pour Over",
-    "Cortado",
-    "Espresso",
-    "Flat White",
-    "Americano",
-    "Other",
-  ];
 
   return (
     <div
@@ -29,7 +14,7 @@ function Filter() {
         bottom: "0",
         left: "0",
         right: "0",
-        backgroundColor: "white",
+        // backgroundColor: "white",
         zIndex: 10,
         borderTopLeftRadius: "1rem",
         borderTopRightRadius: "1rem",
@@ -70,7 +55,7 @@ function Filter() {
         </div>
       </div>
 
-      <div style={{ marginBottom: "1rem" }}>
+      {/* <div style={{ marginBottom: "1rem" }}>
         <h2>Filter by Drink</h2>
         <div
           style={{
@@ -102,7 +87,7 @@ function Filter() {
             </label>
           ))}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

@@ -171,18 +171,20 @@ function NavBar() {
           )}
           {showFilter && (
             <div
-              style={{
-                position: "absolute",
-                top: "100",
-                right: "3.5rem",
-                backgroundColor: "white",
-                padding: "0.5rem",
-                borderRadius: "0.5rem",
-                boxShadow: "0 2px 5px rgba(0, 0, 0, 0.3)",
-                cursor: "pointer",
-                marginRight: "1.5rem",
-                width: "25rem",
-              }}
+              style={
+                {
+                  // position: "absolute",
+                  // top: "100",
+                  // right: "3.5rem",
+                  // backgroundColor: "white",
+                  // padding: "0.5rem",
+                  // borderRadius: "0.5rem",
+                  // boxShadow: "0 2px 5px rgba(0, 0, 0, 0.3)",
+                  // cursor: "pointer",
+                  // marginRight: "1.5rem",
+                  // width: "25rem",
+                }
+              }
             >
               <Filter />
             </div>
