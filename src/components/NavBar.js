@@ -12,6 +12,7 @@ import { signOut } from "firebase/auth";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Filter from "./pages/navbar/Filter";
+import { useUserStore } from "../utils/auth/userStore"; // Import the Zustand store
 
 function NavBar() {
   const navigate = useNavigate();
@@ -22,6 +23,8 @@ function NavBar() {
   const [showLogout, setShowLogout] = useState(false);
   const [showAdd, setShowAdd] = useState(false);
   const [showFilter, setShowFilter] = useState(false);
+
+  const { setCurrentUser } = useUserStore();
 
   const handleUserClick = () => {
     setShowLogout(!showLogout);
@@ -53,10 +56,11 @@ function NavBar() {
 
   const logOut = async () => {
     try {
-      await signOut(auth);
-      localStorage.removeItem("authToken"); // Clear the auth token
+      await signOut(auth); // Sign out from Firebase
+      localStorage.removeItem("authToken"); // Clear the auth token from localStorage
+      setCurrentUser(null); // Reset the user state in Zustand
       navigate("/login"); // Redirect to the login page
-      alert("Logged out!");
+      toast.success("Successfully logged out!"); // Notify user
     } catch (err) {
       console.error("Error during logout:", err.message || err);
       toast.error("Logout error. Please try again.");
