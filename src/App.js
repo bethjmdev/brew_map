@@ -23,10 +23,10 @@ import EditShop from "./components/pages/shop/EditShop";
 
 function App() {
   // Call the initAuthListener on app load
-  const { initAuthListener } = useUserStore();
-  useEffect(() => {
-    initAuthListener(); // Start listening for auth state changes
-  }, [initAuthListener]);
+  // const { initAuthListener } = useUserStore();
+  // useEffect(() => {
+  //   initAuthListener(); // Start listening for auth state changes
+  // }, [initAuthListener]);
 
   return (
     <Router>
@@ -36,14 +36,19 @@ function App() {
 }
 
 function MainContent() {
-  const navigate = useNavigate();
+  const { initAuthListener } = useUserStore(); // Correctly accessing it from the store
 
+  const navigate = useNavigate();
   const location = useLocation();
 
   const hideNavBar =
     location.pathname === "/login" ||
     location.pathname === "/register" ||
     location.pathname === "/";
+
+  useEffect(() => {
+    initAuthListener(); // Initialize Firebase auth listener when the app loads
+  }, [initAuthListener]);
 
   return (
     <div style={{ marginTop: "-10px" }}>
@@ -101,8 +106,18 @@ function MainContent() {
 // }
 
 // PrivateRoute component
+// function PrivateRoute({ component }) {
+//   const { currentUser } = useUserStore();
+//   return currentUser ? component : <Navigate to="/login" />;
+// }
+
 function PrivateRoute({ component }) {
-  const { currentUser } = useUserStore();
+  const { currentUser, isLoading } = useUserStore();
+
+  if (isLoading) {
+    return <div>Loading...</div>; // Display a loading spinner or message while loading
+  }
+
   return currentUser ? component : <Navigate to="/login" />;
 }
 

@@ -13,6 +13,30 @@ const Login = ({ navigate }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  // const handleLogin = async (e) => {
+  //   e.preventDefault();
+
+  //   try {
+  //     const userCredential = await signInWithEmailAndPassword(
+  //       auth,
+  //       email,
+  //       password
+  //     );
+  //     const user = userCredential.user;
+
+  //     // Store the auth token in localStorage
+  //     localStorage.setItem("authToken", user.accessToken);
+
+  //     const userDocRef = doc(db, "BrewUsers", user.uid);
+  //     await getDoc(userDocRef);
+
+  //     navigate("/home"); // Navigate to /home on successful login
+  //   } catch (err) {
+  //     console.error("Error during login:", err.message || err);
+  //     toast.error("Login error. Please check your credentials and try again.");
+  //   }
+  // };
+
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -24,7 +48,7 @@ const Login = ({ navigate }) => {
       );
       const user = userCredential.user;
 
-      // Store the auth token in localStorage
+      // Optionally store the token for manual use (but Firebase should persist this session)
       localStorage.setItem("authToken", user.accessToken);
 
       const userDocRef = doc(db, "BrewUsers", user.uid);
