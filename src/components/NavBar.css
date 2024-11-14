@@ -1,0 +1,47 @@
+.navbar-container {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 4;
+  height: 15rem;
+  padding: 1rem;
+  border-radius: 0.5rem;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 0;
+  right: 3.5rem;
+  background-color: white;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  margin-right: 1.5rem;
+  width: 8rem;
+}
+
+.add-icon {
+  font-size: 3rem;
+  color: #806d5b;
+  margin-bottom: 1rem;
+}
+
+.user-icon-container {
+  position: relative;
+  cursor: pointer;
+}
+
+.user-icon {
+  font-size: 3rem;
+  color: #806d5b;
+  margin-bottom: 1rem;
+}
+
+.map-icon {
+  font-size: 3rem;
+  color: #806d5b;
+}
