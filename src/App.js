@@ -92,7 +92,7 @@ function PrivateRoute({ component }) {
   const { currentUser, isLoading } = useUserStore();
 
   if (isLoading) {
-    return <div>Loading...</div>; // Display a loading spinner or message while loading
+    return <div>Loading!!!!</div>; // Display a loading spinner or message while loading
   }
 
   return currentUser ? component : <Navigate to="/login" />;

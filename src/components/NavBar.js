@@ -9,7 +9,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { auth } from "../utils/auth/firebase";
 import { signOut } from "firebase/auth";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Filter from "./pages/navbar/Filter";
 import { useUserStore } from "../utils/auth/userStore"; // Import the Zustand store
@@ -84,9 +84,9 @@ function NavBar() {
           right: "1rem",
           display: "flex",
           flexDirection: "column",
+          alignItems: "center",
           zIndex: 4,
           height: "15rem",
-          justifyContent: "space-between",
           padding: "1rem",
           borderRadius: "0.5rem",
         }}
@@ -121,7 +121,7 @@ function NavBar() {
         )}
         <FontAwesomeIcon
           icon={faCirclePlus}
-          style={{ fontSize: "3rem", color: "#806D5B" }}
+          style={{ fontSize: "3rem", color: "#806D5B", marginBottom: "1rem" }}
           onClick={handleAddClick}
         />
         <div onClick={handleUserClick} style={{ position: "relative" }}>
@@ -130,6 +130,7 @@ function NavBar() {
             style={{
               fontSize: "3rem",
               color: "#806D5B",
+              marginBottom: "1rem",
             }}
           />
 
@@ -159,7 +160,7 @@ function NavBar() {
           )}
         </div>
 
-        <div
+        {/* <div
           style={{
             display: "flex",
             alignItems: "center",
@@ -193,7 +194,7 @@ function NavBar() {
               <Filter />
             </div>
           )}
-        </div>
+        </div> */}
 
         {[
           "/profile",
@@ -207,8 +208,6 @@ function NavBar() {
             style={{
               fontSize: "3rem",
               color: "#806D5B",
-              marginTop: "-2rem",
-              marginLeft: "-.6rem",
             }}
             onClick={goToMap}
           />

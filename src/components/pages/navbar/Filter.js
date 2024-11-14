@@ -7,31 +7,30 @@ function Filter() {
   return (
     <div
       style={{
-        marginTop: "-20px",
-        padding: "1rem",
-        height: "50vh",
+        // marginTop: "-20px",
+        // padding: "1rem",
+        // height: "50vh",
         position: "fixed",
-        bottom: "0",
-        left: "0",
-        right: "0",
-        // backgroundColor: "white",
+        // bottom: "0",
+        // left: "0",
+        // right: "0",
         zIndex: 10,
-        borderTopLeftRadius: "1rem",
-        borderTopRightRadius: "1rem",
-        overflowY: "auto",
+        // borderTopLeftRadius: "1rem",
+        // borderTopRightRadius: "1rem",
+        // overflowY: "auto",
       }}
     >
       <div style={{ marginBottom: "1rem" }}>
         <h2>Filter by Roast</h2>
         <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: "0.5rem",
-            padding: "0.5rem",
-            backgroundColor: "#f9f9f9",
-            borderRadius: "0.5rem",
-          }}
+        // style={{
+        //   display: "grid",
+        //   gridTemplateColumns: "repeat(3, 1fr)",
+        //   gap: "0.5rem",
+        //   padding: "0.5rem",
+        //   backgroundColor: "#f9f9f9",
+        //   borderRadius: "0.5rem",
+        // }}
         >
           {roastOptions.map((roast) => (
             <label
