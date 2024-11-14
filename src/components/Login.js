@@ -61,17 +61,7 @@ const Login = ({ navigate }) => {
         <h3>Log Into BrewMap</h3>
         <ToastContainer position="bottom-right" />
 
-        <form
-          onSubmit={handleLogin}
-          // style={{
-          //   display: "flex",
-          //   // justifyContent: "center",
-          //   alignItems: "center",
-          //   flexDirection: "column",
-          //   width: "50rem",
-          // }}
-          className="login-form"
-        >
+        <form onSubmit={handleLogin} className="login-form">
           <div className="signin_form">
             <input
               type="email"
