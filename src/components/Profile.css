@@ -1,0 +1,27 @@
+.profile {
+  position: relative;
+  width: 100vw;
+  height: 110vh;
+  background-color: #806d5b;
+  padding: 1rem;
+  box-sizing: border-box;
+  background-image: url("./images/coffee_background.png");
+  background-size: cover;
+  background-position: center;
+}
+
+.profile::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.9);
+  z-index: 1;
+}
+
+.profile > * {
+  position: relative;
+  z-index: 2;
+}

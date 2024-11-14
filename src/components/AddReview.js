@@ -67,14 +67,7 @@ function AddReview({ navigate }) {
     "Other",
   ];
 
-  const ratingOptions = [
-    `0: A total disaster, wouldnt wish it on my worst enemy`,
-    `1: Pretty bad, left feeling disappointed and let down `,
-    `2: Meh, not the worst, but I wouldnt go out of my way for it`,
-    `3: It got the job done. Would go back if there wasnt other options available`,
-    `4: Solid, enjoyed it, will go back`,
-    `5: Fantastic, going here every chance I get and cant wait to tell everyone I know!`,
-  ];
+  const ratingOptions = [1, 2, 3, 4, 5];
 
   // Get current user data from Firebase Auth
   const auth = getAuth();
@@ -313,11 +306,11 @@ function AddReview({ navigate }) {
 
   return (
     <>
-      <h2>Add Review</h2>
       <div className="filter-section">
         {!shopId ? (
           // Render dropdowns if no shop is selected
           <>
+            <h2>Add Review</h2>
             <select value={state} onChange={(e) => setState(e.target.value)}>
               <option value="">Select State</option>
               {states.map((state) => (
@@ -361,8 +354,7 @@ function AddReview({ navigate }) {
               submitReview();
             }}
           >
-            <h3>Review for {selectedShop.shop_name}</h3>
-            <h2 htmlFor="review">Your Review:</h2>
+            <h3 htmlFor="review">Review for {selectedShop.shop_name}</h3>
 
             <h3>Drink you had</h3>
             {beverageOptions.map((beverage) => (
