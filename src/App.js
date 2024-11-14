@@ -1,5 +1,5 @@
 // App.js
-import React from "react";
+import React, { useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -8,6 +8,8 @@ import {
   useLocation,
 } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { useUserStore } from "./utils/auth/userStore";
+
 import Signup from "./components/Signup";
 import Login from "./components/Login";
 import HomePage from "./components/HomePage";
@@ -20,6 +22,12 @@ import EditProfile from "./components/pages/profile/EditProfile";
 import EditShop from "./components/pages/shop/EditShop";
 
 function App() {
+  // Call the initAuthListener on app load
+  const { initAuthListener } = useUserStore();
+  useEffect(() => {
+    initAuthListener(); // Start listening for auth state changes
+  }, [initAuthListener]);
+
   return (
     <Router>
       <MainContent />
@@ -81,15 +89,21 @@ function MainContent() {
   );
 }
 
-// Mock authentication check (replace with actual authentication logic)
-const isAuthenticated = () => {
-  // Example: check for a token or authentication state here
-  return Boolean(localStorage.getItem("authToken"));
-};
+// // Mock authentication check (replace with actual authentication logic)
+// const isAuthenticated = () => {
+//   // Example: check for a token or authentication state here
+//   return Boolean(localStorage.getItem("authToken"));
+// };
+
+// // PrivateRoute component
+// function PrivateRoute({ component }) {
+//   return isAuthenticated() ? component : <Navigate to="/login" />;
+// }
 
 // PrivateRoute component
 function PrivateRoute({ component }) {
-  return isAuthenticated() ? component : <Navigate to="/login" />;
+  const { currentUser } = useUserStore();
+  return currentUser ? component : <Navigate to="/login" />;
 }
 
 export default App;
