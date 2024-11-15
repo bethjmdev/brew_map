@@ -104,6 +104,7 @@ export const Profile = () => {
           reviews.map((review) => (
             <div
               key={review.id}
+              className="review-section"
               style={{
                 display: "flex",
                 flexDirection: "column",
