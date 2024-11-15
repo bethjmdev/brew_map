@@ -1,7 +1,7 @@
 .profile {
   position: relative;
   width: 100vw;
-  height: 110vh;
+  min-height: 110vh;
   background-color: #806d5b;
   padding: 1rem;
   box-sizing: border-box;
@@ -17,7 +17,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(79, 62, 49, 0.9);
   z-index: 1;
 }
 

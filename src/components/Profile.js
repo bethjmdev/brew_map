@@ -8,7 +8,9 @@ import {
   getDocs,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
-import { db } from "../utils/auth/firebase"; // Ensure correct Firebase imports
+import { db } from "../utils/auth/firebase";
+import CoffeeCups from "./pages/profile/CoffeeCups";
+
 import "./Profile.css";
 
 export const Profile = () => {
@@ -68,13 +70,13 @@ export const Profile = () => {
   return (
     <div className="profile">
       <div className="profile-container">
-        <h2>Profile</h2>
         {profileData ? (
           <div>
-            <p>
-              <strong>Name:</strong> {profileData.firstName}{" "}
-              {profileData.lastName}
-            </p>
+            <h2>
+              <strong>
+                {profileData.firstName} {profileData.lastName}{" "}
+              </strong>
+            </h2>
             <p>
               <strong>Favorite Cafe Drink:</strong> A {profileData.cafeTemp}{" "}
               {profileData.cafeMilk}{" "}
@@ -100,7 +102,18 @@ export const Profile = () => {
         <h2>Reviews Section</h2>
         {reviews.length > 0 ? (
           reviews.map((review) => (
-            <div key={review.id}>
+            <div
+              key={review.id}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                backgroundColor: "rgba(255, 255, 255, 0.9)",
+                marginBottom: "1rem",
+                borderRadius: "20px",
+                padding: "1rem",
+              }}
+            >
               {review.shop_name}
 
               <p>
@@ -112,19 +125,22 @@ export const Profile = () => {
               </p>
 
               <p>
-                <strong>Drink Rating:</strong> {review.drinkRating}
+                <strong>Drink Rating</strong>{" "}
+                <CoffeeCups rating={review.drinkRating} maxCups={5} />
               </p>
 
               <p>
-                <strong>Shop Rating:</strong> {review.shopRating}
+                <strong>Shop Rating</strong>{" "}
+                <CoffeeCups rating={review.shopRating} maxCups={5} />
               </p>
+
               <p>
-                <strong>Staff Rating:</strong> {review.staffRating}
+                <strong>Staff Rating</strong>{" "}
+                <CoffeeCups rating={review.staffRating} maxCups={5} />
               </p>
               <p>
                 <strong>Review:</strong> {review.review}
               </p>
-              <hr />
             </div>
           ))
         ) : (
