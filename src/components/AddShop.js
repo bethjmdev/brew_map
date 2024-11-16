@@ -182,7 +182,7 @@ const AddShop = ({ navigate }) => {
   return (
     <div className="add-shop">
       <div className="add-shop-container">
-        <h3>Add a New Coffee Shop</h3>
+        <h2>Add a New Coffee Shop</h2>
         <ToastContainer position="top-right" />
         <form onSubmit={handleSubmit} className="add-shop-form">
           <input
