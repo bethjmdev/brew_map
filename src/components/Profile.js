@@ -102,19 +102,7 @@ export const Profile = () => {
         <h2>Reviews Section</h2>
         {reviews.length > 0 ? (
           reviews.map((review) => (
-            <div
-              key={review.id}
-              className="review-section"
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                backgroundColor: "rgba(255, 255, 255, 0.9)",
-                marginBottom: "1rem",
-                borderRadius: "20px",
-                padding: "1rem",
-              }}
-            >
+            <div key={review.id} className="review-section">
               {review.shop_name}
 
               <p>
@@ -125,21 +113,21 @@ export const Profile = () => {
                 {review.flavoring ? "with flavoring" : " "}
               </p>
 
-              <p>
+              <p className="ratings-profile">
                 <strong>Drink Rating</strong>{" "}
                 <CoffeeCups rating={review.drinkRating} maxCups={5} />
               </p>
 
-              <p>
+              <p className="ratings-profile">
                 <strong>Shop Rating</strong>{" "}
                 <CoffeeCups rating={review.shopRating} maxCups={5} />
               </p>
 
-              <p>
+              <p className="ratings-profile">
                 <strong>Staff Rating</strong>{" "}
                 <CoffeeCups rating={review.staffRating} maxCups={5} />
               </p>
-              <p>
+              <p className="personal-review">
                 <strong>Review:</strong> {review.review}
               </p>
             </div>
