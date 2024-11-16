@@ -66,26 +66,6 @@
   background-color: #8b5a5a;
 }
 
-.edit-profile .y-n-box {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.edit-profile .y-n-box button {
-  padding: 0.5rem 1rem;
-  background-color: #e0e0e0;
-  border-radius: 5px;
-  border: 1px solid #ccc;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.edit-profile .y-n-box button.active-button {
-  background-color: #6a4d4d;
-  color: white;
-}
-
 .edit-profile .beverage-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -112,6 +92,11 @@
 
 .edit-profile .edit-profile-container h2 {
   color: #6a4d4d;
+}
+
+.edit-profile .question-boxes {
+  display: flex;
+  flex-direction: row;
 }
 
 @media (max-width: 600px) {

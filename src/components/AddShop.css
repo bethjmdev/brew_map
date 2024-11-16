@@ -42,7 +42,7 @@
 }
 
 .add-shop-container .add-shop-input-text {
-  max-width: 30rem;
+  width: 20rem;
   margin-bottom: 1rem;
 }
 
@@ -79,17 +79,13 @@
 }
 
 .add-shop-container .roast-style {
-  width: 100%; /* Full-width on mobile */
-  /* max-width: 30rem; */
-  /* margin-bottom: 1rem; */
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
 .add-shop-container .roast-style select {
-  /* width: 100%; */
-  /* max-width: 12rem;  */
   padding: 0.5rem; /* Improve touch target size */
 }
 

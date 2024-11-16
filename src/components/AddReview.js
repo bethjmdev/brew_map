@@ -1,9 +1,3 @@
-//use the same drop down but have it by state then city then shop
-//if a shop is opened in the map for view then pull the info from there instead of doing the drop down
-// grab the shop id, shop name, current user id, current user name, cirrent use fav drink
-// allow user to add all review info
-// upload to shopreviews
-
 import React, { useState, useEffect } from "react";
 import { doc, getDoc, collection, getDocs, setDoc } from "firebase/firestore";
 import { db } from "../utils/auth/firebase";
@@ -72,38 +66,6 @@ function AddReview({ navigate }) {
   // Get current user data from Firebase Auth
   const auth = getAuth();
   const currentUser = auth.currentUser;
-
-  // // Set the current user data and fetch additional BrewUsers data when the component mounts
-  // useEffect(() => {
-  //   if (currentUser) {
-  //     const fetchUserData = async () => {
-  //       try {
-  //         const userDocRef = doc(db, "BrewUsers", currentUser.uid);
-  //         const userDoc = await getDoc(userDocRef);
-
-  //         if (userDoc.exists()) {
-  //           const userData = userDoc.data();
-  //           setSelectedShop((prevData) => ({
-  //             ...prevData,
-  //             userID_submitting: currentUser.uid,
-  //             user_name_submitting:
-  //               `${userData.firstName} ${userData.lastName}` || "",
-  //             firstName: userData.firstName || "",
-  //             lastName: userData.lastName || "",
-  //             cafeDrink: userData.cafeDrink || "",
-
-  //           }));
-  //         } else {
-  //           console.log("No user document found for the current user.");
-  //         }
-  //       } catch (error) {
-  //         console.error("Error fetching BrewUser data:", error);
-  //       }
-  //     };
-
-  //     fetchUserData();
-  //   }
-  // }, [currentUser]);
 
   // Set the current user data and fetch additional BrewUsers data when the component mounts
   useEffect(() => {
@@ -305,11 +267,11 @@ function AddReview({ navigate }) {
   };
 
   return (
-    <>
-      <div className="filter-section">
+    <div className="add-review">
+      <div className="add-review-container">
         {!shopId ? (
           // Render dropdowns if no shop is selected
-          <>
+          <div className="select-drop-down">
             <h2>Add Review</h2>
             <select value={state} onChange={(e) => setState(e.target.value)}>
               <option value="">Select State</option>
@@ -345,7 +307,7 @@ function AddReview({ navigate }) {
                 ))}
               </select>
             )}
-          </>
+          </div>
         ) : (
           // Render review form if a shop is selected
           <form
@@ -354,41 +316,46 @@ function AddReview({ navigate }) {
               submitReview();
             }}
           >
-            <h3 htmlFor="review">Review for {selectedShop.shop_name}</h3>
+            <h2 htmlFor="review">Review for {selectedShop.shop_name}</h2>
 
             <h3>Drink you had</h3>
-            {beverageOptions.map((beverage) => (
-              <label key={beverage}>
-                <input
-                  type="radio"
-                  name="selectedBev"
-                  value={beverage}
-                  checked={selectedBev === beverage}
-                  onChange={() => setSelectedBev(beverage)}
-                />
-                {beverage}
-              </label>
-            ))}
-
+            <div className="beverage-options">
+              {beverageOptions.map((beverage) => (
+                <label key={beverage}>
+                  <input
+                    type="radio"
+                    name="selectedBev"
+                    value={beverage}
+                    checked={selectedBev === beverage}
+                    onChange={() => setSelectedBev(beverage)}
+                  />
+                  {beverage}
+                </label>
+              ))}
+            </div>
             <br />
             <br />
             <h3>Milk you had</h3>
-            {milkOptions.map((milk) => (
-              <label key={milk}>
-                <input
-                  type="radio"
-                  value={milk}
-                  checked={selectedMilk === milk}
-                  onChange={() => setSelectedMilk(milk)}
-                />
-                {milk}
-              </label>
-            ))}
+
+            <div className="beverage-options">
+              {milkOptions.map((milk) => (
+                <label key={milk}>
+                  <input
+                    type="radio"
+                    value={milk}
+                    checked={selectedMilk === milk}
+                    onChange={() => setSelectedMilk(milk)}
+                  />
+                  {milk}
+                </label>
+              ))}
+            </div>
             <br />
             <br />
             <label>
-              Did you add flavoring? (e.g., vanilla, pumpkin spice, lavender,
-              etc.):
+              Did you add flavoring? (vanilla, pumpkin spice, lavender, etc.):{" "}
+              <br />
+              <br />
               <button
                 type="button"
                 className={flavoring === true ? "active-button" : ""}
@@ -409,6 +376,8 @@ function AddReview({ navigate }) {
 
             <label>
               Drink Temp
+              <br />
+              <br />
               <button
                 type="button"
                 className={selectedTemp === "Hot" ? "active-button" : ""}
@@ -429,6 +398,8 @@ function AddReview({ navigate }) {
 
             <label>
               Roast Type
+              <br />
+              <br />
               <button
                 type="button"
                 className={selectedRoast === "Light" ? "active-button" : ""}
@@ -456,6 +427,8 @@ function AddReview({ navigate }) {
 
             <label>
               Process
+              <br />
+              <br />
               <button
                 type="button"
                 className={selectedProcess === "Natural" ? "active-button" : ""}
@@ -483,11 +456,9 @@ function AddReview({ navigate }) {
             <br />
             <br />
 
-            <br />
-            <br />
             <h3>Rate the coffee</h3>
             {ratingOptions.map((drink, index) => (
-              <label key={index}>
+              <label key={index} className="shop-ratings">
                 <input
                   type="radio"
                   name="drink"
@@ -495,7 +466,7 @@ function AddReview({ navigate }) {
                   checked={drinkRating === drink}
                   onChange={() => setDrinkRating(drink)}
                 />
-                {drink}
+                {drink}{" "}
               </label>
             ))}
             <br />
@@ -537,6 +508,7 @@ function AddReview({ navigate }) {
               value={review}
               onChange={(e) => setReview(e.target.value)}
               placeholder="Write your review here..."
+              className="personal-review"
             />
             <br />
             <br />
@@ -544,7 +516,7 @@ function AddReview({ navigate }) {
           </form>
         )}
       </div>
-    </>
+    </div>
   );
 }
 
