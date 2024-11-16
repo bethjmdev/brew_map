@@ -103,8 +103,9 @@ export const Profile = () => {
         {reviews.length > 0 ? (
           reviews.map((review) => (
             <div key={review.id} className="review-section">
-              {review.shop_name}
-
+              <strong>
+                <h3>{review.shop_name}</h3>
+              </strong>
               <p>
                 Ordered a {review.selectedRoast} roast {review.selectedTemp}{" "}
                 {review.selectedMilk}{" "}

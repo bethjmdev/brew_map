@@ -50,3 +50,9 @@
   word-wrap: break-word;
   word-break: break-word;
 }
+
+@media (max-width: 769px) {
+  .profile-container .personal-review {
+    width: 16rem;
+  }
+}
