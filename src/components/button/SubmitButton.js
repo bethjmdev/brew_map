@@ -11,7 +11,6 @@ const SubmitButton = ({ text, type = "button" }) => (
 
 const styles = {
   button: {
-    marginLeft: "4rem",
     width: "12rem",
     height: "2.8rem",
     backgroundColor: colors.latte_brown,
@@ -23,8 +22,7 @@ const styles = {
     border: "none",
     borderRadius: "25px",
     cursor: "pointer",
-    // boxShadow: `4px 4px 0px ${colors.espresso_brown}`,
-    boxShadow: `-3.5px 4.5px 0px ${colors.espresso_brown}`, // Left and bottom shadow
+    boxShadow: `-1px 1px 0px ${colors.espresso_brown}`, // Left and bottom shadow
   },
 };
 

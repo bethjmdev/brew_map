@@ -1,17 +1,27 @@
-// import "./SignIn.css";
+import "./Login.css";
+
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-import { React, useState } from "react";
+import { React, useState, useEffect } from "react";
 import { toast } from "react-toastify";
-
 import { auth, db } from "../utils/auth/firebase";
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
+import { useUserStore } from "../utils/auth/userStore";
+
+import SubmitButton from "./button/SubmitButton";
 
 const Login = ({ navigate }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { currentUser } = useUserStore();
+
+  useEffect(() => {
+    if (currentUser) {
+      alert("You are already logged in.");
+      navigate("/home");
+    }
+  }, [currentUser]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -24,7 +34,7 @@ const Login = ({ navigate }) => {
       );
       const user = userCredential.user;
 
-      // Store the auth token in localStorage
+      // Optionally store the token for manual use (but Firebase should persist this session)
       localStorage.setItem("authToken", user.accessToken);
 
       const userDocRef = doc(db, "BrewUsers", user.uid);
@@ -48,10 +58,10 @@ const Login = ({ navigate }) => {
   return (
     <div className="auth_user">
       <div className="auth_user_container">
-        <h3>Log In</h3>
+        <h3>Log Into BrewMap</h3>
         <ToastContainer position="bottom-right" />
 
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleLogin} className="login-form">
           <div className="signin_form">
             <input
               type="email"
@@ -71,24 +81,8 @@ const Login = ({ navigate }) => {
               className="input_styling"
             />
             <br />
-            <button
-              type="submit"
-              style={{
-                display: "flex",
-                width: "8rem",
-                color: "white",
-                padding: "8px 16px",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: "8px",
-                borderRadius: "4px",
-                border: "3px solid var(--YELLOW, #FCC131)",
-                background: "var(--Primary-1---Navy, #202B67)",
-              }}
-            >
-              Log In
-            </button>
           </div>
+          <SubmitButton text="Log In" type="submit" />
         </form>
         <p
           style={{

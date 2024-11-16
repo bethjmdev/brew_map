@@ -8,7 +8,10 @@ import {
   getDocs,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
-import { db } from "../utils/auth/firebase"; // Ensure correct Firebase imports
+import { db } from "../utils/auth/firebase";
+import CoffeeCups from "./pages/profile/CoffeeCups";
+
+import "./Profile.css";
 
 export const Profile = () => {
   const [profileData, setProfileData] = useState(null);
@@ -65,105 +68,76 @@ export const Profile = () => {
   }, [currentUser]);
 
   return (
-    <section>
-      <h2>Profile</h2>
-      {profileData ? (
-        <div>
-          <p>
-            <strong>About:</strong> {profileData.about}
-          </p>
-          <p>
-            <strong>Favorite Cafe Drink:</strong> {profileData.cafeDrink}
-          </p>
-          <p>
-            <strong>Favorite Cafe Milk:</strong> {profileData.cafeMilk}
-          </p>
-          <p>
-            <strong>Preferred Cafe Temperature:</strong> {profileData.cafeTemp}
-          </p>
-          <p>
-            <strong>Email:</strong> {profileData.email}
-          </p>
-          <p>
-            <strong>Favorite Cafe:</strong> {profileData.favCafe}
-          </p>
-          <p>
-            <strong>First Name:</strong> {profileData.firstName}
-          </p>
-          <p>
-            <strong>Last Name:</strong> {profileData.lastName}
-          </p>
-          <p>
-            <strong>Home Drink:</strong> {profileData.homeDrink}
-          </p>
-          <p>
-            <strong>Home Milk:</strong> {profileData.homeMilk}
-          </p>
-          <p>
-            <strong>Preferred Home Temperature:</strong> {profileData.homeTemp}
-          </p>
-          <p>
-            <strong>Selected Roast:</strong> {profileData.selectedRoast}
-          </p>
-          <p>
-            <strong>Your City:</strong> {profileData.yourCity}
-          </p>
-          <p>
-            <strong>Active Status:</strong>{" "}
-            {profileData.is_active ? "Active" : "Inactive"}
-          </p>
-        </div>
-      ) : (
-        <p>Loading profile...</p>
-      )}
+    <div className="profile">
+      <div className="profile-container">
+        {profileData ? (
+          <div>
+            <h2>
+              <strong>
+                {profileData.firstName} {profileData.lastName}{" "}
+              </strong>
+            </h2>
+            <p>
+              <strong>Favorite Cafe Drink:</strong> A {profileData.cafeTemp}{" "}
+              {profileData.cafeMilk}{" "}
+              {profileData.cafeMilk !== "Black" && "Milk"}{" "}
+              {profileData.cafeDrink}
+            </p>
 
-      <h2>User Reviews</h2>
-      {reviews.length > 0 ? (
-        reviews.map((review) => (
-          <div key={review.id}>
             <p>
-              <strong>Drink Rating:</strong> {review.drinkRating}
+              <strong>Favorite at Home Drink:</strong> A {profileData.homeTemp}{" "}
+              {profileData.homeDrink} {profileData.homeMilk}{" "}
+              {profileData.homeMilk !== "Black" && "Milk"}{" "}
             </p>
             <p>
-              <strong>Flavoring:</strong> {review.flavoring ? "Yes" : "No"}
+              {profileData.firstName}'s favorite cafe is {profileData.favCafe}{" "}
+              and preferred roast is {profileData.selectedRoast}.
             </p>
-            <p>
-              <strong>Review:</strong> {review.review}
-            </p>
-            <p>
-              <strong>Selected Beverage:</strong> {review.selectedBev}
-            </p>
-            <p>
-              <strong>Selected Milk:</strong> {review.selectedMilk}
-            </p>
-            <p>
-              <strong>Selected Process:</strong> {review.selectedProcess}
-            </p>
-            <p>
-              <strong>Selected Roast:</strong> {review.selectedRoast}
-            </p>
-            <p>
-              <strong>Selected Temperature:</strong> {review.selectedTemp}
-            </p>
-            <p>
-              <strong>Shop Rating:</strong> {review.shopRating}
-            </p>
-            <p>
-              <strong>Shop Name:</strong> {review.shop_name}
-            </p>
-            <p>
-              <strong>Staff Rating:</strong> {review.staffRating}
-            </p>
-            <p>
-              <strong>User Name:</strong> {review.user_name_submitting}
-            </p>
-            <hr />
+            <p>{profileData.about}</p>
           </div>
-        ))
-      ) : (
-        <p>No reviews found.</p>
-      )}
-    </section>
+        ) : (
+          <p>Loading profile...</p>
+        )}
+
+        <h2>Reviews Section</h2>
+        {reviews.length > 0 ? (
+          reviews.map((review) => (
+            <div key={review.id} className="review-section">
+              <strong>
+                <h3>{review.shop_name}</h3>
+              </strong>
+              <p>
+                Ordered a {review.selectedRoast} roast {review.selectedTemp}{" "}
+                {review.selectedMilk}{" "}
+                {review.selectedMilk !== "Black" && "Milk"} {review.selectedBev}{" "}
+                that was {review.selectedProcess} processed{" "}
+                {review.flavoring ? "with flavoring" : " "}
+              </p>
+
+              <p className="ratings-profile">
+                <strong>Drink Rating</strong>{" "}
+                <CoffeeCups rating={review.drinkRating} maxCups={5} />
+              </p>
+
+              <p className="ratings-profile">
+                <strong>Shop Rating</strong>{" "}
+                <CoffeeCups rating={review.shopRating} maxCups={5} />
+              </p>
+
+              <p className="ratings-profile">
+                <strong>Staff Rating</strong>{" "}
+                <CoffeeCups rating={review.staffRating} maxCups={5} />
+              </p>
+              <p className="personal-review">
+                <strong>Review:</strong> {review.review}
+              </p>
+            </div>
+          ))
+        ) : (
+          <p>No reviews found.</p>
+        )}
+      </div>
+    </div>
   );
 };
 

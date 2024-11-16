@@ -13,6 +13,7 @@ const HomePage = () => {
   const [coordinates, setCoordinates] = useState([]); // state to hold coordinates
   const [coffeeShop, setCoffeeShop] = useState(null); // state to hold shop details
   const [shopReviews, setShopReviews] = useState(null);
+  const [searchQuery, setSearchQuery] = useState(""); // new state for search query
 
   //fetches long, lat, shop id's and name from coordinates collection
   useEffect(() => {
@@ -36,6 +37,7 @@ const HomePage = () => {
         const { lat, lng } = results[0].geometry.location;
         setCenter({ lat: lat(), lng: lng() });
         setZoom(15);
+        setSearchQuery(cityName);
       } else {
         alert("City not found.");
       }
@@ -49,14 +51,6 @@ const HomePage = () => {
       .find((doc) => doc.id === id);
     setCoffeeShop(shop);
   };
-
-  // const getCoffeeShopReviews = async (id) => {
-  //   const querySnapshot = await getDocs(collection(db, "ShopReviews"));
-  //   const reviews = querySnapshot.docs
-  //     .map((doc) => ({ id: doc.id, ...doc.data() }))
-  //     .find((doc) => doc.id === id);
-  //   setShopReviews(reviews);
-  // };
 
   const getCoffeeShopReviews = async (id) => {
     console.log("Fetching reviews for shop ID:", id); // Confirm the ID
@@ -84,6 +78,7 @@ const HomePage = () => {
         zoom={zoom}
         showCoffeeShow={showCoffeeShow}
         coordinates={coordinates}
+        searchQuery={searchQuery}
       />
       {isVisible && (
         <ViewShop

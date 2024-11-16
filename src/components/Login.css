@@ -1,0 +1,76 @@
+.auth_user {
+  position: relative;
+  width: 100vw;
+  height: 110vh;
+  background-color: #806d5b;
+  padding: 1rem;
+  box-sizing: border-box;
+  background-image: url("../components/images/coffee_background.png");
+  background-size: cover;
+  background-position: center;
+}
+
+.auth_user::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(128, 109, 91, 0.85);
+  z-index: 1;
+}
+
+.auth_user > * {
+  position: relative;
+  z-index: 2;
+}
+
+.auth_user .auth_user_container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.auth_user h3 {
+  color: var(--white);
+  font-size: 60px;
+  text-align: center;
+}
+
+.auth_user .login-form {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 50rem;
+}
+
+.auth_user .signin_form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+  width: 400px;
+}
+
+.auth_user .signin_form input {
+  height: 2rem;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  padding: 0;
+  padding-left: 0.5rem;
+  background: none;
+  appearance: none;
+}
+
+@media (max-width: 768px) {
+  .auth_user .login-form {
+    width: 20rem;
+  }
+
+  .auth_user .signin_form {
+    width: 20rem;
+  }
+}

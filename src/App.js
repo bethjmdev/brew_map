@@ -1,5 +1,5 @@
 // App.js
-import React from "react";
+import React, { useEffect } from "react";
 import {
   BrowserRouter as Router,
   Routes,
@@ -8,6 +8,8 @@ import {
   useLocation,
 } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { useUserStore } from "./utils/auth/userStore";
+
 import Signup from "./components/Signup";
 import Login from "./components/Login";
 import HomePage from "./components/HomePage";
@@ -28,14 +30,19 @@ function App() {
 }
 
 function MainContent() {
-  const navigate = useNavigate();
+  const { initAuthListener } = useUserStore(); // Correctly accessing it from the store
 
+  const navigate = useNavigate();
   const location = useLocation();
 
   const hideNavBar =
     location.pathname === "/login" ||
     location.pathname === "/register" ||
     location.pathname === "/";
+
+  useEffect(() => {
+    initAuthListener(); // Initialize Firebase auth listener when the app loads
+  }, [initAuthListener]);
 
   return (
     <div style={{ marginTop: "-10px" }}>
@@ -81,15 +88,14 @@ function MainContent() {
   );
 }
 
-// Mock authentication check (replace with actual authentication logic)
-const isAuthenticated = () => {
-  // Example: check for a token or authentication state here
-  return Boolean(localStorage.getItem("authToken"));
-};
-
-// PrivateRoute component
 function PrivateRoute({ component }) {
-  return isAuthenticated() ? component : <Navigate to="/login" />;
+  const { currentUser, isLoading } = useUserStore();
+
+  if (isLoading) {
+    return <div>Loading!!!!</div>; // Display a loading spinner or message while loading
+  }
+
+  return currentUser ? component : <Navigate to="/login" />;
 }
 
 export default App;

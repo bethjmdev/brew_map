@@ -1,34 +1,95 @@
+.add-shop {
+  /* position: relative;
+  width: 100vw;
+  min-height: 110vh;
+  background-color: #806d5b;
+  padding: 1rem;
+  box-sizing: border-box;
+  background-image: url("./images/coffee_background.png");
+  background-size: cover;
+  background-position: center; */
+  position: relative;
+  width: 100vw;
+  min-height: 100vh;
+  background-color: #f4f4f4;
+  padding: 1rem;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* .add-shop::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.7);
+  z-index: 1;
+}
+
+.add-shop > * {
+  position: relative;
+  z-index: 2;
+} */
+
+.add-shop-container {
+  /* display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem; */
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 500px;
+  padding: 2rem;
+}
+
+.add-shop-container h2 {
+  text-align: center;
+}
+
 .add-shop-form {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  margin-left: 1rem;
-}
-
-.add-shop-form input,
-.add-shop-form textarea,
-.add-shop-form label,
-.add-shop-form select {
-  margin-bottom: 1rem;
-  width: 20%;
-}
-
-.active-button {
-  background-color: #333; /* Darker color for selected button */
-  color: #fff;
-}
-
-.beverage-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
+  margin-left: 0;
   gap: 1rem;
-  width: 30rem;
+}
+
+.add-shop-container .add-shop-input-text {
+  width: 20rem;
   margin-bottom: 1rem;
 }
+
+.add-shop-container .active-button {
+  background-color: var(--espresso-brown);
+  color: #fff;
+  padding: 0.75rem 1rem; /* Add padding for better touch targets */
+  border-radius: 0.5rem; /* Slightly rounded corners for a modern look */
+  /* width: 100%; */
+  width: 20rem;
+  /* max-width: 12rem; Limit width to look balanced */
+}
+
+.add-shop-container .beverage-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Default to 2 columns for mobile */
+  gap: 1rem;
+  /* width: 100%; */
+  width: 20rem;
+  margin-bottom: 1.5rem;
+}
+
 .beverage-grid label {
   display: flex;
-  width: 2rem;
+  align-items: center; /* Center-align checkbox and label text */
   gap: 0.5rem;
+  font-size: 1rem; /* Ensure readability on smaller screens */
+  width: auto;
 }
 
 .beverage-grid input[type="checkbox"] {
@@ -36,4 +97,62 @@
   height: 1rem;
   min-width: 1rem;
   min-height: 1rem;
+}
+
+.add-shop-container .roast-style {
+  /* width: 100%; */
+  width: 20rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.add-shop-container .roast-style select {
+  padding: 0.5rem; /* Improve touch target size */
+}
+
+.add-shop-container .y-n-box {
+  display: flex;
+  flex-direction: column;
+  width: 100%; /* Full-width on mobile */
+  align-items: center;
+}
+
+.add-shop-container button {
+  background-color: var(--latte-brown);
+  color: var(--white);
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  /* width: 100%; */
+  width: 20rem;
+  margin-bottom: 1rem;
+}
+
+/* button {
+  background-color: var(--white);
+  color: var(--espresso-brown);
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  border: none;
+  width: 100%;
+  margin-bottom: 1rem;
+} */
+
+@media (max-width: 768px) {
+  .add-shop-form {
+    margin-left: 0; /* Center-align form on smaller screens */
+  }
+
+  .add-shop-container .beverage-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns for mobile */
+    margin-bottom: 1.5rem;
+  }
+
+  .add-shop-container .y-n-box {
+    flex-direction: column;
+    /* flex-direction: row; */
+
+    align-items: center;
+  }
 }

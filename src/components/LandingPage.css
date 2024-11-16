@@ -1,14 +1,33 @@
 /* Main container */
 
 .landingpage-container {
+  position: relative;
   width: 100vw;
   height: 110vh;
   background-color: #806d5b;
   padding: 1rem;
   box-sizing: border-box;
+  background-image: url("../components/images/coffee_background.png");
+  background-size: cover;
+  background-position: center;
 }
 
-/* Header */
+.landingpage-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(128, 109, 91, 0.85);
+  z-index: 1;
+}
+
+.landingpage-container > * {
+  position: relative;
+  z-index: 2;
+}
+
 .landingpage-container h3 {
   text-align: center;
   margin-top: 15rem;
