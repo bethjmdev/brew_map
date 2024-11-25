@@ -2,6 +2,12 @@ import React, { useState, useEffect } from "react";
 import { doc, getDoc, collection, getDocs, setDoc } from "firebase/firestore";
 import { db } from "../utils/auth/firebase";
 import { getAuth } from "firebase/auth";
+import {
+  getStorage,
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+} from "firebase/storage";
 import "./AddReview.css";
 
 function AddReview({ navigate }) {
@@ -12,6 +18,14 @@ function AddReview({ navigate }) {
   const [shops, setShops] = useState([]);
   const [shopId, setShopId] = useState("");
   const [allShops, setAllShops] = useState([]);
+
+  //this is for firebase images
+  const [images, setImages] = useState([]);
+  const [imageUrls, setImageUrls] = useState([]);
+
+  const [isUploading, setIsUploading] = useState(false);
+
+  const storage = getStorage();
 
   //will save this to the review, not collected form user input
   const [selectedShop, setSelectedShop] = useState({
@@ -173,6 +187,13 @@ function AddReview({ navigate }) {
 
   const submitReview = async () => {
     try {
+      // Upload images and get their URLs
+      const urls = await uploadImages();
+      if (urls.length === 0) {
+        alert("No images were uploaded.");
+        return;
+      }
+
       const shopReviewsRef = collection(db, "ShopReviews");
 
       // Fetch existing reviews for the shop to calculate the document ID
@@ -186,29 +207,7 @@ function AddReview({ navigate }) {
         selectedShop.userID_submitting
       }-${reviewCount + 1}`;
 
-      // Data to be saved, including the document ID as review_id
-      // const reviewData = {
-      //   review_id: documentId, // New field for review_id
-      //   selectedBev,
-      //   selectedMilk,
-      //   selectedTemp,
-      //   selectedRoast,
-      //   selectedProcess,
-      //   flavoring,
-      //   drinkRating,
-      //   shopRating,
-      //   staffRating,
-      //   review,
-      //   shop_id: selectedShop.shop_id,
-      //   userID_submitting: selectedShop.userID_submitting,
-      //   shop_name: selectedShop.shop_name,
-      //   user_name_submitting: selectedShop.user_name_submitting,
-      //   user_fav_drink: selectedShop.cafeDrink,
-      //   user_fav_temp: selectedShop.cafeTemp,
-      //   user_fav_milk: selectedShop.cafeMilk,
-      //   user_fav_roast: selectedShop.selectedRoast,
-      // };
-
+      // Include image URLs in the review data
       const reviewData = {
         review_id: documentId,
         selectedBev,
@@ -230,6 +229,7 @@ function AddReview({ navigate }) {
         user_fav_milk: selectedShop.cafeMilk,
         user_fav_roast: selectedShop.selectedRoast,
         user_fav_process: selectedShop.selectedProcess,
+        photo_urls: urls, // Save image URLs here
       };
 
       // Save the review to Firestore with the custom document ID
@@ -250,6 +250,8 @@ function AddReview({ navigate }) {
       setStaffRating("");
       setReview("");
       setShopId(""); // Clear shop selection
+      setImages([]);
+      setImageUrls([]);
       setSelectedShop({
         shop_name: "",
         shop_id: "",
@@ -264,6 +266,54 @@ function AddReview({ navigate }) {
     } catch (error) {
       console.error("Error submitting review:", error);
     }
+  };
+
+  const handleImageChange = (e) => {
+    const selectedFiles = Array.from(e.target.files);
+    setImages((prev) => [...prev, ...selectedFiles]);
+  };
+
+  const uploadImages = async () => {
+    if (images.length === 0) {
+      alert("Please select images first.");
+      return [];
+    }
+
+    setIsUploading(true);
+
+    const uploadPromises = images.map((image) => {
+      const storageRef = ref(storage, `reviews/${Date.now()}-${image.name}`);
+      const uploadTask = uploadBytesResumable(storageRef, image);
+
+      return new Promise((resolve, reject) => {
+        uploadTask.on(
+          "state_changed",
+          null,
+          (error) => {
+            console.error("Error uploading image:", error);
+            reject(error);
+          },
+          async () => {
+            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+            resolve(downloadURL);
+          }
+        );
+      });
+    });
+
+    const urls = await Promise.all(uploadPromises)
+      .then((urls) => {
+        setIsUploading(false); // Set uploading state to false after completion
+        return urls;
+      })
+      .catch((error) => {
+        setIsUploading(false); // Reset uploading state on error
+        console.error("Error uploading one or more images:", error);
+        alert("Error uploading images.");
+        return [];
+      });
+
+    return urls;
   };
 
   return (
@@ -512,7 +562,20 @@ function AddReview({ navigate }) {
             />
             <br />
             <br />
-            <button type="submit">Submit Review</button>
+            <label>
+              Upload Photos:
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={(e) => handleImageChange(e)}
+              />
+            </label>
+
+            <br />
+            <button type="submit" onClick={uploadImages}>
+              Submit Review
+            </button>
           </form>
         )}
       </div>
