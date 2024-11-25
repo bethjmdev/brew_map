@@ -382,7 +382,6 @@ function AddReview({ navigate }) {
             }}
           >
             <h2 htmlFor="review">Review for {selectedShop.shop_name}</h2>
-
             <h3>Drink you had</h3>
             <div className="beverage-options">
               {beverageOptions.map((beverage) => (
@@ -401,7 +400,6 @@ function AddReview({ navigate }) {
             <br />
             <br />
             <h3>Milk you had</h3>
-
             <div className="beverage-options">
               {milkOptions.map((milk) => (
                 <label key={milk}>
@@ -438,7 +436,6 @@ function AddReview({ navigate }) {
             </label>
             <br />
             <br />
-
             <label>
               Drink Temp
               <br />
@@ -460,7 +457,6 @@ function AddReview({ navigate }) {
             </label>
             <br />
             <br />
-
             <label>
               Roast Type
               <br />
@@ -489,7 +485,6 @@ function AddReview({ navigate }) {
             </label>
             <br />
             <br />
-
             <label>
               Process
               <br />
@@ -520,7 +515,6 @@ function AddReview({ navigate }) {
             </label>
             <br />
             <br />
-
             <h3>Rate the coffee</h3>
             {ratingOptions.map((drink, index) => (
               <label key={index} className="shop-ratings">
@@ -537,7 +531,6 @@ function AddReview({ navigate }) {
             <br />
             <br />
             <h3>Rate the vibe of the shop</h3>
-
             {ratingOptions.map((vibe, index) => (
               <label key={index}>
                 <input
@@ -553,7 +546,6 @@ function AddReview({ navigate }) {
             <br />
             <br />
             <h3>Rate the Staff</h3>
-
             {ratingOptions.map((staff, index) => (
               <label key={index}>
                 <input
@@ -586,8 +578,7 @@ function AddReview({ navigate }) {
                 onChange={(e) => handleImageChange(e)}
               />
             </label>
-
-            <br />
+            <br /> <br />
             <button type="submit" onClick={uploadImages}>
               Submit Review
             </button>
