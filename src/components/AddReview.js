@@ -235,7 +235,22 @@ function AddReview({ navigate }) {
       // Save the review to Firestore with the custom document ID
       await setDoc(doc(shopReviewsRef, documentId), reviewData);
 
-      console.log("Review submitted successfully!");
+      // Update the CoffeeShops table with the image URLs
+      const shopDocRef = doc(db, "CoffeeShops", selectedShop.shop_id);
+      const shopDoc = await getDoc(shopDocRef);
+      if (shopDoc.exists()) {
+        const currentPhotos = shopDoc.data().photos || [];
+        const updatedPhotos = [...new Set([...currentPhotos, ...urls])]; // Avoid duplicates
+        await setDoc(
+          shopDocRef,
+          { photos: updatedPhotos },
+          { merge: true } // Merge to avoid overwriting other fields
+        );
+      } else {
+        console.error("Selected shop document does not exist.");
+      }
+
+      console.log("Review submitted and photos updated successfully!");
       alert("Review submitted successfully");
 
       // Clear all fields
