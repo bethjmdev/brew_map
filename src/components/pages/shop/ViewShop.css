@@ -10,7 +10,7 @@
   max-height: 100vh;
   overflow-y: auto;
   border: 1px solid #ccc;
-  padding-left: 0.5rem;
+  /* padding-left: 0.5rem; */
 }
 
 .view-shop .photo-viewer-overlay {
@@ -84,25 +84,9 @@
   flex-direction: row;
 }
 
-.view-shop .shop-images-column {
-  display: flex;
-  flex-direction: column;
-  margin: 0;
-}
-
 .view-shop #photo1 {
   height: 25rem;
-  width: 25rem;
-}
-
-.view-shop #photo2 {
-  height: 15rem;
-  width: 15rem;
-}
-
-.view-shop #photo3 {
-  height: 10rem;
-  width: 15rem;
+  width: 40rem;
 }
 
 .view-shop .about-coffee-shop {
@@ -146,17 +130,7 @@
 
   .view-shop #photo1 {
     height: 25rem;
-    width: 25rem;
-  }
-
-  .view-shop #photo2 {
-    height: 15rem;
-    width: 10rem;
-  }
-
-  .view-shop #photo3 {
-    height: 10rem;
-    width: 10rem;
+    width: 100vw;
   }
 
   .view-shop .shop-ind-review {
