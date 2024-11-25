@@ -10,6 +10,7 @@
   max-height: 100vh;
   overflow-y: auto;
   border: 1px solid #ccc;
+  padding-left: 0.5rem;
 }
 
 .view-shop .view-shop-container #title {
@@ -84,9 +85,18 @@
   margin: 0;
 }
 
+.view-shop .options-available {
+  margin-top: 2rem;
+}
+
+.view-shop .options-available h2 {
+  margin-bottom: 0.3rem;
+}
+
 @media (max-width: 760px) {
   .view-shop {
     width: 100vw;
+    padding-left: 0.01rem;
   }
 
   .view-shop #photo1 {

@@ -75,12 +75,32 @@ function ViewShop({ showCoffeeShow, coffeeShop, shopReviews }) {
           <p>
             <strong>Most Popular Beverage:</strong>{" "}
           </p>
+
+          <div className="options-available">
+            <h2>Options Available</h2>
+            <p>
+              <strong>Dairy Free Options: </strong>
+              {coffeeShop.dairy_free ? " Yes" : " No"}
+            </p>
+            <p>
+              <strong>Gluten Friendly Options:</strong>
+              {coffeeShop.gluten_friendly ? " Yes" : " No"}
+            </p>
+            <p>
+              <strong>Bakery Items:</strong>
+              {coffeeShop.bakery_options ? " Yes" : " No"}
+            </p>
+            <p>
+              <strong>Serves Meals:</strong>
+              {coffeeShop.meal_options ? " Yes" : " No"}
+            </p>
+          </div>
         </div>
         <div className="shop-review-section">
-          <h2>Shop Reviews</h2>
           {shopReviews && shopReviews.length > 0 ? (
             shopReviews.map((review) => (
               <div key={review.id} className="shop-ind-review">
+                <h2>Shop Reviews</h2>
                 <p id="reviewer-name">
                   <strong>{review.user_name_submitting}</strong>
                 </p>
@@ -123,10 +143,19 @@ function ViewShop({ showCoffeeShow, coffeeShop, shopReviews }) {
               </div>
             ))
           ) : (
-            <p>No reviews Be the first person to leave one</p>
+            <h2 style={{ width: "80%" }}>
+              No reviews, be the first person to leave one
+            </h2>
           )}
         </div>
-        <p>Shop Submitted by: {coffeeShop.user_name_submitting}</p>
+        <p style={{ marginLeft: "1rem", marginBottom: "1rem" }}>
+          Shop Submitted by:{" "}
+          {coffeeShop.user_name_submitting ? (
+            <>{coffeeShop.user_name_submitting}</>
+          ) : (
+            " "
+          )}
+        </p>
       </div>
     </div>
   );

@@ -28,6 +28,8 @@
   font-size: 3rem;
   color: #806d5b;
   margin-bottom: 1rem;
+  /* border: 2px solid var(--espresso-brown); */
+  /* border-radius: 50%; */
 }
 
 .user-icon-container {
