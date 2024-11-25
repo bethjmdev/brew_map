@@ -15,6 +15,11 @@
   font-size: 2rem;
   margin: 0;
   padding-bottom: 0.3rem;
+  /* margin-left: 1rem; */
+}
+
+.view-shop .shop-review-section h2 {
+  margin-left: 1rem;
 }
 
 .view-shop p {

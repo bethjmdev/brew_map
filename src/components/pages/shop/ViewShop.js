@@ -29,6 +29,29 @@ function ViewShop({ showCoffeeShow, coffeeShop, shopReviews }) {
           </div>
         </div>
 
+        <div className="about-coffee-shop">
+          <p>
+            Address: {coffeeShop.street_address} {coffeeShop.city},{" "}
+            {coffeeShop.state}
+          </p>
+          <p>Hours: {coffeeShop.hours}</p>
+          <p>Roasts own beans? {coffeeShop.roasts_own_beans ? "Yes" : "No"}</p>
+          <p>
+            Website: <a href={coffeeShop.website}>{coffeeShop.website}</a>
+          </p>
+          <p>
+            Types of Beverages Served:{" "}
+            {coffeeShop.types_of_beverages.map((beverage, index) => (
+              <span key={index}>
+                {beverage}
+                {index < coffeeShop.types_of_beverages.length - 1 && ", "}
+              </span>
+            ))}
+          </p>
+          <p>Typical Flavor Notes: {coffeeShop.typical_flavor_notes}</p>
+          <p>Typical Roast Style: {coffeeShop.typical_roast_style}</p>
+          <p>Most Popular Beverage: </p>
+        </div>
         <div className="shop-review-section">
           <h2>Shop Reviews</h2>
           {shopReviews && shopReviews.length > 0 ? (
@@ -78,6 +101,7 @@ function ViewShop({ showCoffeeShow, coffeeShop, shopReviews }) {
             <p>No reviews Be the first person to leave one</p>
           )}
         </div>
+        <p>Shop Submitted by: {coffeeShop.user_name_submitting}</p>
       </div>
     </div>
   );

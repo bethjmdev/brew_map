@@ -42,7 +42,7 @@
 
 .profile-container .personal-review {
   width: 29rem;
-  overflow: hidden;
+
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
