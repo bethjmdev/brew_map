@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./ViewShop.css";
 import CoffeeCups from "../../pages/profile/CoffeeCups";
 import ViewImage from "./ViewImage";
+import ShopImages from "./ShopImages";
 
 function ViewShop({ showCoffeeShow, coffeeShop, shopReviews, navigate }) {
   const [photoViewer, setPhotoViewer] = useState({ isOpen: false, photos: [] });
@@ -37,9 +38,6 @@ function ViewShop({ showCoffeeShow, coffeeShop, shopReviews, navigate }) {
             Close
           </button>
           <div className="photo-scroll-container">
-            {/* {photoViewer.photos.map((photo, index) => (
-              <ViewImage key={index} photo={photo} index={index} />
-            ))} */}
             {photoViewer.photos.map((photo, index) => (
               <img
                 key={index}
@@ -66,7 +64,10 @@ function ViewShop({ showCoffeeShow, coffeeShop, shopReviews, navigate }) {
         </div>
         <p id="title">{coffeeShop.shop_name}</p>
 
-        <div className="shop-images">
+        {/* <div className="shop-images">
+        {coffeeShop.photos.map((photo, index) => (
+            <img src={photo} key={index} />
+          ))}
           <a style={{ backgroundColor: "#806D5B" }} id="photo1">
             image
           </a>
@@ -78,7 +79,9 @@ function ViewShop({ showCoffeeShow, coffeeShop, shopReviews, navigate }) {
               image2
             </a>
           </div>
-        </div>
+        </div> */}
+
+        <ShopImages coffeeShop={coffeeShop} />
 
         <div className="about-coffee-shop">
           <p>
