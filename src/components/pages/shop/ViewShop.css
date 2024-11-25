@@ -7,7 +7,6 @@
   left: 0;
   z-index: 50;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
-  /*  */
   max-height: 96vh;
   overflow-y: auto;
   border: 1px solid #ccc;
@@ -79,4 +78,15 @@
 .view-shop #reviewer-name {
   font-size: 1.5rem;
   margin: 0;
+}
+
+@media (max-width: 760px) {
+  .view-shop {
+    width: 95vw;
+  }
+
+  .view-shop .shop-ind-review {
+    width: 88vw;
+    margin-left: 0;
+  }
 }
