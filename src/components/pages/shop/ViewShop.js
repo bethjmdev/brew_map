@@ -64,24 +64,7 @@ function ViewShop({ showCoffeeShow, coffeeShop, shopReviews, navigate }) {
         </div>
         <p id="title">{coffeeShop.shop_name}</p>
 
-        {/* <div className="shop-images">
-        {coffeeShop.photos.map((photo, index) => (
-            <img src={photo} key={index} />
-          ))}
-          <a style={{ backgroundColor: "#806D5B" }} id="photo1">
-            image
-          </a>
-          <div className="shop-images-column">
-            <a style={{ backgroundColor: "#B3A89D" }} id="photo2">
-              image1
-            </a>
-            <a style={{ backgroundColor: "#4F3E31" }} id="photo3">
-              image2
-            </a>
-          </div>
-        </div> */}
-
-        <ShopImages coffeeShop={coffeeShop} />
+        <ShopImages coffeeShop={coffeeShop} openPhotoViewer={openPhotoViewer} />
 
         <div className="about-coffee-shop">
           <p>
