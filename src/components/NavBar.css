@@ -47,3 +47,9 @@
   font-size: 3rem;
   color: #806d5b;
 }
+
+@media (max-width: 760px) {
+  .navbar-container {
+    top: 5rem;
+  }
+}
