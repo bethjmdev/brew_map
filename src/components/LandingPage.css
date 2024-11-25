@@ -64,7 +64,7 @@
   color: #4f3e31;
 }
 
-.icon-wrapper p {
+.landingpage .icon-wrapper p {
   margin-top: 0.5rem;
   color: white;
   font-size: 2rem;
@@ -99,7 +99,7 @@
     font-size: 4rem;
   }
 
-  .icon-wrapper p {
+  .landingpage .icon-wrapper p {
     margin-top: 0.5rem;
     font-size: 0.9rem;
   }
