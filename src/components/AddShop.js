@@ -171,6 +171,11 @@ const AddShop = ({ navigate }) => {
         longitude: coordinates.longitude,
       });
 
+      await setDoc(doc(db, "CoffeeShopWebsites", shopId), {
+        shop_id: shopId,
+        website,
+      });
+
       toast.success("Shop added successfully!");
       navigate("/home");
     } catch (error) {

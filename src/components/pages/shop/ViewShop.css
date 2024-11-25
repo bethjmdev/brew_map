@@ -1,6 +1,43 @@
+.view-shop {
+  background-color: var(--white);
+  height: 100vh;
+  width: 40rem;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 99;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+}
+
 .view-shop-container {
-  background-color: "var(--white)";
-  height: "100vh";
-  width: "40rem";
-  z-index: "99";
+  background-color: var(--white);
+  height: 100vh;
+  width: 40rem;
+  z-index: 99;
+}
+
+.view-shop .shop-images {
+  display: flex;
+  flex-direction: row;
+}
+
+.view-shop .shop-images-column {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+.view-shop #photo1 {
+  height: 25rem;
+  width: 25rem;
+}
+
+.view-shop #photo2 {
+  height: 15rem;
+  width: 15rem;
+}
+
+.view-shop #photo3 {
+  height: 10rem;
+  width: 15rem;
 }
