@@ -5,15 +5,25 @@
   position: absolute;
   top: 0;
   left: 0;
-  z-index: 99;
+  z-index: 50;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
 }
 
-.view-shop-container {
-  background-color: var(--white);
-  height: 100vh;
-  width: 40rem;
-  z-index: 99;
+.view-shop .view-shop-container #title {
+  font-weight: 600;
+  text-align: left;
+  font-size: 2rem;
+  margin: 0;
+  padding-bottom: 0.3rem;
+}
+
+.view-shop p {
+  margin: 0.1rem;
+}
+
+.view-shop .exit-shop {
+  text-align: right;
+  padding-right: 1rem;
 }
 
 .view-shop .shop-images {
@@ -40,4 +50,24 @@
 .view-shop #photo3 {
   height: 10rem;
   width: 15rem;
+}
+
+.view-shop .shop-ind-review {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: rgba(128, 109, 91, 0.6);
+  margin-bottom: 1rem;
+  border-radius: 20px;
+  padding: 1rem;
+  margin: 1rem;
+  width: 35rem;
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow: hidden;
+}
+
+.view-shop #reviewer-name {
+  font-size: 1.5rem;
+  margin: 0;
 }
