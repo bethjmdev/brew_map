@@ -7,6 +7,11 @@
   left: 0;
   z-index: 50;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+  /*  */
+  max-height: 96vh;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  padding: 10px;
 }
 
 .view-shop .view-shop-container #title {
@@ -15,7 +20,6 @@
   font-size: 2rem;
   margin: 0;
   padding-bottom: 0.3rem;
-  /* margin-left: 1rem; */
 }
 
 .view-shop .shop-review-section h2 {

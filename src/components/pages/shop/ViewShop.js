@@ -89,6 +89,7 @@ function ViewShop({ showCoffeeShow, coffeeShop, shopReviews }) {
                   <strong>Staff Rating</strong>{" "}
                   <CoffeeCups rating={review.staffRating} maxCups={5} />
                 </p>
+                <p>View photos</p>
                 <p>
                   <strong>
                     Review <br />
