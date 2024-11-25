@@ -1,11 +1,23 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "./ViewShop.css";
 import CoffeeCups from "../../pages/profile/CoffeeCups";
+import ViewImage from "./ViewImage";
 
-function ViewShop({ showCoffeeShow, coffeeShop, shopReviews }) {
+function ViewShop({ showCoffeeShow, coffeeShop, shopReviews, navigate }) {
+  const [photoViewer, setPhotoViewer] = useState({ isOpen: false, photos: [] });
+  const isVertical = (width, height) => height > width;
+
   useEffect(() => {
     console.log("shopReviews updated:", shopReviews);
   }, [shopReviews]);
+
+  const openPhotoViewer = (photos) => {
+    setPhotoViewer({ isOpen: true, photos });
+  };
+
+  const closePhotoViewer = () => {
+    setPhotoViewer({ isOpen: false, photos: [] });
+  };
 
   if (!coffeeShop) {
     return (
@@ -19,6 +31,35 @@ function ViewShop({ showCoffeeShow, coffeeShop, shopReviews }) {
 
   return (
     <div className="view-shop">
+      {photoViewer.isOpen && (
+        <div className="photo-viewer-overlay">
+          <button className="close-button" onClick={closePhotoViewer}>
+            Close
+          </button>
+          <div className="photo-scroll-container">
+            {/* {photoViewer.photos.map((photo, index) => (
+              <ViewImage key={index} photo={photo} index={index} />
+            ))} */}
+            {photoViewer.photos.map((photo, index) => (
+              <img
+                key={index}
+                src={photo}
+                alt={`Photo ${index + 1}`}
+                className={`photo-item`}
+                onLoad={(e) => {
+                  const img = e.target;
+                  const isPortrait = isVertical(
+                    img.naturalWidth,
+                    img.naturalHeight
+                  );
+                  img.style.height = isPortrait ? "80vh" : "60vh";
+                  img.style.width = isPortrait ? "auto" : "90%";
+                }}
+              />
+            ))}
+          </div>
+        </div>
+      )}
       <div className="view-shop-container">
         <div className="exit-shop">
           <a onClick={showCoffeeShow}>X</a>
@@ -133,7 +174,11 @@ function ViewShop({ showCoffeeShow, coffeeShop, shopReviews }) {
                   <strong>Staff Rating</strong>{" "}
                   <CoffeeCups rating={review.staffRating} maxCups={5} />
                 </p>
-                <p>View photos</p>
+
+                <a onClick={() => openPhotoViewer(review.photo_urls)}>
+                  View photos
+                </a>
+
                 <p>
                   <strong>
                     Review <br />

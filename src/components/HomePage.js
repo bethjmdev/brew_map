@@ -6,7 +6,7 @@ import SearchBar from "./pages/map/SearchBar";
 import ViewShop from "./pages/shop/ViewShop";
 import Map from "./pages/map/Map";
 
-const HomePage = () => {
+const HomePage = ({ navigate }) => {
   const [center, setCenter] = useState({ lat: 42.3779725, lng: -71.1073006 });
   const [zoom, setZoom] = useState(15);
   const [isVisible, setIsVisible] = useState(false);
@@ -85,6 +85,7 @@ const HomePage = () => {
           showCoffeeShow={showCoffeeShow}
           coffeeShop={coffeeShop}
           shopReviews={shopReviews}
+          navigate={navigate}
         />
       )}
     </LoadScript>
