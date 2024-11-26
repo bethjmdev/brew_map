@@ -161,9 +161,13 @@ function ViewShop({ showCoffeeShow, coffeeShop, shopReviews, navigate }) {
                   <CoffeeCups rating={review.staffRating} maxCups={5} />
                 </p>
 
-                <a onClick={() => openPhotoViewer(review.photo_urls)}>
-                  View photos
-                </a>
+                {review.photo_urls ? (
+                  <a onClick={() => openPhotoViewer(review.photo_urls)}>
+                    View photos
+                  </a>
+                ) : (
+                  " "
+                )}
 
                 <p>
                   <strong>
