@@ -1,5 +1,8 @@
 import React from "react";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faImage } from "@fortawesome/free-solid-svg-icons";
+
 function ShopImages({ coffeeShop, openPhotoViewer }) {
   return (
     <div className="shop-images">
@@ -20,8 +23,15 @@ function ShopImages({ coffeeShop, openPhotoViewer }) {
                   id="photo1"
                   onClick={() => openPhotoViewer(coffeeShop.photos)} // Trigger photo viewer
                 >
-                  {/* image */}
-                  More Photos
+                  {/* More Photos */}
+                  <FontAwesomeIcon
+                    icon={faImage}
+                    style={{
+                      height: "2rem",
+                      width: "2rem",
+                      paddingLeft: "1rem",
+                    }}
+                  />
                 </a>
               );
             }
