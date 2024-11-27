@@ -1,10 +1,11 @@
-const functions = require("firebase-functions");
-const axios = require("axios");
-const cheerio = require("cheerio");
 const admin = require("firebase-admin");
+const functions = require("firebase-functions");
 const db = admin.firestore();
 
-exports.scrapeCoffeeShop = functions.firestore
+const axios = require("axios");
+const cheerio = require("cheerio");
+
+exports.findBeans = functions.firestore
     .document("CoffeeShopWebsites/{shopId}")
     .onCreate(async (snapshot, context) => {
       const websiteData = snapshot.data();
