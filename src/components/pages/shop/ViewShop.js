@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./ViewShop.css";
 import CoffeeCups from "../../pages/profile/CoffeeCups";
-import ViewImage from "./ViewImage";
 import ShopImages from "./ShopImages";
 
 function ViewShop({ showCoffeeShow, coffeeShop, shopReviews, navigate }) {
