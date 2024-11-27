@@ -1,25 +1,32 @@
 const functions = require("firebase-functions");
+const admin = require("firebase-admin");
 const axios = require("axios");
-const cheerio = require("cheerio");
 
-// Simple HTTP function for testing
-exports.scrapeWebsite = functions.https.onRequest(async (req, res) => {
-  const testUrl = "https://example.com"; // Replace with the URL you want to test
+// Initialize Firebase Admin SDK
+admin.initializeApp();
 
-  try {
-    // Fetch the website content
-    const response = await axios.get(testUrl);
+exports.simpleScrapeTest = functions.firestore
+  .document("CoffeeShopWebsites/{docId}")
+  .onCreate(async (snap, context) => {
+    const data = snap.data();
+    const websiteUrl = data.website;
 
-    // Parse the HTML with Cheerio
-    const $ = cheerio.load(response.data);
+    if (!websiteUrl) {
+      console.error("No website URL provided in the document");
+      return null;
+    }
 
-    // Extract the header text
-    const header = $("header").text().trim();
+    try {
+      // Fetch website content
+      const response = await axios.get(websiteUrl);
 
-    console.log(`Scraped Header: ${header}`);
-    res.status(200).send(`Scraped Header: ${header}`);
-  } catch (error) {
-    console.error("Error scraping the website:", error.message);
-    res.status(500).send(`Error: ${error.message}`);
-  }
-});
+      // Log the website's title to the console
+      const content = response.data;
+      console.log(`Fetched content for URL: ${websiteUrl}`);
+      console.log("Sample content:", content.slice(0, 100)); // Log the first 100 characters
+    } catch (error) {
+      console.error("Error fetching the website:", error.message);
+    }
+
+    return null;
+  });
