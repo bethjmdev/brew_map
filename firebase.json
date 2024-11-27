@@ -1,20 +1,30 @@
 {
-  "name": "brewmapfunctions",
-  "description": "Cloud Functions for Firebase",
-  "dependencies": {
-    "firebase-admin": "^11.10.1",
-    "firebase-functions": "^4.4.0"
-  },
-  "scripts": {
-    "lint": "echo 'No linting rules defined yet!'",
-    "serve": "firebase emulators:start --only functions",
-    "shell": "firebase functions:shell",
-    "start": "firebase emulators:start --only functions",
-    "deploy": "firebase deploy --only functions",
-    "logs": "firebase functions:log"
-  },
-  "engines": {
-    "node": "16"
-  },
-  "private": true
+  "functions": [
+    {
+      "source": "brewmapfunctions",
+      "codebase": "brewmapfunctions",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ],
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run lint"
+      ]
+    }
+  ],
+  "emulators": {
+    "functions": {
+      "port": 5001
+    },
+    "database": {
+      "port": 9000
+    },
+    "ui": {
+      "enabled": true
+    },
+    "singleProjectMode": true
+  }
 }
