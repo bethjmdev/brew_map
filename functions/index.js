@@ -1,19 +1,25 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * const {onCall} = require("firebase-functions/v2/https");
- * const {onDocumentWritten} = require("firebase-functions/v2/firestore");
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
+const functions = require("firebase-functions");
+const axios = require("axios");
+const cheerio = require("cheerio");
 
-const {onRequest} = require("firebase-functions/v2/https");
-const logger = require("firebase-functions/logger");
+// Simple HTTP function for testing
+exports.scrapeWebsite = functions.https.onRequest(async (req, res) => {
+  const testUrl = "https://example.com"; // Replace with the URL you want to test
 
-// Create and deploy your first functions
-// https://firebase.google.com/docs/functions/get-started
+  try {
+    // Fetch the website content
+    const response = await axios.get(testUrl);
 
-// exports.helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+    // Parse the HTML with Cheerio
+    const $ = cheerio.load(response.data);
+
+    // Extract the header text
+    const header = $("header").text().trim();
+
+    console.log(`Scraped Header: ${header}`);
+    res.status(200).send(`Scraped Header: ${header}`);
+  } catch (error) {
+    console.error("Error scraping the website:", error.message);
+    res.status(500).send(`Error: ${error.message}`);
+  }
+});
