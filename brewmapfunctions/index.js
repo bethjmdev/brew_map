@@ -1,74 +1,5 @@
 
 
-//===========
-//===========
-
-// import { onDocumentCreated } from "firebase-functions/v2/firestore";
-// import fetch from "node-fetch";
-
-// export const logWebsite = onDocumentCreated("CoffeeShopWebsites/{shopId}", async (event) => {
-//   const data = event.data;
-
-//   const website = data.get("website");
-//   console.log(`Website submitted: ${website}`);
-
-//   if (!website) {
-//     console.error("Website is undefined. Please check the Firestore document structure.");
-//     return null;
-//   }
-
-//   try {
-//     // Fetch the website's HTML content using node-fetch
-//     const response = await fetch(website);
-
-//     if (!response.ok) {
-//       console.error(`Failed to fetch the website: ${website} with status: ${response.status}`);
-//       return null;
-//     }
-
-//     const html = await response.text(); // Get the HTML content
-//     console.log("Successfully fetched website content.");
-
-//     // Extract and print the page title
-//     const titleMatch = html.match(/<title>(.*?)<\/title>/i);
-//     const pageTitle = titleMatch ? titleMatch[1] : "No title found";
-//     console.log(`Page Title: ${pageTitle}`);
-
-//     // Extract and print the meta description
-//     const metaDescriptionMatch = html.match(/<meta name="description" content="(.*?)"/i);
-//     const metaDescription = metaDescriptionMatch ? metaDescriptionMatch[1] : "No meta description found";
-//     console.log(`Meta Description: ${metaDescription}`);
-
-//     // Extract and print all <h1> headings
-//     const h1Matches = html.match(/<h1>(.*?)<\/h1>/gi) || [];
-//     const h1Headings = h1Matches.map(h1 => h1.replace(/<\/?h1>/gi, ""));
-//     console.log(`H1 Headings: ${h1Headings.join(", ")}`);
-
-//     // Extract and print all <h2> headings
-//     const h2Matches = html.match(/<h2>(.*?)<\/h2>/gi) || [];
-//     const h2Headings = h2Matches.map(h2 => h2.replace(/<\/?h2>/gi, ""));
-//     console.log(`H2 Headings: ${h2Headings.join(", ")}`);
-
-//     // Extract and print all <p> tags
-//     const pMatches = html.match(/<p>(.*?)<\/p>/gi) || [];
-//     const paragraphs = pMatches.map(p => p.replace(/<\/?p>/gi, "").trim()).slice(0, 5); // Limit to first 5 for brevity
-//     console.log(`Paragraphs: ${paragraphs.join(" | ")}`);
-
-//     // Extract and print all links
-//     const linkMatches = html.match(/href="(.*?)"/gi) || [];
-//     const links = linkMatches.map(link => link.replace(/href="/, "").replace(/"/, ""));
-//     console.log("Links:", links);
-
-//     // Extract and print all image sources
-//     const imgMatches = html.match(/<img[^>]+src="(.*?)"/gi) || [];
-//     const images = imgMatches.map(img => img.match(/src="(.*?)"/)[1]);
-//     console.log("Image Sources:", images);
-//   } catch (error) {
-//     console.error(`Error scraping the website ${website}:`, error);
-//   }
-
-//   return null; // Always return a promise or null in Cloud Functions
-// });
 import { onDocumentCreated } from "firebase-functions/v2/firestore";
 import fetch from "node-fetch";
 
@@ -94,9 +25,9 @@ export const logWebsite = onDocumentCreated("CoffeeShopWebsites/{shopId}", async
     const html = await response.text(); // Get the HTML content
     console.log("Successfully fetched main website content.");
 
-    // Search for "Coffee" or "Shop" links
-    const coffeeLinkMatch = html.match(/<a[^>]*href="([^"]*)"[^>]*>\s*coffee\s*<\/a>/i);
-    const shopLinkMatch = html.match(/<a[^>]*href="([^"]*)"[^>]*>\s*shop\s*<\/a>/i);
+    // Search for links with keywords like "Coffee" (e.g., "All Coffee") or "Shop"
+    const coffeeLinkMatch = html.match(/<a[^>]*href="([^"]*)"[^>]*>\s*.*?coffee.*?<\/a>/i);
+    const shopLinkMatch = html.match(/<a[^>]*href="([^"]*)"[^>]*>\s*.*?shop.*?<\/a>/i);
 
     // Prioritize Coffee > Shop
     const targetLink = coffeeLinkMatch
