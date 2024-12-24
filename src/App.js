@@ -6,8 +6,8 @@ import {
   Route,
   Navigate,
   useLocation,
+  useNavigate
 } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 import { useUserStore } from "./utils/auth/userStore";
 
 import Signup from "./components/Signup";
@@ -30,7 +30,7 @@ function App() {
 }
 
 function MainContent() {
-  const { initAuthListener } = useUserStore(); // Correctly accessing it from the store
+  const { initAuthListener, currentUser } = useUserStore(); // Correctly accessing it from the store
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -43,6 +43,25 @@ function MainContent() {
   useEffect(() => {
     initAuthListener(); // Initialize Firebase auth listener when the app loads
   }, [initAuthListener]);
+
+  useEffect(() => {
+    useUserStore.getState().initAuthListener();
+  }, []);
+  
+
+    //   useEffect(() => {
+    //   if (!currentUser) {
+    //     alert("You need to log in.");
+    //     navigate("/login");
+    //   }
+    // }, [currentUser]);
+
+    // useEffect(() => {      
+    //   if (!currentUser && location.pathname !== "/login") {
+    //     alert("You need to log in.");
+    //     navigate("/login");
+    //   }
+    // }, [currentUser, location.pathname]);
 
   return (
     <div style={{ marginTop: "-10px" }}>

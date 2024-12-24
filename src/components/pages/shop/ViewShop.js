@@ -96,7 +96,7 @@ function ViewShop({ showCoffeeShow, coffeeShop, shopReviews, navigate }) {
           </p>
           <p>
             <strong>Typical Roast Style:</strong>{" "}
-            {coffeeShop.typical_roast_style}
+            {coffeeShop.roast_style}
           </p>
           <p>
             <strong>Most Popular Beverage:</strong>{" "}

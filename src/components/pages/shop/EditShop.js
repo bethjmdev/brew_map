@@ -51,7 +51,7 @@ const EditShop = ({ navigate }) => {
     website: "",
     types_of_beverages: [],
     typical_flavor_notes: [],
-    typical_roast_style: "",
+    roast_style: "",
     beans_available: [],
   });
 
@@ -138,7 +138,7 @@ const EditShop = ({ navigate }) => {
           website: data.website || "",
           types_of_beverages: data.types_of_beverages || [],
           typical_flavor_notes: data.typical_flavor_notes || [],
-          typical_roast_style: data.typical_roast_style || "",
+          roast_style: data.roast_style || "",
           dairy_free_options: data.dairy_free_options,
           gluten_friendly: data.gluten_friendly,
           meal_options: data.meal_options,
@@ -297,11 +297,11 @@ const EditShop = ({ navigate }) => {
             </div>
             <label>Typical Roast Style:</label>
             <select
-              value={shopData.typical_roast_style || ""}
+              value={shopData.roast_style || ""}
               onChange={(e) =>
                 setShopData({
                   ...shopData,
-                  typical_roast_style: e.target.value,
+                  roast_style: e.target.value,
                 })
               }
             >
