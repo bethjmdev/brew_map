@@ -1,7 +1,13 @@
 import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { doc, setDoc } from "firebase/firestore";
+import {
+  doc,
+  setDoc,
+  updateDoc,
+  increment,
+  FieldValue,
+} from "firebase/firestore";
 import { db, auth } from "../utils/auth/firebase";
 import SubmitButton from "./button/SubmitButton";
 import "./AddShop.css";
@@ -138,6 +144,13 @@ const AddShop = ({ navigate }) => {
 
     if (!coordinates) return; // Exit if coordinates fetching failed
 
+    if (!website) {
+      toast.error("Website field is required.");
+      return;
+    }
+
+    console.log("Writing to Firestore with website:", website);
+
     try {
       await setDoc(doc(db, "CoffeeShops", shopId), {
         shop_name: shopName,
@@ -152,7 +165,7 @@ const AddShop = ({ navigate }) => {
         website,
         types_of_beverages: typesOfBeverages,
         typical_flavor_notes: typicalFlavorNotes,
-        typical_roast_style: typicalRoastStyle,
+        roast_style: typicalRoastStyle,
         popular_bev: popularBev,
         dairy_free_options: dairyFreeOptions,
         gluten_friendly: glutenFriendly,
@@ -166,7 +179,7 @@ const AddShop = ({ navigate }) => {
         shop_id: shopId,
         shop_name: shopName,
         street_address: address,
-        typical_roast_style: typicalRoastStyle,
+        roast_style: typicalRoastStyle,
         latitude: coordinates.latitude,
         longitude: coordinates.longitude,
       });
@@ -174,6 +187,16 @@ const AddShop = ({ navigate }) => {
       await setDoc(doc(db, "CoffeeShopWebsites", shopId), {
         shop_id: shopId,
         website,
+      });
+
+      //this isnt quite right, but its getting to the right spot
+      // await updateDoc(doc(db, "BrewBadges", currentUser.uid), {
+      // cafes: increment(1),
+      // });
+
+      await updateDoc(doc(db, "BrewBadges", currentUser.uid), {
+        cities: FieldValue.arrayUnion(...new Array(city)),
+        cafes: increment(1),
       });
 
       toast.success("Shop added successfully!");

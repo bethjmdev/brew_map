@@ -1,19 +1,30 @@
 {
-    "functions": [
-      {
-        "source": "functions",
-        "codebase": "default",
-        "ignore": [
-          "node_modules",
-          ".git",
-          "firebase-debug.log",
-          "firebase-debug.*.log",
-          "*.local"
-        ],
-        "predeploy": [
-          "npm --prefix \"$RESOURCE_DIR\" run lint"
-        ]
-      }
-    ]
+  "functions": [
+    {
+      "source": "brewmapfunctions",
+      "codebase": "brewmapfunctions",
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ]
+    }
+  ],
+  "emulators": {
+    "functions": {
+      "port": 5001,
+      "source": "brewmapfunctions",
+      "runtime": "nodejs18",
+      "codebase": "brewmapfunctions"
+    },
+    "database": {
+      "port": 9000
+    },
+    "ui": {
+      "enabled": true
+    },
+    "singleProjectMode": true
   }
-  
+}

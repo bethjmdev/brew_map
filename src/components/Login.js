@@ -16,12 +16,14 @@ const Login = ({ navigate }) => {
   const [password, setPassword] = useState("");
   const { currentUser } = useUserStore();
 
-  useEffect(() => {
-    if (currentUser) {
-      alert("You are already logged in.");
-      navigate("/home");
-    }
-  }, [currentUser]);
+
+
+  //   useEffect(() => {
+  //   if (!currentUser) {
+  //     alert("You need to log in.");
+  //     navigate("/login");
+  //   }
+  // }, [currentUser]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
