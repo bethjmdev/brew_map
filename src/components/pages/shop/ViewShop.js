@@ -2,14 +2,80 @@ import React, { useEffect, useState } from "react";
 import "./ViewShop.css";
 import CoffeeCups from "../../pages/profile/CoffeeCups";
 import ShopImages from "./ShopImages";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../../utils/auth/firebase";
 
 function ViewShop({ showCoffeeShow, coffeeShop, shopReviews, coffeeBags }) {
   const [photoViewer, setPhotoViewer] = useState({ isOpen: false, photos: [] });
+  const [badges, setBadges] = useState({}); // Store badges for users
   const isVertical = (width, height) => height > width;
 
   useEffect(() => {
     console.log("shopReviews updated:", shopReviews);
   }, [shopReviews]);
+
+  // Fetch BrewBadges data and store in a dictionary for quick lookup
+  useEffect(() => {
+    const fetchBadges = async () => {
+      try {
+        const badgeCollection = collection(db, "BrewBadges");
+        const badgeSnapshot = await getDocs(badgeCollection);
+
+        const badgeData = {};
+        badgeSnapshot.forEach((doc) => {
+          const data = doc.data();
+          badgeData[data.id] = data; // Use the `id` field as the key
+        });
+
+        setBadges(badgeData);
+      } catch (error) {
+        console.error("Error fetching badges:", error);
+      }
+    };
+
+    fetchBadges();
+  }, [shopReviews]);
+
+  // Helper functions for badge logic
+  const getCafeBadge = (cafes) => {
+    if (cafes >= 1 && cafes < 5) return `Bean Scout`;
+    if (cafes >= 5 && cafes < 10) return `Brew Pathfinder`;
+    if (cafes >= 10 && cafes < 20) return `Espresso Explorer`;
+    if (cafes >= 20) return `Caffeine Pioneer`;
+    return null;
+  };
+
+  const getPhotoBadge = (photos) => {
+    if (photos >= 1 && photos < 5) return `Coffee Photographer`;
+    if (photos >= 5 && photos < 15) return `Snapshot Sipper`;
+    if (photos >= 15 && photos < 25) return `Latte Lens`;
+    if (photos >= 25) return `Coffee Cameraman`;
+    return null;
+  };
+
+  const getReviewBadge = (reviews) => {
+    if (reviews >= 1 && reviews < 5) return `Percolating Critic`;
+    if (reviews >= 5 && reviews < 10) return `Grounded Reviewer`;
+    if (reviews >= 10 && reviews < 20) return `Brewmaster Critic`;
+    if (reviews >= 20) return `Caffeinated Maven`;
+    return null;
+  };
+
+  // Render badges based on user data
+  const renderBadges = (userId) => {
+    const userBadges = badges[userId];
+    if (!userBadges) return "No badges"; // Default message if no badges found
+
+    const badgeList = [
+      getCafeBadge(userBadges.cafes),
+      getPhotoBadge(userBadges.photos),
+      getReviewBadge(userBadges.reviews),
+    ]
+      .filter(Boolean) // Remove null or undefined badges
+      .join(", ");
+
+    return badgeList || "No badges";
+  };
 
   const openPhotoViewer = (photos) => {
     setPhotoViewer({ isOpen: true, photos });
@@ -140,13 +206,18 @@ function ViewShop({ showCoffeeShow, coffeeShop, shopReviews, coffeeBags }) {
           </div>
         </div>
         <div className="shop-review-section">
+          <h2>Shop Reviews</h2>
           {shopReviews && shopReviews.length > 0 ? (
             shopReviews.map((review) => (
               <div key={review.id} className="shop-ind-review">
-                <h2>Shop Reviews</h2>
                 <p id="reviewer-name">
                   <strong>{review.user_name_submitting}</strong>
                 </p>
+                <strong></strong>
+                <p>
+                  <i> {renderBadges(review.userID_submitting)}</i>
+                </p>
+                <br />
                 <p>
                   <strong>Favorite drink</strong>
                   <br />A {review.user_fav_temp} {""}

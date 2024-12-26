@@ -429,7 +429,7 @@ export const Profile = () => {
 
         <h2>Badges</h2>
         <div>
-          <p>
+          {/* <p>
             {[
               getCafeBadge(cafes),
               getPhotoBadge(photos),
@@ -437,6 +437,17 @@ export const Profile = () => {
             ]
               .filter(Boolean) // Remove empty or null values
               .join(", ")}
+          </p> */}
+
+          <p>
+            {[
+              getCafeBadge(cafes),
+              getPhotoBadge(photos),
+              getReviewBadge(reviewsBadge),
+            ]
+              .filter(Boolean) // Remove empty or null values
+              .join(", ") ||
+              "No badges yet! Leave a review for a shop, add a coffee shop, or upload a photo to a review earn a badge."}
           </p>
         </div>
 
