@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { doc, getDoc, collection, getDocs, setDoc } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  collection,
+  getDocs,
+  setDoc,
+  updateDoc,
+  increment,
+} from "firebase/firestore";
 import { db } from "../utils/auth/firebase";
 import { getAuth } from "firebase/auth";
 import {
@@ -383,6 +391,11 @@ function AddReview({ navigate }) {
     } catch (error) {
       console.error("Error submitting review:", error);
     }
+
+    //this isnt quite right, but its getting to the right spot
+    await updateDoc(doc(db, "BrewBadges", currentUser.uid), {
+      reviews: increment(1),
+    });
   };
 
   const handleImageChange = (e) => {
@@ -472,6 +485,11 @@ function AddReview({ navigate }) {
         console.error("Error uploading one or more images:", error);
         return [];
       });
+
+    //this isnt quite right, but its getting to the right spot
+    await updateDoc(doc(db, "BrewBadges", currentUser.uid), {
+      photos: increment(1),
+    });
 
     return urls;
   };

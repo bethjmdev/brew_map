@@ -164,7 +164,10 @@ const EditShop = ({ navigate }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!selectedShop) return;
+    if (!selectedShop) {
+      alert("No shop has been selected");
+      return;
+    }
 
     try {
       await updateDoc(doc(db, "CoffeeShops", shopId), shopData);

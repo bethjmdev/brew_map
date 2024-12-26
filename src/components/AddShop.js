@@ -1,7 +1,13 @@
 import React, { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { doc, setDoc } from "firebase/firestore";
+import {
+  doc,
+  setDoc,
+  updateDoc,
+  increment,
+  FieldValue,
+} from "firebase/firestore";
 import { db, auth } from "../utils/auth/firebase";
 import SubmitButton from "./button/SubmitButton";
 import "./AddShop.css";
@@ -130,7 +136,6 @@ const AddShop = ({ navigate }) => {
       return;
     }
 
-
     const shopId = generateShopId();
     const currentUser = auth.currentUser;
 
@@ -143,9 +148,9 @@ const AddShop = ({ navigate }) => {
       toast.error("Website field is required.");
       return;
     }
-  
+
     console.log("Writing to Firestore with website:", website);
-    
+
     try {
       await setDoc(doc(db, "CoffeeShops", shopId), {
         shop_name: shopName,
@@ -184,6 +189,16 @@ const AddShop = ({ navigate }) => {
         website,
       });
 
+      //this isnt quite right, but its getting to the right spot
+      // await updateDoc(doc(db, "BrewBadges", currentUser.uid), {
+      // cafes: increment(1),
+      // });
+
+      await updateDoc(doc(db, "BrewBadges", currentUser.uid), {
+        cities: FieldValue.arrayUnion(...new Array(city)),
+        cafes: increment(1),
+      });
+
       toast.success("Shop added successfully!");
       navigate("/home");
     } catch (error) {
@@ -191,9 +206,6 @@ const AddShop = ({ navigate }) => {
       toast.error("Failed to add shop.");
     }
   };
-
-  
-  
 
   return (
     <div className="add-shop">

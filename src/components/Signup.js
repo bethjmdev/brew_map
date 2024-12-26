@@ -123,6 +123,16 @@ const Signup = ({ navigate }) => {
         about,
       });
 
+      await setDoc(doc(db, "BrewBadges", user.uid), {
+        id: user.uid,
+        firstName,
+        lastName,
+        photos: 0,
+        cafes: 0,
+        reviews: 0,
+        cities: [],
+      });
+
       await signOut(auth);
 
       // Clear form fields
