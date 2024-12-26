@@ -30,7 +30,7 @@ function App() {
 }
 
 function MainContent() {
-  const { initAuthListener, currentUser } = useUserStore(); // Correctly accessing it from the store
+  const { initAuthListener } = useUserStore(); // Correctly accessing it from the store
 
   const navigate = useNavigate();
   const location = useLocation();

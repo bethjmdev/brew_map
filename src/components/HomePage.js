@@ -12,6 +12,7 @@ const HomePage = ({ navigate }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [coordinates, setCoordinates] = useState([]); // state to hold coordinates
   const [coffeeShop, setCoffeeShop] = useState(null); // state to hold shop details
+  const [coffeeBags, setCoffeeBags] = useState([]);
   const [shopReviews, setShopReviews] = useState(null);
   const [searchQuery, setSearchQuery] = useState(""); // new state for search query
 
@@ -68,6 +69,19 @@ const HomePage = ({ navigate }) => {
     console.log("Shop ID:", id); // Log the shop ID here
     getShopDetails(id);
     getCoffeeShopReviews(id);
+    getCoffeeBags(id);
+  };
+
+
+  //get the coffee bags availablle at the shop
+  const getCoffeeBags = async (id) => {
+    console.log("Fetching coffee bags for shop ID:", id); // Confirm the ID
+    const querySnapshot = await getDocs(collection(db, "CoffeeBags"));
+    const bags = querySnapshot.docs
+      .map((doc) => ({ id: doc.id, ...doc.data() }))
+      .filter((doc) => doc.shop_id === id); // Adjust to match reviews by shop_id field
+    console.log("Fetched bags:", bags); // Log fetched reviews
+    setCoffeeBags(bags);
   };
 
   return (
@@ -86,6 +100,7 @@ const HomePage = ({ navigate }) => {
           coffeeShop={coffeeShop}
           shopReviews={shopReviews}
           navigate={navigate}
+          coffeeBags={coffeeBags}
         />
       )}
     </LoadScript>

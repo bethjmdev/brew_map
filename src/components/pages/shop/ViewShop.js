@@ -3,7 +3,7 @@ import "./ViewShop.css";
 import CoffeeCups from "../../pages/profile/CoffeeCups";
 import ShopImages from "./ShopImages";
 
-function ViewShop({ showCoffeeShow, coffeeShop, shopReviews, navigate }) {
+function ViewShop({ showCoffeeShow, coffeeShop, shopReviews, coffeeBags }) {
   const [photoViewer, setPhotoViewer] = useState({ isOpen: false, photos: [] });
   const isVertical = (width, height) => height > width;
 
@@ -71,7 +71,7 @@ function ViewShop({ showCoffeeShow, coffeeShop, shopReviews, navigate }) {
             {coffeeShop.street_address} {coffeeShop.city}, {coffeeShop.state}
           </p>
           <p>
-            <strong>Hours:</strong> {coffeeShop.hours}
+            <strong>Hours:</strong> {coffeeShop.hours} <i>(hours may vary)</i>
           </p>
           <p>
             <strong>Roasts own beans?</strong>{" "}
@@ -95,8 +95,7 @@ function ViewShop({ showCoffeeShow, coffeeShop, shopReviews, navigate }) {
             {coffeeShop.typical_flavor_notes}
           </p>
           <p>
-            <strong>Typical Roast Style:</strong>{" "}
-            {coffeeShop.roast_style}
+            <strong>Typical Roast Style:</strong> {coffeeShop.roast_style}
           </p>
           <p>
             <strong>Most Popular Beverage:</strong>{" "}
@@ -120,6 +119,24 @@ function ViewShop({ showCoffeeShow, coffeeShop, shopReviews, navigate }) {
               <strong>Serves Meals:</strong>
               {coffeeShop.meal_options ? " Yes" : " No"}
             </p>
+          </div>
+          <div className="options-available">
+            <h2>Beans Available</h2>
+
+            <ul>
+              {coffeeBags.flatMap((coffee) =>
+                coffee.coffee_bags.map((name) => (
+                  <li key={name}>
+                    {name
+                      .split(" ")
+                      .map(
+                        (word) => word.charAt(0).toUpperCase() + word.slice(1)
+                      )
+                      .join(" ")}
+                  </li>
+                ))
+              )}
+            </ul>
           </div>
         </div>
         <div className="shop-review-section">
