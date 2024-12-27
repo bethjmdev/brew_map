@@ -209,27 +209,32 @@ export const Profile = () => {
   //           const matchingRoastReviews = allReviews.filter(
   //             (review) => review.selectedRoast === selectedRoast
   //           );
-  //           console.log(
-  //             "Reviews Matching Selected Roast:",
-  //             matchingRoastReviews
-  //           );
 
   //           // Step 5: Further filter reviews where selectedBev matches user's cafeDrink
   //           const matchingBevReviews = matchingRoastReviews.filter(
   //             (review) => review.selectedBev === cafeDrink
-  //           );
-  //           console.log(
-  //             "Reviews Matching Selected Beverage:",
-  //             matchingBevReviews
   //           );
 
   //           // Step 6: Further filter reviews where selectedTemp matches user's cafeTemp
   //           const matchingTempReviews = matchingBevReviews.filter(
   //             (review) => review.selectedTemp === cafeTemp
   //           );
+
+  //           // Step 7: Remove duplicate shop IDs and retain one review per shop
+  //           const uniqueReviews = Array.from(
+  //             new Map(
+  //               matchingTempReviews.map((review) => [review.shop_id, review])
+  //             ).values()
+  //           );
+
+  //           // Step 8: Exclude reviews submitted by the current user
+  //           const filteredReviews = uniqueReviews.filter(
+  //             (review) => review.userID_submitting !== currentUser.uid
+  //           );
+
   //           console.log(
-  //             "Reviews Matching Selected Temperature:",
-  //             matchingTempReviews
+  //             "Filtered Reviews (Excluding Current User):",
+  //             filteredReviews
   //           );
   //         } else {
   //           console.log("No user data found for the current user.");
@@ -315,7 +320,20 @@ export const Profile = () => {
               ).values()
             );
 
-            console.log("Unique Reviews (One per Shop):", uniqueReviews);
+            // Step 8: Exclude reviews submitted by the current user
+            const filteredReviews = uniqueReviews.filter(
+              (review) => review.userID_submitting !== currentUser.uid
+            );
+
+            // Step 9: Filter out reviews with drinkRating >= 4
+            const finalFilteredReviews = filteredReviews.filter(
+              (review) => review.drinkRating >= 4
+            );
+
+            console.log(
+              "Final Filtered Reviews (Drink Rating > 4):",
+              finalFilteredReviews
+            );
           } else {
             console.log("No user data found for the current user.");
           }
@@ -344,14 +362,24 @@ export const Profile = () => {
             {isModalOpen && (
               <div className="modal-overlay">
                 <div className="modal">
-                  <p>Where do you want your coffee reccomendations from?</p>
+                  <p>
+                    <strong>
+                      What city do you want your coffee shop reccomendations in?
+                    </strong>
+                  </p>
+                  <p>
+                    You can only request one custom recommendation per day.
+                    We’ll generate six tailored recommendations for the location
+                    of your choice, all in one go!
+                  </p>
                   <p>
                     <i>
-                      You can only request one custom recommendation per day.
-                      We’ll generate six tailored recommendations for the
-                      location of your choice, all in one go!
+                      (if there arent 6 locations listed it means we don't have
+                      enough reviews yet in that city with your preferences...
+                      encourage your friends to add reviews!!!)
                     </i>
                   </p>
+
                   <input
                     type="text"
                     value={coffeeCity}
