@@ -6,7 +6,7 @@ import {
   Route,
   Navigate,
   useLocation,
-  useNavigate
+  useNavigate,
 } from "react-router-dom";
 import { useUserStore } from "./utils/auth/userStore";
 
@@ -20,6 +20,7 @@ import AddReview from "./components/AddReview";
 import AddShop from "./components/AddShop";
 import EditProfile from "./components/pages/profile/EditProfile";
 import EditShop from "./components/pages/shop/EditShop";
+import OtherUser from "./components/pages/shop/OtherUser";
 
 function App() {
   return (
@@ -47,21 +48,20 @@ function MainContent() {
   useEffect(() => {
     useUserStore.getState().initAuthListener();
   }, []);
-  
 
-    //   useEffect(() => {
-    //   if (!currentUser) {
-    //     alert("You need to log in.");
-    //     navigate("/login");
-    //   }
-    // }, [currentUser]);
+  //   useEffect(() => {
+  //   if (!currentUser) {
+  //     alert("You need to log in.");
+  //     navigate("/login");
+  //   }
+  // }, [currentUser]);
 
-    // useEffect(() => {      
-    //   if (!currentUser && location.pathname !== "/login") {
-    //     alert("You need to log in.");
-    //     navigate("/login");
-    //   }
-    // }, [currentUser, location.pathname]);
+  // useEffect(() => {
+  //   if (!currentUser && location.pathname !== "/login") {
+  //     alert("You need to log in.");
+  //     navigate("/login");
+  //   }
+  // }, [currentUser, location.pathname]);
 
   return (
     <div style={{ marginTop: "-10px" }}>
@@ -98,6 +98,12 @@ function MainContent() {
           path="/editshop"
           element={
             <PrivateRoute component={<EditShop navigate={navigate} />} />
+          }
+        />
+        <Route
+          path="/otheruser/"
+          element={
+            <PrivateRoute component={<OtherUser navigate={navigate} />} />
           }
         />
         <Route path="/login" element={<Login navigate={navigate} />} />

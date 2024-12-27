@@ -133,6 +133,11 @@ const Signup = ({ navigate }) => {
         cities: [],
       });
 
+      await setDoc(doc(db, "Friends", user.uid), {
+        id: user.uid,
+        friends: [],
+      });
+
       await signOut(auth);
 
       // Clear form fields
