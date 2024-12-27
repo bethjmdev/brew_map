@@ -211,7 +211,6 @@
 // };
 
 // export default OtherUser;
-
 import React, { useEffect, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import {
@@ -225,13 +224,57 @@ import {
 import { db } from "../utils/auth/firebase";
 
 const OtherUser = () => {
-  const { uidName } = useParams(); // Extract the last 4 digits and name
+  const { uidName } = useParams(); // Extract user identifier from the URL
   const location = useLocation();
   const [profileData, setProfileData] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [brewBadge, setBrewBadge] = useState(null);
 
-  // Decode the Base64-encoded UID from the query parameter
+  const cafeBadges = [
+    `Bean Scout`,
+    `Brew Pathfinder`,
+    `Espresso Explorer`,
+    `Caffeine Pioneer`,
+  ];
+
+  const photoBadges = [
+    `Caffeine Shutterbug`,
+    `Snapshot Sipper`,
+    `Latte Luminary`,
+    `Brewtiful Visionary`,
+  ];
+
+  const reviewBadges = [
+    `Percolating Critic`,
+    `Grounded Reviewer`,
+    `Brewmaster Critic`,
+    `Cupping Connoisseur`,
+  ];
+
+  const getCafeBadge = (cafes) => {
+    if (cafes >= 1 && cafes < 5) return cafeBadges[0];
+    if (cafes >= 5 && cafes < 10) return cafeBadges[1];
+    if (cafes >= 10 && cafes < 20) return cafeBadges[2];
+    if (cafes >= 20) return cafeBadges[3];
+    return null;
+  };
+
+  const getPhotoBadge = (photos) => {
+    if (photos >= 1 && photos < 5) return photoBadges[0];
+    if (photos >= 5 && photos < 15) return photoBadges[1];
+    if (photos >= 15 && photos < 25) return photoBadges[2];
+    if (photos >= 25) return photoBadges[3];
+    return null;
+  };
+
+  const getReviewBadge = (reviews) => {
+    if (reviews >= 1 && reviews < 5) return reviewBadges[0];
+    if (reviews >= 5 && reviews < 10) return reviewBadges[1];
+    if (reviews >= 10 && reviews < 20) return reviewBadges[2];
+    if (reviews >= 20) return reviewBadges[3];
+    return null;
+  };
+
   const searchParams = new URLSearchParams(location.search);
   const encodedUserId = searchParams.get("uid");
   const userId = encodedUserId ? atob(encodedUserId) : null;
@@ -243,8 +286,6 @@ const OtherUser = () => {
           const userDoc = await getDoc(doc(db, "BrewUsers", userId));
           if (userDoc.exists()) {
             setProfileData(userDoc.data());
-          } else {
-            console.log("No such user document!");
           }
 
           const q = query(
@@ -252,6 +293,7 @@ const OtherUser = () => {
             where("id", "==", userId)
           );
           const querySnapshot = await getDocs(q);
+
           querySnapshot.forEach((doc) => setBrewBadge(doc.data()));
         } catch (error) {
           console.error("Error fetching user data:", error);
@@ -303,17 +345,23 @@ const OtherUser = () => {
         )}
 
         <h2>Badges</h2>
-        <p>{brewBadge ? "Badges go here" : "No badges yet!"}</p>
+        <p>
+          {brewBadge
+            ? [
+                getCafeBadge(brewBadge.cafes),
+                getPhotoBadge(brewBadge.photos),
+                getReviewBadge(brewBadge.reviews),
+              ]
+                .filter(Boolean)
+                .join(", ") || "No badges yet!"
+            : "Loading badges..."}
+        </p>
 
         <h2>Reviews</h2>
         {reviews.length > 0 ? (
           reviews.map((review) => (
             <div key={review.id} className="review-section">
               <h3>{review.shop_name}</h3>
-              <p>
-                Ordered a {review.selectedTemp} {review.selectedMilk}{" "}
-                {review.selectedMilk !== "Black" && "Milk"} {review.selectedBev}
-              </p>
               <p>{review.review}</p>
             </div>
           ))
