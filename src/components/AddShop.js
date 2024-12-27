@@ -9,6 +9,10 @@ import {
   increment,
   arrayUnion,
   serverTimestamp,
+  collection,
+  where,
+  getDocs,
+  query,
 } from "firebase/firestore";
 import { db, auth } from "../utils/auth/firebase";
 import stringSimilarity from "string-similarity";
@@ -359,6 +363,121 @@ const AddShop = ({ navigate }) => {
     checkBannedShop();
   };
 
+  const checkExistingShop = async (streetAddress, city, state) => {
+    try {
+      const shopQuery = query(
+        collection(db, "CoffeeShops"),
+        where("street_address", "==", streetAddress),
+        where("city", "==", city),
+        where("state", "==", state)
+      );
+      const querySnapshot = await getDocs(shopQuery);
+
+      return !querySnapshot.empty; // Returns true if there's a match
+    } catch (error) {
+      console.error("Error checking existing shop:", error);
+      return false;
+    }
+  };
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+
+  //   if (
+  //     !shopName ||
+  //     !streetAddress ||
+  //     !city ||
+  //     !state ||
+  //     !hours ||
+  //     !website ||
+  //     !typesOfBeverages.length ||
+  //     !typicalRoastStyle
+  //   ) {
+  //     toast.error("Please fill out all required fields.");
+  //     return;
+  //   }
+
+  //   if (checkBannedShop()) {
+  //     alert(
+  //       "As previously mentioned, this shop cannot be added to the map. You are being rediected away from Add Shop."
+  //     );
+  //     navigate("/home");
+  //     return;
+  //   }
+
+  //   const shopId = generateShopId();
+  //   const currentUser = auth.currentUser;
+
+  //   const address = `${streetAddress}, ${city}, ${state}`;
+  //   const coordinates = await getCoordinates(address);
+
+  //   if (!coordinates) return; // Exit if coordinates fetching failed
+
+  //   if (!website) {
+  //     toast.error("Website field is required.");
+  //     return;
+  //   }
+
+  //   console.log("Writing to Firestore with website:", website);
+
+  //   try {
+  //     await setDoc(doc(db, "CoffeeShops", shopId), {
+  //       shop_name: shopName,
+  //       shop_id: shopId,
+  //       userID_submitting: currentUser.uid,
+  //       user_name_submitting:
+  //         profileData.firstName + " " + profileData.firstName,
+  //       street_address: streetAddress,
+  //       city,
+  //       state,
+  //       roasts_own_beans: roastsOwnBeans,
+  //       hours,
+  //       website,
+  //       types_of_beverages: typesOfBeverages,
+  //       typical_flavor_notes: typicalFlavorNotes,
+  //       roast_style: typicalRoastStyle,
+  //       popular_bev: popularBev,
+  //       dairy_free_options: dairyFreeOptions,
+  //       gluten_friendly: glutenFriendly,
+  //       meal_options: mealOptions,
+  //       bakery_options: bakeryOptions,
+  //       beans_available: beansAvailable,
+  //       timestamp: serverTimestamp(),
+  //     });
+
+  //     // Save coordinates to Firestore in the Coordinates collection
+  //     await setDoc(doc(db, "Coordinates", shopId), {
+  //       shop_id: shopId,
+  //       shop_name: shopName,
+  //       street_address: address,
+  //       roast_style: typicalRoastStyle,
+  //       latitude: coordinates.latitude,
+  //       longitude: coordinates.longitude,
+  //     });
+
+  //     await setDoc(doc(db, "CoffeeShopWebsites", shopId), {
+  //       shop_id: shopId,
+  //       website,
+  //     });
+
+  //     //this isnt quite right, but its getting to the right spot
+  //     // await updateDoc(doc(db, "BrewBadges", currentUser.uid), {
+  //     // cafes: increment(1),
+  //     // });
+
+  //     await updateDoc(doc(db, "BrewBadges", currentUser.uid), {
+  //       cities: arrayUnion(...new Array(city)),
+  //       cafes: increment(1),
+  //     });
+
+  //     toast.success("Shop added successfully!");
+  //     navigate("/home");
+  //   } catch (error) {
+  //     console.error("Error adding shop:", error);
+  //     toast.error("Failed to add shop.");
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -378,9 +497,20 @@ const AddShop = ({ navigate }) => {
 
     if (checkBannedShop()) {
       alert(
-        "As previously mentioned, this shop cannot be added to the map. You are being rediected away from Add Shop."
+        "As previously mentioned, this shop cannot be added to the map. You are being redirected away from Add Shop."
       );
       navigate("/home");
+      return;
+    }
+
+    const addressExists = await checkExistingShop(
+      streetAddress,
+      city.toUpperCase(),
+      state.toUpperCase()
+    );
+
+    if (addressExists) {
+      toast.error("This shop location is already in the system.");
       return;
     }
 
@@ -391,13 +521,6 @@ const AddShop = ({ navigate }) => {
     const coordinates = await getCoordinates(address);
 
     if (!coordinates) return; // Exit if coordinates fetching failed
-
-    if (!website) {
-      toast.error("Website field is required.");
-      return;
-    }
-
-    console.log("Writing to Firestore with website:", website);
 
     try {
       await setDoc(doc(db, "CoffeeShops", shopId), {
@@ -424,7 +547,6 @@ const AddShop = ({ navigate }) => {
         timestamp: serverTimestamp(),
       });
 
-      // Save coordinates to Firestore in the Coordinates collection
       await setDoc(doc(db, "Coordinates", shopId), {
         shop_id: shopId,
         shop_name: shopName,
@@ -439,13 +561,8 @@ const AddShop = ({ navigate }) => {
         website,
       });
 
-      //this isnt quite right, but its getting to the right spot
-      // await updateDoc(doc(db, "BrewBadges", currentUser.uid), {
-      // cafes: increment(1),
-      // });
-
       await updateDoc(doc(db, "BrewBadges", currentUser.uid), {
-        cities: arrayUnion(...new Array(city)),
+        cities: arrayUnion(city),
         cafes: increment(1),
       });
 
