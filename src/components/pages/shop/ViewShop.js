@@ -260,11 +260,11 @@ function ViewShop({
                 </p>
                 <p>
                   <strong>Ordered</strong>
-                  <br /> A {review.selectedTemp} {review.selectedMilk}{" "}
-                  {review.selectedMilk !== "Black" && "Milk"}{" "}
-                  {review.selectedBev} that was a {review.selectedRoast} roast
-                  and {review.selectedProcess} processed{" "}
-                  {review.flavoring ? "with flavoring" : " "}
+                  <br /> A {review.selectedTemp} {review.selectedBev}{" "}
+                  {review.selectedMilk}{" "}
+                  {review.selectedMilk !== "Black" && "Milk"} that was a{" "}
+                  {review.selectedRoast} roast and {review.selectedProcess}{" "}
+                  processed {review.flavoring ? "with flavoring" : " "}
                 </p>
                 <p className="ratings-profile">
                   <strong>Drink Rating</strong>{" "}

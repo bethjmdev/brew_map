@@ -22,6 +22,7 @@ import EditProfile from "./components/pages/profile/EditProfile";
 import EditShop from "./components/pages/shop/EditShop";
 import OtherUser from "./components/OtherUser";
 import FollowerFeed from "./components/FollowerFeed";
+// import DummyData from "./components/DummyData";
 
 function App() {
   return (
@@ -69,6 +70,8 @@ function MainContent() {
       {!hideNavBar && <NavBar />}
       <Routes>
         <Route path="/" element={<LandingPage navigate={navigate} />} />
+        {/* <Route path="/dummy" element={<DummyData navigate={navigate} />} /> */}
+
         <Route
           path="/home"
           element={

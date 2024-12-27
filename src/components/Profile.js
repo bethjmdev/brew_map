@@ -5,6 +5,7 @@ import {
   collection,
   query,
   where,
+  limit,
   getDocs,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
@@ -19,6 +20,12 @@ export const Profile = () => {
   const auth = getAuth();
   const currentUser = auth.currentUser;
   const [brewBadge, setBrewBadge] = useState(null);
+
+  const [isReccModalOpen, setIsReccModalOpen] = useState(false);
+  const [isListModalOpen, setIsListModalOpen] = useState(false);
+  const [coffeeCity, setCoffeeCity] = useState("");
+  const [coffeeState, setCoffeeState] = useState("");
+  const [finalFilteredReviews, setFinalFilteredReviews] = useState([]);
 
   const cafeBadges = [
     `Bean Scout`,
@@ -142,6 +149,117 @@ export const Profile = () => {
     fetchUserReviews();
   }, [currentUser]);
 
+  const handleOpenReccModal = () => {
+    setIsReccModalOpen(true);
+  };
+
+  const handleCloseReccModal = () => {
+    setIsReccModalOpen(false);
+  };
+
+  const handleCloseListModal = () => {
+    setIsListModalOpen(false);
+  };
+
+  const handleSubmit = async () => {
+    console.log("User input:", coffeeCity, coffeeState);
+
+    try {
+      // Step 1: Fetch all coffee shops matching the city and state
+      const shopQuery = query(
+        collection(db, "CoffeeShops"),
+        where("city", "==", coffeeCity.toUpperCase()),
+        where("state", "==", coffeeState.toUpperCase())
+      );
+      const shopSnapshot = await getDocs(shopQuery);
+
+      if (!shopSnapshot.empty) {
+        const shopIds = [];
+        const shopDetails = {};
+
+        shopSnapshot.forEach((doc) => {
+          shopIds.push(doc.id);
+          shopDetails[doc.id] = { ...doc.data() };
+        });
+
+        console.log("Matching shop IDs:", shopIds);
+
+        // Step 2: Fetch all reviews for the matching shop IDs in a single query
+        const reviewQuery = query(
+          collection(db, "ShopReviews"),
+          where("shop_id", "in", shopIds)
+        );
+        const reviewSnapshot = await getDocs(reviewQuery);
+
+        const allReviews = [];
+        reviewSnapshot.forEach((doc) => {
+          const reviewData = { id: doc.id, ...doc.data() };
+          const shop = shopDetails[reviewData.shop_id];
+
+          if (shop) {
+            reviewData.shop_name = shop.shop_name;
+            reviewData.street_address = shop.street_address;
+            reviewData.city = shop.city;
+            reviewData.state = shop.state;
+          }
+
+          allReviews.push(reviewData);
+        });
+
+        console.log("All Matching Reviews:", allReviews);
+
+        // Step 3: Filter reviews based on user preferences
+        if (currentUser) {
+          const userDoc = await getDoc(doc(db, "BrewUsers", currentUser.uid));
+          if (userDoc.exists()) {
+            const { cafeDrink, cafeMilk, cafeTemp, selectedRoast } =
+              userDoc.data();
+
+            console.log("Current User Preferences:", {
+              cafeDrink,
+              cafeMilk,
+              cafeTemp,
+              selectedRoast,
+            });
+
+            const finalFilteredReviews = allReviews
+              .filter(
+                (review) =>
+                  review.selectedRoast === selectedRoast &&
+                  review.selectedBev === cafeDrink &&
+                  review.selectedTemp === cafeTemp &&
+                  review.drinkRating >= 4 &&
+                  review.userID_submitting !== currentUser.uid
+              )
+              .reduce((unique, review) => {
+                if (!unique[review.shop_id]) unique[review.shop_id] = review;
+                return unique;
+              }, {});
+
+            const recommendations = Object.values(finalFilteredReviews);
+
+            // Handle results
+            if (recommendations.length === 0) {
+              alert(
+                "Not enough shops with your preferences to make a recommendation. Sorry!"
+              );
+            } else {
+              setFinalFilteredReviews(recommendations);
+              setIsListModalOpen(true);
+              console.log("Final Recommendations:", recommendations);
+            }
+          } else {
+            console.log("No user data found for the current user.");
+          }
+        }
+      } else {
+        console.log("No coffee shops found for the given city and state.");
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   return (
     <div className="profile">
       <div className="profile-container">
@@ -152,6 +270,96 @@ export const Profile = () => {
                 {profileData.firstName} {profileData.lastName}
               </strong>
             </h2>
+            <button onClick={handleOpenReccModal}>
+              Get Custom Coffee Shop reccomendations
+            </button>
+            {isReccModalOpen && (
+              <div className="modal-overlay">
+                <div className="modal">
+                  <p>
+                    <strong>
+                      What city do you want your coffee shop reccomendations in?
+                    </strong>
+                  </p>
+                  {/* <p>
+                    You can only request one custom recommendation per day.
+                    We’ll generate six tailored recommendations for the location
+                    of your choice, all in one go!
+                  </p> */}
+                  <p>
+                    <i>
+                      Our reccomendations are based on user reviews. So! If
+                      there arent 6 - or any - locations listed it means we
+                      don't have enough reviews in that city that match with
+                      your preferences... encourage your friends to add reviews
+                      so we can improve up our reccomendations!!!
+                    </i>
+                  </p>
+
+                  <input
+                    type="text"
+                    value={coffeeCity}
+                    placeholder="City you want the recc in- ex. Portland"
+                    onChange={(e) => setCoffeeCity(e.target.value)}
+                  />
+                  <br />
+                  <br />
+                  <input
+                    type="text"
+                    value={coffeeState}
+                    placeholder="State you want the rec in- ex: ME"
+                    onChange={(e) => {
+                      const input = e.target.value.toUpperCase().slice(0, 2); // Uppercase and limit to 2 characters
+                      setCoffeeState(input);
+                    }}
+                  />
+                  <div className="modal-buttons">
+                    <button onClick={handleSubmit}>Submit</button>
+                    <button onClick={handleCloseReccModal}>Cancel</button>
+                  </div>
+                </div>
+              </div>
+            )}
+            {isListModalOpen && (
+              <div className="modal-overlay">
+                <div className="modal">
+                  <h2>Your Custom Reccomendations</h2>
+                  <p>
+                    <i>Make sure to save this list to reference later</i>
+                  </p>
+                  {finalFilteredReviews.map((review) => (
+                    <>
+                      <p key={review.id}>
+                        {review.shop_name} @ {review.street_address}
+                      </p>
+                    </>
+                  ))}
+                  <div className="modal-buttons">
+                    <button
+                      onClick={() => {
+                        const listText = finalFilteredReviews
+                          .map(
+                            (review) =>
+                              `${review.shop_name} @ ${review.street_address}, ${review.city}, ${review.state}`
+                          )
+                          .join("\n");
+                        navigator.clipboard
+                          .writeText(listText)
+                          .then(() => {
+                            alert("List copied to clipboard!");
+                          })
+                          .catch((err) => {
+                            console.error("Failed to copy list:", err);
+                          });
+                      }}
+                    >
+                      Copy List
+                    </button>
+                    <button onClick={handleCloseListModal}>Close</button>
+                  </div>
+                </div>
+              </div>
+            )}
             <button onClick={copyFollowLink}>Copy Follow Link</button>
             <p>
               <strong>Favorite Cafe Drink:</strong> A {profileData.cafeTemp}{" "}
