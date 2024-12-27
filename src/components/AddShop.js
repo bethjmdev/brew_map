@@ -11,6 +11,8 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import { db, auth } from "../utils/auth/firebase";
+import stringSimilarity from "string-similarity";
+
 import SubmitButton from "./button/SubmitButton";
 import "./AddShop.css";
 
@@ -64,6 +66,134 @@ const AddShop = ({ navigate }) => {
     "Jack in the box",
     "7 Brew",
     "Cumberland Farms",
+  ];
+
+  const bannedShopAbbreviations = [
+    "stbx",
+    "strbx",
+    "dunkin",
+    "macas",
+    "mickey d’s",
+    "sbux",
+    "krispy",
+    "kaladi",
+    "Starbucks",
+    "Starbucks Coffee",
+    "Sbux",
+    "Starbux",
+    "The ‘Bucks",
+    "Dunkin Donuts",
+    "Dunkin'",
+    "DD",
+    "Dunkin’ Coffee",
+    "McDonald's",
+    "McD's",
+    "Mickey D's",
+    "McDee's",
+    "MacDonald's",
+    "Tim Hortons",
+    "Timmies",
+    "Timmy's",
+    "T-Ho’s",
+    "Aroma Joe's",
+    "AJ’s",
+    "Aroma Joes",
+    "321 Coffee",
+    "321 Café",
+    "Coffee 321",
+    "Au Bon Pain",
+    "ABP",
+    "Oh Bon Pain",
+    "Au Bon Café",
+    "Biggby Coffee",
+    "Big B Coffee",
+    "Bigby",
+    "Big B",
+    "Bluestone Lane",
+    "Bluestone Café",
+    "Bluestone Coffee",
+    "Cafe Trieste",
+    "Caffè Trieste",
+    "Café Trieste",
+    "Trieste Coffee",
+    "Caribou Coffee",
+    "Caribou",
+    "The ‘Bou",
+    "Caribou Café",
+    "Coffee Beanery",
+    "Beanery Coffee",
+    "Coffee Beanery Shop",
+    "The Coffee Bean & Tea Leaf",
+    "Coffee Bean",
+    "The Bean",
+    "Coffee Bean Tea Leaf",
+    "Dutch Bros Coffee",
+    "Dutch Bros",
+    "Dutch Brothers",
+    "Dutch",
+    "Intelligentsia Coffee & Tea",
+    "Intelligentsia",
+    "Intelli Coffee",
+    "Intelligentsia Tea",
+    "Krispy Kreme",
+    "KK",
+    "Krispy",
+    "Krispy Creme",
+    "Kaladi Brothers Coffee",
+    "Kaladi Coffee",
+    "Kaladi Bros",
+    "La Colombe",
+    "La Colombe Coffee",
+    "Colombe Café",
+    "Peet’s Coffee",
+    "Peet’s",
+    "Peets Café",
+    "Peet’s Coffee and Tea",
+    "Verve Coffee",
+    "Verve",
+    "Verve Café",
+    "PJ’s Coffee",
+    "PJ's",
+    "PJ’s Café",
+    "Pret a Manger",
+    "Pret",
+    "Pret a Café",
+    "Scooter’s Coffee",
+    "Scooters",
+    "Scooter’s",
+    "Scooter’s Café",
+    "Tully’s Coffee",
+    "Tully's",
+    "Tully's Café",
+    "Woods Coffee",
+    "Woods Café",
+    "Wood Coffee",
+    "Burger King",
+    "BK",
+    "The King",
+    "Burger King Café",
+    "Wendy’s",
+    "Wendy’s Café",
+    "Wendy’s Burgers",
+    "Panera",
+    "Panera Bread",
+    "Panera Café",
+    "Panera Coffee",
+    "Sonic",
+    "Sonic Drive-In",
+    "Sonic Burgers",
+    "Sonic Café",
+    "Jack in the Box",
+    "Jack’s",
+    "Jack",
+    "JITB",
+    "7 Brew",
+    "Seven Brew",
+    "7Brews",
+    "Cumberland Farms",
+    "Cumby’s",
+    "Cumberland Coffee",
+    "Cumberland Farms Café",
   ];
 
   // Set initial values for default drink options
@@ -186,21 +316,65 @@ const AddShop = ({ navigate }) => {
     }
   };
 
-  const checkBannedShop = () => {
-    const foundBanned = bannedShops.some(
-      (bannedShop) => bannedShop.toLowerCase() === shopName.trim().toLowerCase()
-    );
-    setIsBanned(foundBanned);
+  //OLD
+  // const checkBannedShop = () => {
+  //   const foundBanned = bannedShops.some(
+  //     (bannedShop) => bannedShop.toLowerCase() === shopName.trim().toLowerCase()
+  //   );
+  //   setIsBanned(foundBanned);
 
-    if (foundBanned && !alerted) {
-      alert(
-        "This is not a specialty coffee shop and cannot be added to the map."
-      );
-      setAlerted(true);
+  //   if (foundBanned && !alerted) {
+  //     alert(
+  //       "This is not a specialty coffee shop and cannot be added to the map."
+  //     );
+  //     setAlerted(true);
+  //   }
+
+  //   return foundBanned;
+  // };
+
+  const checkBannedShop = () => {
+    const trimmedShopName = shopName.trim().toLowerCase();
+
+    // Check direct matches
+    const exactMatch = bannedShops.some(
+      (bannedShop) => bannedShop.toLowerCase() === trimmedShopName
+    );
+
+    // Check abbreviations
+    const abbreviationMatch = bannedShopAbbreviations.some(
+      (abbr) => abbr.toLowerCase() === trimmedShopName
+    );
+
+    // Check for similarity
+    const matches = bannedShops.map((bannedShop) =>
+      stringSimilarity.compareTwoStrings(
+        bannedShop.toLowerCase(),
+        trimmedShopName
+      )
+    );
+
+    const highestSimilarity = Math.max(...matches);
+
+    if (exactMatch || abbreviationMatch || highestSimilarity > 0.6) {
+      setIsBanned(true);
+      if (!alerted) {
+        alert(
+          "This is not a specialty coffee shop and cannot be added to the map."
+        );
+        setAlerted(true);
+      }
+      return true;
     }
 
-    return foundBanned;
+    setIsBanned(false);
+    return false;
   };
+
+  //OLD
+  // const handleShopNameBlur = () => {
+  //   checkBannedShop();
+  // };
 
   const handleShopNameBlur = () => {
     checkBannedShop();
@@ -225,7 +399,7 @@ const AddShop = ({ navigate }) => {
 
     if (checkBannedShop()) {
       alert(
-        "As previously mentioned, this shop cannot be added to the map. You are b eing rediected away from Add Shop."
+        "As previously mentioned, this shop cannot be added to the map. You are being rediected away from Add Shop."
       );
       navigate("/home");
       return;

@@ -20,6 +20,7 @@
     "react-router-dom": "^6.28.0",
     "react-scripts": "5.0.1",
     "react-toastify": "^10.0.6",
+    "string-similarity": "^4.0.4",
     "toast": "^0.5.4",
     "web-vitals": "^2.1.4",
     "zustand": "^5.0.1"
