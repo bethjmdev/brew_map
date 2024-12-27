@@ -7,6 +7,7 @@ import {
   updateDoc,
   increment,
   FieldValue,
+  serverTimestamp,
 } from "firebase/firestore";
 import { db, auth } from "../utils/auth/firebase";
 import SubmitButton from "./button/SubmitButton";
@@ -172,6 +173,7 @@ const AddShop = ({ navigate }) => {
         meal_options: mealOptions,
         bakery_options: bakeryOptions,
         beans_available: beansAvailable,
+        timestamp: serverTimestamp(),
       });
 
       // Save coordinates to Firestore in the Coordinates collection

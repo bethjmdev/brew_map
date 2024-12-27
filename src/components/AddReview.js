@@ -7,6 +7,7 @@ import {
   setDoc,
   updateDoc,
   increment,
+  serverTimestamp,
 } from "firebase/firestore";
 import { db } from "../utils/auth/firebase";
 import { getAuth } from "firebase/auth";
@@ -338,6 +339,7 @@ function AddReview({ navigate }) {
         user_fav_roast: selectedShop.selectedRoast,
         user_fav_process: selectedShop.selectedProcess,
         photo_urls: urls, // Save image URLs here, even if empty
+        timestamp: serverTimestamp(),
       };
 
       // Save the review to Firestore with the custom document ID

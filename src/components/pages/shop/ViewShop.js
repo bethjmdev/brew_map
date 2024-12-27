@@ -221,10 +221,26 @@ function ViewShop({
                   <strong>{review.user_name_submitting}</strong>
                 </p> */}
                 {/* NEW */}
-                <p
+                {/* <p
                   id="reviewer-name"
                   onClick={() =>
                     navigate(`/otheruser/${review.userID_submitting}`)
+                  }
+                >
+                  <strong>{review.user_name_submitting}</strong>
+                </p> */}
+
+                <p
+                  id="reviewer-name"
+                  onClick={() =>
+                    navigate(
+                      `/otheruser/${review.userID_submitting.slice(-4)}-${
+                        review.user_name_submitting
+                      }`,
+                      {
+                        state: { userId: review.userID_submitting },
+                      }
+                    )
                   }
                 >
                   <strong>{review.user_name_submitting}</strong>

@@ -21,6 +21,7 @@ import AddShop from "./components/AddShop";
 import EditProfile from "./components/pages/profile/EditProfile";
 import EditShop from "./components/pages/shop/EditShop";
 import OtherUser from "./components/OtherUser";
+import FollowerFeed from "./components/FollowerFeed";
 
 function App() {
   return (
@@ -101,8 +102,14 @@ function MainContent() {
           }
         />
         <Route
-          path="/otheruser/:id"
+          path="/otheruser/:identifier"
           element={<PrivateRoute component={<OtherUser />} />}
+        />
+        <Route
+          path="/feed"
+          element={
+            <PrivateRoute component={<FollowerFeed navigate={navigate} />} />
+          }
         />
         <Route path="/login" element={<Login navigate={navigate} />} />
         <Route path="/register" element={<Signup navigate={navigate} />} />
