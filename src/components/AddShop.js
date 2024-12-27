@@ -23,6 +23,48 @@ const AddShop = ({ navigate }) => {
   const [hours, setHours] = useState("");
   const [website, setWebsite] = useState("");
   const [profileData, setProfileData] = useState("");
+  const [alerted, setAlerted] = useState(false);
+  const [isBanned, setIsBanned] = useState(false);
+
+  const bannedShops = [
+    "Starbucks",
+    "Dunkin Donuts",
+    "Dunkin",
+    "Mcdonalds",
+    "Tim Hortons",
+    "Aroma Joe’s",
+    "321 Coffee",
+    "Au Bon pain",
+    "Biggby Coffee",
+    "Bluestone Lane",
+    "Cafe Trieste",
+    "Caribou Coffee",
+    "Coffee Beanery",
+    "The Coffee Bean & Tea Leaf",
+    "Dutch Bros. Coffee",
+    "Dutch Bros",
+    "Intelligentsia Coffee & Tea",
+    "Intelligentsia",
+    "Krispy Kreme",
+    "Kaladi Brothers Coffee",
+    "La Colombe",
+    "Peet’s Coffee",
+    "Verve Coffee",
+    "PJ’s Coffee",
+    "Pret a Manger",
+    "Scooters Coffee",
+    "Tully’s Coffee",
+    "Woods Coffee",
+    "Burger King",
+    "Wendy’s",
+    "Panera",
+    "Sonic",
+    "Scooters Coffee",
+    "Sonic Drive-in",
+    "Jack in the box",
+    "7 Brew",
+    "Cumberland Farms",
+  ];
 
   // Set initial values for default drink options
   const [typesOfBeverages, setTypesOfBeverages] = useState([
@@ -139,9 +181,29 @@ const AddShop = ({ navigate }) => {
       }
     } catch (error) {
       console.error("Error fetching coordinates:", error);
-      toast.error("Failed to get coordinates.");
+      alert("Failed to get coordinates.");
       return null;
     }
+  };
+
+  const checkBannedShop = () => {
+    const foundBanned = bannedShops.some(
+      (bannedShop) => bannedShop.toLowerCase() === shopName.trim().toLowerCase()
+    );
+    setIsBanned(foundBanned);
+
+    if (foundBanned && !alerted) {
+      alert(
+        "This is not a specialty coffee shop and cannot be added to the map."
+      );
+      setAlerted(true);
+    }
+
+    return foundBanned;
+  };
+
+  const handleShopNameBlur = () => {
+    checkBannedShop();
   };
 
   const handleSubmit = async (e) => {
@@ -158,6 +220,14 @@ const AddShop = ({ navigate }) => {
       !typicalRoastStyle
     ) {
       toast.error("Please fill out all required fields.");
+      return;
+    }
+
+    if (checkBannedShop()) {
+      alert(
+        "As previously mentioned, this shop cannot be added to the map. You are b eing rediected away from Add Shop."
+      );
+      navigate("/home");
       return;
     }
 
@@ -245,6 +315,7 @@ const AddShop = ({ navigate }) => {
             placeholder="Shop Name"
             value={shopName}
             onChange={(e) => setShopName(e.target.value)}
+            onBlur={handleShopNameBlur}
             required
             className="add-shop-input-text"
           />
@@ -422,6 +493,7 @@ const AddShop = ({ navigate }) => {
           <SubmitButton
             text="Add Shop"
             type="submit"
+            disabled={isBanned}
             // style={{ display: "flex", alignItems: "center" }}
           />
         </form>
