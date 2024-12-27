@@ -5,6 +5,7 @@ import {
   collection,
   query,
   where,
+  limit,
   getDocs,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
@@ -154,9 +155,44 @@ export const Profile = () => {
     setIsModalOpen(false);
   };
 
-  const handleSubmit = () => {
+  // const handleSubmit = () => {
+  //   console.log("User input:", coffeeCity, coffeeState);
+  //   setIsModalOpen(false); // Close the modal after submission
+
+  //   //i dont want this to close out the modal- i want it to trigger the reccomendation to generate.
+  //   //need to get code in for recc
+  //   //need to figure out how to get modal screen to change...?
+  // };
+
+  const handleSubmit = async () => {
     console.log("User input:", coffeeCity, coffeeState);
-    setIsModalOpen(false); // Close the modal after submission
+
+    try {
+      // Create a query to fetch matching coffee shops
+      const q = query(
+        collection(db, "CoffeeShops"),
+        where("city", "==", coffeeCity.toUpperCase()), // Ensure consistency with stored data
+        where("state", "==", coffeeState.toUpperCase()) // Ensure consistency with stored data
+      );
+
+      // Execute the query and retrieve the documents
+      const querySnapshot = await getDocs(q);
+
+      // Check if any documents are found
+      if (!querySnapshot.empty) {
+        const coffeeShops = [];
+        querySnapshot.forEach((doc) => {
+          coffeeShops.push({ id: doc.id, ...doc.data() });
+        });
+
+        // Log the results to the console
+        console.log("Coffee Shops:", coffeeShops);
+      } else {
+        console.log("No coffee shops found for the given city and state.");
+      }
+    } catch (error) {
+      console.error("Error fetching coffee shops:", error);
+    }
   };
 
   return (
