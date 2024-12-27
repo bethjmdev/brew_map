@@ -155,43 +155,81 @@ export const Profile = () => {
     setIsModalOpen(false);
   };
 
-  // const handleSubmit = () => {
+  // const handleSubmit = async () => {
   //   console.log("User input:", coffeeCity, coffeeState);
-  //   setIsModalOpen(false); // Close the modal after submission
 
-  //   //i dont want this to close out the modal- i want it to trigger the reccomendation to generate.
-  //   //need to get code in for recc
-  //   //need to figure out how to get modal screen to change...?
+  //   try {
+  //     // Create a query to fetch matching coffee shops
+  //     const q = query(
+  //       collection(db, "CoffeeShops"),
+  //       where("city", "==", coffeeCity.toUpperCase()), // Ensure consistency with stored data
+  //       where("state", "==", coffeeState.toUpperCase()) // Ensure consistency with stored data
+  //     );
+
+  //     // Execute the query and retrieve the documents
+  //     const querySnapshot = await getDocs(q);
+
+  //     // Check if any documents are found
+  //     if (!querySnapshot.empty) {
+  //       const coffeeShops = [];
+  //       querySnapshot.forEach((doc) => {
+  //         coffeeShops.push({ id: doc.id, ...doc.data() });
+  //       });
+
+  //       // Log the results to the console
+  //       console.log("Coffee Shops:", coffeeShops);
+  //     } else {
+  //       console.log("No coffee shops found for the given city and state.");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error fetching coffee shops:", error);
+  //   }
   // };
 
   const handleSubmit = async () => {
     console.log("User input:", coffeeCity, coffeeState);
 
     try {
-      // Create a query to fetch matching coffee shops
-      const q = query(
+      // Step 1: Fetch all coffee shops matching the city and state
+      const shopQuery = query(
         collection(db, "CoffeeShops"),
-        where("city", "==", coffeeCity.toUpperCase()), // Ensure consistency with stored data
-        where("state", "==", coffeeState.toUpperCase()) // Ensure consistency with stored data
+        where("city", "==", coffeeCity.toUpperCase()),
+        where("state", "==", coffeeState.toUpperCase())
       );
+      const shopSnapshot = await getDocs(shopQuery);
 
-      // Execute the query and retrieve the documents
-      const querySnapshot = await getDocs(q);
-
-      // Check if any documents are found
-      if (!querySnapshot.empty) {
-        const coffeeShops = [];
-        querySnapshot.forEach((doc) => {
-          coffeeShops.push({ id: doc.id, ...doc.data() });
+      if (!shopSnapshot.empty) {
+        const shopIds = [];
+        shopSnapshot.forEach((doc) => {
+          shopIds.push(doc.id);
         });
 
-        // Log the results to the console
-        console.log("Coffee Shops:", coffeeShops);
+        console.log("Matching shop IDs:", shopIds);
+
+        // Step 2: Fetch all reviews for the matching shop IDs
+        const reviewPromises = shopIds.map(async (shopId) => {
+          const reviewQuery = query(
+            collection(db, "ShopReviews"),
+            where("shop_id", "==", shopId)
+          );
+          const reviewSnapshot = await getDocs(reviewQuery);
+          const reviews = [];
+          reviewSnapshot.forEach((doc) => {
+            reviews.push({ id: doc.id, ...doc.data() });
+          });
+          return reviews;
+        });
+
+        // Wait for all review queries to complete
+        const allReviews = (await Promise.all(reviewPromises)).flat();
+
+        // Log all reviews to the console
+        console.log("All Matching Reviews:", allReviews);
       } else {
         console.log("No coffee shops found for the given city and state.");
       }
     } catch (error) {
-      console.error("Error fetching coffee shops:", error);
+      console.error("Error fetching data:", error);
     }
   };
 
