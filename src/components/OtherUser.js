@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useParams, useLocation } from "react-router-dom";
 import {
   doc,
   getDoc,
@@ -6,19 +7,22 @@ import {
   query,
   where,
   getDocs,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { db } from "../utils/auth/firebase";
-import CoffeeCups from "./pages/profile/CoffeeCups";
 
-import "./Profile.css";
-
-export const Profile = () => {
+const OtherUser = () => {
+  const { uidName } = useParams(); // Extract user identifier from the URL
+  const location = useLocation();
   const [profileData, setProfileData] = useState(null);
   const [reviews, setReviews] = useState([]);
+  const [brewBadge, setBrewBadge] = useState(null);
+  const [isFollowing, setIsFollowing] = useState(false);
   const auth = getAuth();
   const currentUser = auth.currentUser;
-  const [brewBadge, setBrewBadge] = useState(null);
 
   const cafeBadges = [
     `Bean Scout`,
@@ -65,73 +69,43 @@ export const Profile = () => {
     return null;
   };
 
-  const copyFollowLink = () => {
-    if (!currentUser || !profileData) return;
-
-    const encodedUserId = btoa(currentUser.uid);
-    const lastFourDigits = currentUser.uid.slice(-4);
-    const userName = profileData.firstName + profileData.lastName;
-    const followLink = `${window.location.origin}/otheruser/${lastFourDigits}-${userName}?uid=${encodedUserId}`;
-
-    navigator.clipboard
-      .writeText(followLink)
-      .then(() => {
-        alert("Follow link copied to clipboard!");
-      })
-      .catch((error) => {
-        console.error("Error copying link:", error);
-      });
-  };
+  const searchParams = new URLSearchParams(location.search);
+  const encodedUserId = searchParams.get("uid");
+  const userId = encodedUserId ? atob(encodedUserId) : null;
 
   useEffect(() => {
     const fetchUserData = async () => {
-      if (currentUser) {
+      if (userId) {
         try {
-          const userDoc = await getDoc(doc(db, "BrewUsers", currentUser.uid));
+          const userDoc = await getDoc(doc(db, "BrewUsers", userId));
           if (userDoc.exists()) {
             setProfileData(userDoc.data());
           }
+
+          const q = query(
+            collection(db, "BrewBadges"),
+            where("id", "==", userId)
+          );
+          const querySnapshot = await getDocs(q);
+
+          querySnapshot.forEach((doc) => setBrewBadge(doc.data()));
         } catch (error) {
           console.error("Error fetching user data:", error);
         }
       }
-
-      if (currentUser) {
-        try {
-          const q = query(
-            collection(db, "BrewBadges"),
-            where("id", "==", currentUser.uid)
-          );
-          const querySnapshot = await getDocs(q);
-
-          if (!querySnapshot.empty) {
-            querySnapshot.forEach((doc) => setBrewBadge(doc.data()));
-          }
-        } catch (error) {
-          console.error("Error fetching user badges:", error);
-        }
-      }
     };
 
-    fetchUserData();
-  }, [currentUser]);
-
-  useEffect(() => {
     const fetchUserReviews = async () => {
-      if (currentUser) {
+      if (userId) {
         try {
           const reviewRef = collection(db, "ShopReviews");
-          const q = query(
-            reviewRef,
-            where("userID_submitting", "==", currentUser.uid)
-          );
+          const q = query(reviewRef, where("userID_submitting", "==", userId));
           const querySnapshot = await getDocs(q);
 
           const reviewList = [];
-          querySnapshot.forEach((doc) => {
-            reviewList.push({ id: doc.id, ...doc.data() });
-          });
-
+          querySnapshot.forEach((doc) =>
+            reviewList.push({ id: doc.id, ...doc.data() })
+          );
           setReviews(reviewList);
         } catch (error) {
           console.error("Error fetching user reviews:", error);
@@ -139,8 +113,70 @@ export const Profile = () => {
       }
     };
 
+    fetchUserData();
     fetchUserReviews();
-  }, [currentUser]);
+  }, [userId]);
+
+  useEffect(() => {
+    const checkFollowingStatus = async () => {
+      if (currentUser) {
+        try {
+          const q = query(
+            collection(db, "Friends"),
+            where("id", "==", currentUser.uid)
+          );
+          const querySnapshot = await getDocs(q);
+
+          if (!querySnapshot.empty) {
+            const friendsDoc = querySnapshot.docs[0];
+            const friendsData = friendsDoc.data();
+
+            if (friendsData.friends && friendsData.friends.includes(userId)) {
+              setIsFollowing(true);
+            }
+          }
+        } catch (error) {
+          console.error("Error checking following status:", error);
+        }
+      }
+    };
+
+    checkFollowingStatus();
+  }, [currentUser, userId]);
+
+  const handleFollowToggle = async () => {
+    if (currentUser) {
+      try {
+        const q = query(
+          collection(db, "Friends"),
+          where("id", "==", currentUser.uid)
+        );
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          const friendsDocRef = querySnapshot.docs[0].ref;
+
+          if (isFollowing) {
+            // Unfollow logic: Remove the userId from the friends array
+            await updateDoc(friendsDocRef, {
+              friends: arrayRemove(userId),
+            });
+            setIsFollowing(false);
+          } else {
+            // Follow logic: Add the userId to the friends array
+            await updateDoc(friendsDocRef, {
+              friends: arrayUnion(userId),
+            });
+            setIsFollowing(true);
+          }
+        } else {
+          console.error("Friends document not found for the current user.");
+        }
+      } catch (error) {
+        console.error("Error updating following status:", error);
+      }
+    }
+  };
 
   return (
     <div className="profile">
@@ -152,7 +188,9 @@ export const Profile = () => {
                 {profileData.firstName} {profileData.lastName}
               </strong>
             </h2>
-            <button onClick={copyFollowLink}>Copy Follow Link</button>
+            <button onClick={handleFollowToggle}>
+              {isFollowing ? "Unfollow" : "Follow"}
+            </button>
             <p>
               <strong>Favorite Cafe Drink:</strong> A {profileData.cafeTemp}{" "}
               {profileData.cafeMilk}{" "}
@@ -187,18 +225,6 @@ export const Profile = () => {
                 {review.selectedMilk !== "Black" && "Milk"} {review.selectedBev}
               </p>
               <p>{review.review}</p>
-              <p className="ratings-profile">
-                <strong>Drink Rating</strong>{" "}
-                <CoffeeCups rating={review.drinkRating} maxCups={5} />
-              </p>
-              <p className="ratings-profile">
-                <strong>Shop Rating</strong>{" "}
-                <CoffeeCups rating={review.shopRating} maxCups={5} />
-              </p>
-              <p className="ratings-profile">
-                <strong>Staff Rating</strong>{" "}
-                <CoffeeCups rating={review.staffRating} maxCups={5} />
-              </p>
             </div>
           ))
         ) : (
@@ -209,4 +235,4 @@ export const Profile = () => {
   );
 };
 
-export default Profile;
+export default OtherUser;

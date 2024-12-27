@@ -1,8 +1,12 @@
-
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCirclePlus, faUser, faMap } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCirclePlus,
+  faUser,
+  faMap,
+  faComments,
+} from "@fortawesome/free-solid-svg-icons";
 import { auth } from "../utils/auth/firebase";
 import { signOut } from "firebase/auth";
 import { toast } from "react-toastify";
@@ -47,6 +51,7 @@ function NavBar() {
 
   const goToProfile = () => navigate("/profile");
   const goToMap = () => navigate("/home");
+  const goToFeed = () => navigate("/feed");
 
   return (
     <div className="navbar-container">
@@ -65,6 +70,15 @@ function NavBar() {
           <a onClick={goToAddReview}>Add Review</a>
         </div>
       )}
+
+      {location.pathname !== "/feed" && (
+        <FontAwesomeIcon
+          icon={faComments}
+          onClick={goToFeed}
+          className="add-icon"
+        />
+      )}
+
       <FontAwesomeIcon
         icon={faCirclePlus}
         className="add-icon"
@@ -90,6 +104,8 @@ function NavBar() {
         "/addshop",
         "/addreview",
         "/editshop",
+        "/feed",
+        "/otheruser/",
       ].includes(location.pathname) && (
         <FontAwesomeIcon icon={faMap} className="map-icon" onClick={goToMap} />
       )}

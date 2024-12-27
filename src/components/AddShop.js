@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import {
   doc,
   setDoc,
+  getDoc,
   updateDoc,
   increment,
   FieldValue,
+  serverTimestamp,
 } from "firebase/firestore";
 import { db, auth } from "../utils/auth/firebase";
 import SubmitButton from "./button/SubmitButton";
@@ -20,6 +22,7 @@ const AddShop = ({ navigate }) => {
   const [roastsOwnBeans, setRoastsOwnBeans] = useState(false);
   const [hours, setHours] = useState("");
   const [website, setWebsite] = useState("");
+  const [profileData, setProfileData] = useState("");
 
   // Set initial values for default drink options
   const [typesOfBeverages, setTypesOfBeverages] = useState([
@@ -89,6 +92,28 @@ const AddShop = ({ navigate }) => {
     }
   };
 
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (auth.currentUser) {
+        try {
+          const userDoc = await getDoc(
+            doc(db, "BrewUsers", auth.currentUser.uid)
+          );
+          if (userDoc.exists()) {
+            setProfileData(userDoc.data());
+          } else {
+            console.log("No such document!");
+          }
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      }
+    };
+    fetchUserData();
+  }, [auth.currentUser]);
+
+  console.log(profileData);
+
   // Function to get coordinates using Google Geocoding API
   const getCoordinates = async (address) => {
     const apiKey = process.env.REACT_APP_GOOGLE_MAPS_API; // Securely use an environment variable
@@ -156,7 +181,8 @@ const AddShop = ({ navigate }) => {
         shop_name: shopName,
         shop_id: shopId,
         userID_submitting: currentUser.uid,
-        user_name_submitting: currentUser.displayName || "Anonymous",
+        user_name_submitting:
+          profileData.firstName + " " + profileData.firstName,
         street_address: streetAddress,
         city,
         state,
@@ -172,6 +198,7 @@ const AddShop = ({ navigate }) => {
         meal_options: mealOptions,
         bakery_options: bakeryOptions,
         beans_available: beansAvailable,
+        timestamp: serverTimestamp(),
       });
 
       // Save coordinates to Firestore in the Coordinates collection
@@ -195,7 +222,7 @@ const AddShop = ({ navigate }) => {
       // });
 
       await updateDoc(doc(db, "BrewBadges", currentUser.uid), {
-        cities: FieldValue.arrayUnion(...new Array(city)),
+        // cities: FieldValue.arrayUnion(...new Array(city)),
         cafes: increment(1),
       });
 

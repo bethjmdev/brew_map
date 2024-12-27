@@ -5,7 +5,13 @@ import ShopImages from "./ShopImages";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../../utils/auth/firebase";
 
-function ViewShop({ showCoffeeShow, coffeeShop, shopReviews, coffeeBags }) {
+function ViewShop({
+  showCoffeeShow,
+  coffeeShop,
+  shopReviews,
+  coffeeBags,
+  navigate,
+}) {
   const [photoViewer, setPhotoViewer] = useState({ isOpen: false, photos: [] });
   const [badges, setBadges] = useState({}); // Store badges for users
   const isVertical = (width, height) => height > width;
@@ -210,9 +216,36 @@ function ViewShop({ showCoffeeShow, coffeeShop, shopReviews, coffeeBags }) {
           {shopReviews && shopReviews.length > 0 ? (
             shopReviews.map((review) => (
               <div key={review.id} className="shop-ind-review">
-                <p id="reviewer-name">
+                {/* OLD */}
+                {/* <p id="reviewer-name">
+                  <strong>{review.user_name_submitting}</strong>
+                </p> */}
+                {/* NEW */}
+                {/* <p
+                  id="reviewer-name"
+                  onClick={() =>
+                    navigate(`/otheruser/${review.userID_submitting}`)
+                  }
+                >
+                  <strong>{review.user_name_submitting}</strong>
+                </p> */}
+
+                <p
+                  id="reviewer-name"
+                  onClick={() =>
+                    navigate(
+                      `/otheruser/${review.userID_submitting.slice(-4)}-${
+                        review.user_name_submitting
+                      }`,
+                      {
+                        state: { userId: review.userID_submitting },
+                      }
+                    )
+                  }
+                >
                   <strong>{review.user_name_submitting}</strong>
                 </p>
+
                 <strong></strong>
                 <p>
                   <i> {renderBadges(review.userID_submitting)}</i>
