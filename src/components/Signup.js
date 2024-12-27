@@ -21,6 +21,8 @@ const Signup = ({ navigate }) => {
   const [homeMilk, setHomeMilk] = useState("");
   const [homeTemp, setHomeTemp] = useState("");
   const [yourCity, setYourCity] = useState("");
+  const [yourState, setYourState] = useState("");
+
   const [about, setAbout] = useState("");
 
   const roastOptions = ["Light", "Medium", "Dark"];
@@ -120,6 +122,7 @@ const Signup = ({ navigate }) => {
         homeMilk,
         homeTemp,
         yourCity,
+        yourState,
         about,
       });
 
@@ -155,6 +158,7 @@ const Signup = ({ navigate }) => {
       setHomeMilk("");
       setHomeTemp("");
       setYourCity("");
+      setYourState("");
       setAbout("");
 
       // Display success toast message
@@ -246,6 +250,14 @@ const Signup = ({ navigate }) => {
           placeholder="Your City"
           value={yourCity}
           onChange={(e) => setYourCity(e.target.value)}
+          className="input_styling"
+        />
+        <input
+          type="text"
+          name="yourState"
+          placeholder="Your State"
+          value={yourState}
+          onChange={(e) => setYourState(e.target.value)}
           className="input_styling"
         />
         <textarea
