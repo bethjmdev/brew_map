@@ -20,7 +20,7 @@ import AddReview from "./components/AddReview";
 import AddShop from "./components/AddShop";
 import EditProfile from "./components/pages/profile/EditProfile";
 import EditShop from "./components/pages/shop/EditShop";
-import OtherUser from "./components/pages/shop/OtherUser";
+import OtherUser from "./components/OtherUser";
 
 function App() {
   return (
@@ -101,10 +101,8 @@ function MainContent() {
           }
         />
         <Route
-          path="/otheruser/"
-          element={
-            <PrivateRoute component={<OtherUser navigate={navigate} />} />
-          }
+          path="/otheruser/:id"
+          element={<PrivateRoute component={<OtherUser />} />}
         />
         <Route path="/login" element={<Login navigate={navigate} />} />
         <Route path="/register" element={<Signup navigate={navigate} />} />
