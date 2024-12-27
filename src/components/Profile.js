@@ -222,6 +222,15 @@ export const Profile = () => {
   //             "Reviews Matching Selected Beverage:",
   //             matchingBevReviews
   //           );
+
+  //           // Step 6: Further filter reviews where selectedTemp matches user's cafeTemp
+  //           const matchingTempReviews = matchingBevReviews.filter(
+  //             (review) => review.selectedTemp === cafeTemp
+  //           );
+  //           console.log(
+  //             "Reviews Matching Selected Temperature:",
+  //             matchingTempReviews
+  //           );
   //         } else {
   //           console.log("No user data found for the current user.");
   //         }
@@ -288,28 +297,25 @@ export const Profile = () => {
             const matchingRoastReviews = allReviews.filter(
               (review) => review.selectedRoast === selectedRoast
             );
-            console.log(
-              "Reviews Matching Selected Roast:",
-              matchingRoastReviews
-            );
 
             // Step 5: Further filter reviews where selectedBev matches user's cafeDrink
             const matchingBevReviews = matchingRoastReviews.filter(
               (review) => review.selectedBev === cafeDrink
-            );
-            console.log(
-              "Reviews Matching Selected Beverage:",
-              matchingBevReviews
             );
 
             // Step 6: Further filter reviews where selectedTemp matches user's cafeTemp
             const matchingTempReviews = matchingBevReviews.filter(
               (review) => review.selectedTemp === cafeTemp
             );
-            console.log(
-              "Reviews Matching Selected Temperature:",
-              matchingTempReviews
+
+            // Step 7: Remove duplicate shop IDs and retain one review per shop
+            const uniqueReviews = Array.from(
+              new Map(
+                matchingTempReviews.map((review) => [review.shop_id, review])
+              ).values()
             );
+
+            console.log("Unique Reviews (One per Shop):", uniqueReviews);
           } else {
             console.log("No user data found for the current user.");
           }
