@@ -191,27 +191,35 @@ export const Profile = () => {
 
   //       // Wait for all review queries to complete
   //       const allReviews = (await Promise.all(reviewPromises)).flat();
-
-  //       // Log all reviews to the console
   //       console.log("All Matching Reviews:", allReviews);
+
+  //       // Step 3: Fetch BrewUsers data for the current user
+  //       if (currentUser) {
+  //         const userDoc = await getDoc(doc(db, "BrewUsers", currentUser.uid));
+  //         if (userDoc.exists()) {
+  //           const { cafeDrink, cafeMilk, cafeTemp, selectedRoast } =
+  //             userDoc.data();
+  //           console.log("Current User Preferences:");
+  //           console.log("Cafe Drink:", cafeDrink);
+  //           console.log("Cafe Milk:", cafeMilk);
+  //           console.log("Cafe Temp:", cafeTemp);
+  //           console.log("Selected Roast:", selectedRoast);
+
+  //           // Step 4: Filter reviews where selectedRoast matches user's selectedRoast
+  //           const matchingRoastReviews = allReviews.filter(
+  //             (review) => review.selectedRoast === selectedRoast
+  //           );
+
+  //           console.log(
+  //             "Reviews Matching Selected Roast:",
+  //             matchingRoastReviews
+  //           );
+  //         } else {
+  //           console.log("No user data found for the current user.");
+  //         }
+  //       }
   //     } else {
   //       console.log("No coffee shops found for the given city and state.");
-  //     }
-
-  //     // Step 3: Fetch BrewUsers data for the current user
-  //     if (currentUser) {
-  //       const userDoc = await getDoc(doc(db, "BrewUsers", currentUser.uid));
-  //       if (userDoc.exists()) {
-  //         const { cafeDrink, cafeMilk, cafeTemp, selectedRoast } =
-  //           userDoc.data();
-  //         console.log("Current User Preferences:");
-  //         console.log("Cafe Drink:", cafeDrink);
-  //         console.log("Cafe Milk:", cafeMilk);
-  //         console.log("Cafe Temp:", cafeTemp);
-  //         console.log("Selected Roast:", selectedRoast);
-  //       } else {
-  //         console.log("No user data found for the current user.");
-  //       }
   //     }
   //   } catch (error) {
   //     console.error("Error fetching data:", error);
@@ -272,10 +280,18 @@ export const Profile = () => {
             const matchingRoastReviews = allReviews.filter(
               (review) => review.selectedRoast === selectedRoast
             );
-
             console.log(
               "Reviews Matching Selected Roast:",
               matchingRoastReviews
+            );
+
+            // Step 5: Further filter reviews where selectedBev matches user's cafeDrink
+            const matchingBevReviews = matchingRoastReviews.filter(
+              (review) => review.selectedBev === cafeDrink
+            );
+            console.log(
+              "Reviews Matching Selected Beverage:",
+              matchingBevReviews
             );
           } else {
             console.log("No user data found for the current user.");
