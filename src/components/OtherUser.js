@@ -211,6 +211,7 @@
 // };
 
 // export default OtherUser;
+
 import React, { useEffect, useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import {
@@ -220,7 +221,11 @@ import {
   query,
   where,
   getDocs,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
 } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 import { db } from "../utils/auth/firebase";
 
 const OtherUser = () => {
@@ -229,6 +234,9 @@ const OtherUser = () => {
   const [profileData, setProfileData] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [brewBadge, setBrewBadge] = useState(null);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const auth = getAuth();
+  const currentUser = auth.currentUser;
 
   const cafeBadges = [
     `Bean Scout`,
@@ -323,6 +331,67 @@ const OtherUser = () => {
     fetchUserReviews();
   }, [userId]);
 
+  useEffect(() => {
+    const checkFollowingStatus = async () => {
+      if (currentUser) {
+        try {
+          const q = query(
+            collection(db, "Friends"),
+            where("id", "==", currentUser.uid)
+          );
+          const querySnapshot = await getDocs(q);
+
+          if (!querySnapshot.empty) {
+            const friendsDoc = querySnapshot.docs[0];
+            const friendsData = friendsDoc.data();
+
+            if (friendsData.friends && friendsData.friends.includes(userId)) {
+              setIsFollowing(true);
+            }
+          }
+        } catch (error) {
+          console.error("Error checking following status:", error);
+        }
+      }
+    };
+
+    checkFollowingStatus();
+  }, [currentUser, userId]);
+
+  const handleFollowToggle = async () => {
+    if (currentUser) {
+      try {
+        const q = query(
+          collection(db, "Friends"),
+          where("id", "==", currentUser.uid)
+        );
+        const querySnapshot = await getDocs(q);
+
+        if (!querySnapshot.empty) {
+          const friendsDocRef = querySnapshot.docs[0].ref;
+
+          if (isFollowing) {
+            // Unfollow logic: Remove the userId from the friends array
+            await updateDoc(friendsDocRef, {
+              friends: arrayRemove(userId),
+            });
+            setIsFollowing(false);
+          } else {
+            // Follow logic: Add the userId to the friends array
+            await updateDoc(friendsDocRef, {
+              friends: arrayUnion(userId),
+            });
+            setIsFollowing(true);
+          }
+        } else {
+          console.error("Friends document not found for the current user.");
+        }
+      } catch (error) {
+        console.error("Error updating following status:", error);
+      }
+    }
+  };
+
   return (
     <div className="profile">
       <div className="profile-container">
@@ -333,6 +402,9 @@ const OtherUser = () => {
                 {profileData.firstName} {profileData.lastName}
               </strong>
             </h2>
+            <button onClick={handleFollowToggle}>
+              {isFollowing ? "Unfollow" : "Follow"}
+            </button>
             <p>
               <strong>Favorite Cafe Drink:</strong> A {profileData.cafeTemp}{" "}
               {profileData.cafeMilk}{" "}
@@ -362,6 +434,10 @@ const OtherUser = () => {
           reviews.map((review) => (
             <div key={review.id} className="review-section">
               <h3>{review.shop_name}</h3>
+              <p>
+                Ordered a {review.selectedTemp} {review.selectedMilk}{" "}
+                {review.selectedMilk !== "Black" && "Milk"} {review.selectedBev}
+              </p>
               <p>{review.review}</p>
             </div>
           ))
