@@ -20,6 +20,10 @@ export const Profile = () => {
   const currentUser = auth.currentUser;
   const [brewBadge, setBrewBadge] = useState(null);
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [coffeeCity, setCoffeeCity] = useState("");
+  const [coffeeState, setCoffeeState] = useState("");
+
   const cafeBadges = [
     `Bean Scout`,
     `Brew Pathfinder`,
@@ -142,6 +146,19 @@ export const Profile = () => {
     fetchUserReviews();
   }, [currentUser]);
 
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleSubmit = () => {
+    console.log("User input:", coffeeCity, coffeeState);
+    setIsModalOpen(false); // Close the modal after submission
+  };
+
   return (
     <div className="profile">
       <div className="profile-container">
@@ -152,6 +169,44 @@ export const Profile = () => {
                 {profileData.firstName} {profileData.lastName}
               </strong>
             </h2>
+            <button onClick={handleOpenModal}>
+              Get Custom Coffee Shop reccomendations
+            </button>
+            {isModalOpen && (
+              <div className="modal-overlay">
+                <div className="modal">
+                  <p>Where do you want your coffee reccomendations from?</p>
+                  <p>
+                    <i>
+                      You can only request one custom recommendation per day.
+                      We’ll generate six tailored recommendations for the
+                      location of your choice, all in one go!
+                    </i>
+                  </p>
+                  <input
+                    type="text"
+                    value={coffeeCity}
+                    placeholder="City you want the recc in- ex. Portland"
+                    onChange={(e) => setCoffeeCity(e.target.value)}
+                  />
+                  <br />
+                  <br />
+                  <input
+                    type="text"
+                    value={coffeeState}
+                    placeholder="State you want the rec in- ex: ME"
+                    onChange={(e) => {
+                      const input = e.target.value.toUpperCase().slice(0, 2); // Uppercase and limit to 2 characters
+                      setCoffeeState(input);
+                    }}
+                  />
+                  <div className="modal-buttons">
+                    <button onClick={handleSubmit}>Submit</button>
+                    <button onClick={handleCloseModal}>Cancel</button>
+                  </div>
+                </div>
+              </div>
+            )}
             <button onClick={copyFollowLink}>Copy Follow Link</button>
             <p>
               <strong>Favorite Cafe Drink:</strong> A {profileData.cafeTemp}{" "}

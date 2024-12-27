@@ -1,6 +1,6 @@
 import React from "react";
 import { collection, doc, setDoc } from "firebase/firestore";
-import { db } from "./firebase"; // Ensure your Firebase config is correctly set up
+import { db } from "../utils/auth/firebase"; // Ensure your Firebase config is correctly set up
 
 const shopData = [
   {
@@ -41,7 +41,7 @@ const userIDs = [
 ];
 
 const beverages = ["Latte", "Americano", "Pour Over", "Cortado"];
-const milks = ["Black", "Oat", "Almond"];
+const milks = ["Coconut", "Oat", "Almond"];
 const roasts = ["Light", "Medium", "Dark"];
 const ratings = [1, 2, 3, 4, 5];
 
@@ -81,7 +81,7 @@ const addDummyReviews = async () => {
       staffRating: generateRandomElement(ratings),
       timestamp: new Date(),
       userID_submitting: userID,
-      user_fav_drink: "Cold Brew",
+      user_fav_drink: "Pour Over",
       user_fav_milk: "Black",
       user_fav_process: "Dark",
       user_fav_roast: "Dark",
@@ -111,7 +111,10 @@ const DummyData = () => {
   };
 
   return (
-    <button onClick={handleGenerateReviews}>Generate Dummy Reviews</button>
+    <>
+      <br />
+      <button onClick={handleGenerateReviews}>Generate Dummy Reviews</button>
+    </>
   );
 };
 
