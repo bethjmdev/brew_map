@@ -21,9 +21,11 @@ export const Profile = () => {
   const currentUser = auth.currentUser;
   const [brewBadge, setBrewBadge] = useState(null);
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isReccModalOpen, setIsReccModalOpen] = useState(false);
+  const [isListModalOpen, setIsListModalOpen] = useState(false);
   const [coffeeCity, setCoffeeCity] = useState("");
   const [coffeeState, setCoffeeState] = useState("");
+  const [finalFilteredReviews, setFinalFilteredReviews] = useState([]);
 
   const cafeBadges = [
     `Bean Scout`,
@@ -147,12 +149,20 @@ export const Profile = () => {
     fetchUserReviews();
   }, [currentUser]);
 
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
+  const handleOpenReccModal = () => {
+    setIsReccModalOpen(true);
   };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
+  const handleCloseReccModal = () => {
+    setIsReccModalOpen(false);
+  };
+
+  const handleOpenListModal = () => {
+    setIsListModalOpen(true);
+  };
+
+  const handleCloseListModal = () => {
+    setIsListModalOpen(false);
   };
 
   // const handleSubmit = async () => {
@@ -232,10 +242,48 @@ export const Profile = () => {
   //             (review) => review.userID_submitting !== currentUser.uid
   //           );
 
-  //           console.log(
-  //             "Filtered Reviews (Excluding Current User):",
-  //             filteredReviews
+  //           // Step 9: Filter out reviews with drinkRating < 4
+  //           const finalFilteredReviews = filteredReviews.filter(
+  //             (review) => review.drinkRating >= 4
   //           );
+
+  //           // Update state with final filtered reviews
+  //           setFinalFilteredReviews(finalFilteredReviews);
+
+  //           setIsReccModalOpen(false);
+
+  //           // Step 10: Handle no recommendations case
+  //           if (finalFilteredReviews.length === 0) {
+  //             alert(
+  //               "Not enough shops with your preferences to make a recommendation. Sorry!"
+  //             );
+  //           } else {
+  //             setIsListModalOpen(true);
+  //             console.log("Final Recommendations:", finalFilteredReviews);
+
+  //             // Step 11: Fetch coffee shop details for the reviews
+  //             const shopDetailsPromises = finalFilteredReviews.map(
+  //               async (review) => {
+  //                 const shopDoc = await getDoc(
+  //                   doc(db, "CoffeeShops", review.shop_id)
+  //                 );
+  //                 if (shopDoc.exists()) {
+  //                   return { shop_id: review.shop_id, ...shopDoc.data() };
+  //                 }
+  //                 return null;
+  //               }
+  //             );
+
+  //             // Resolve all promises and filter out null results
+  //             const coffeeShops = (
+  //               await Promise.all(shopDetailsPromises)
+  //             ).filter(Boolean);
+
+  //             console.log(
+  //               "Coffee Shop Details for Recommendations:",
+  //               coffeeShops
+  //             );
+  //           }
   //         } else {
   //           console.log("No user data found for the current user.");
   //         }
@@ -262,8 +310,11 @@ export const Profile = () => {
 
       if (!shopSnapshot.empty) {
         const shopIds = [];
+        const shopDetails = {}; // To store shop details by shop_id
+
         shopSnapshot.forEach((doc) => {
           shopIds.push(doc.id);
+          shopDetails[doc.id] = { ...doc.data() }; // Store the full shop data
         });
 
         console.log("Matching shop IDs:", shopIds);
@@ -277,7 +328,18 @@ export const Profile = () => {
           const reviewSnapshot = await getDocs(reviewQuery);
           const reviews = [];
           reviewSnapshot.forEach((doc) => {
-            reviews.push({ id: doc.id, ...doc.data() });
+            const reviewData = { id: doc.id, ...doc.data() };
+
+            // Merge shop details into each review
+            if (shopDetails[reviewData.shop_id]) {
+              reviewData.shop_name = shopDetails[reviewData.shop_id].shop_name;
+              reviewData.street_address =
+                shopDetails[reviewData.shop_id].street_address;
+              reviewData.city = shopDetails[reviewData.shop_id].city;
+              reviewData.state = shopDetails[reviewData.shop_id].state;
+            }
+
+            reviews.push(reviewData);
           });
           return reviews;
         });
@@ -286,12 +348,13 @@ export const Profile = () => {
         const allReviews = (await Promise.all(reviewPromises)).flat();
         console.log("All Matching Reviews:", allReviews);
 
-        // Step 3: Fetch BrewUsers data for the current user
+        // Continue with filtering logic
         if (currentUser) {
           const userDoc = await getDoc(doc(db, "BrewUsers", currentUser.uid));
           if (userDoc.exists()) {
             const { cafeDrink, cafeMilk, cafeTemp, selectedRoast } =
               userDoc.data();
+
             console.log("Current User Preferences:");
             console.log("Cafe Drink:", cafeDrink);
             console.log("Cafe Milk:", cafeMilk);
@@ -325,15 +388,25 @@ export const Profile = () => {
               (review) => review.userID_submitting !== currentUser.uid
             );
 
-            // Step 9: Filter out reviews with drinkRating >= 4
+            // Step 9: Filter out reviews with drinkRating < 4
             const finalFilteredReviews = filteredReviews.filter(
               (review) => review.drinkRating >= 4
             );
 
-            console.log(
-              "Final Filtered Reviews (Drink Rating > 4):",
-              finalFilteredReviews
-            );
+            // Update state with final filtered reviews
+            setFinalFilteredReviews(finalFilteredReviews);
+
+            setIsReccModalOpen(false);
+
+            // Step 10: Handle no recommendations case
+            if (finalFilteredReviews.length === 0) {
+              alert(
+                "Not enough shops with your preferences to make a recommendation. Sorry!"
+              );
+            } else {
+              setIsListModalOpen(true);
+              console.log("Final Recommendations:", finalFilteredReviews);
+            }
           } else {
             console.log("No user data found for the current user.");
           }
@@ -356,10 +429,10 @@ export const Profile = () => {
                 {profileData.firstName} {profileData.lastName}
               </strong>
             </h2>
-            <button onClick={handleOpenModal}>
+            <button onClick={handleOpenReccModal}>
               Get Custom Coffee Shop reccomendations
             </button>
-            {isModalOpen && (
+            {isReccModalOpen && (
               <div className="modal-overlay">
                 <div className="modal">
                   <p>
@@ -367,16 +440,18 @@ export const Profile = () => {
                       What city do you want your coffee shop reccomendations in?
                     </strong>
                   </p>
-                  <p>
+                  {/* <p>
                     You can only request one custom recommendation per day.
                     We’ll generate six tailored recommendations for the location
                     of your choice, all in one go!
-                  </p>
+                  </p> */}
                   <p>
                     <i>
-                      (if there arent 6 locations listed it means we don't have
-                      enough reviews yet in that city with your preferences...
-                      encourage your friends to add reviews!!!)
+                      Our reccomendations are based on user reviews. So! If
+                      there arent 6 - or any - locations listed it means we
+                      don't have enough reviews in that city that match with
+                      your preferences... encourage your friends to add reviews
+                      so we can improve up our reccomendations!!!
                     </i>
                   </p>
 
@@ -399,7 +474,47 @@ export const Profile = () => {
                   />
                   <div className="modal-buttons">
                     <button onClick={handleSubmit}>Submit</button>
-                    <button onClick={handleCloseModal}>Cancel</button>
+                    <button onClick={handleCloseReccModal}>Cancel</button>
+                  </div>
+                </div>
+              </div>
+            )}
+            {isListModalOpen && (
+              <div className="modal-overlay">
+                <div className="modal">
+                  <h2>Your Custom Reccomendations</h2>
+                  <p>
+                    <i>Make sure to save this list to reference later</i>
+                  </p>
+                  {finalFilteredReviews.map((review) => (
+                    <>
+                      <p key={review.id}>
+                        {review.shop_name} @ {review.street_address}
+                      </p>
+                    </>
+                  ))}
+                  <div className="modal-buttons">
+                    <button
+                      onClick={() => {
+                        const listText = finalFilteredReviews
+                          .map(
+                            (review) =>
+                              `${review.shop_name} @ ${review.street_address}, ${review.city}, ${review.state}`
+                          )
+                          .join("\n");
+                        navigator.clipboard
+                          .writeText(listText)
+                          .then(() => {
+                            alert("List copied to clipboard!");
+                          })
+                          .catch((err) => {
+                            console.error("Failed to copy list:", err);
+                          });
+                      }}
+                    >
+                      Copy List
+                    </button>
+                    <button onClick={handleCloseListModal}>Close</button>
                   </div>
                 </div>
               </div>
