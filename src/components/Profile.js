@@ -165,137 +165,6 @@ export const Profile = () => {
     setIsListModalOpen(false);
   };
 
-  // const handleSubmit = async () => {
-  //   console.log("User input:", coffeeCity, coffeeState);
-
-  //   try {
-  //     // Step 1: Fetch all coffee shops matching the city and state
-  //     const shopQuery = query(
-  //       collection(db, "CoffeeShops"),
-  //       where("city", "==", coffeeCity.toUpperCase()),
-  //       where("state", "==", coffeeState.toUpperCase())
-  //     );
-  //     const shopSnapshot = await getDocs(shopQuery);
-
-  //     if (!shopSnapshot.empty) {
-  //       const shopIds = [];
-  //       shopSnapshot.forEach((doc) => {
-  //         shopIds.push(doc.id);
-  //       });
-
-  //       console.log("Matching shop IDs:", shopIds);
-
-  //       // Step 2: Fetch all reviews for the matching shop IDs
-  //       const reviewPromises = shopIds.map(async (shopId) => {
-  //         const reviewQuery = query(
-  //           collection(db, "ShopReviews"),
-  //           where("shop_id", "==", shopId)
-  //         );
-  //         const reviewSnapshot = await getDocs(reviewQuery);
-  //         const reviews = [];
-  //         reviewSnapshot.forEach((doc) => {
-  //           reviews.push({ id: doc.id, ...doc.data() });
-  //         });
-  //         return reviews;
-  //       });
-
-  //       // Wait for all review queries to complete
-  //       const allReviews = (await Promise.all(reviewPromises)).flat();
-  //       console.log("All Matching Reviews:", allReviews);
-
-  //       // Step 3: Fetch BrewUsers data for the current user
-  //       if (currentUser) {
-  //         const userDoc = await getDoc(doc(db, "BrewUsers", currentUser.uid));
-  //         if (userDoc.exists()) {
-  //           const { cafeDrink, cafeMilk, cafeTemp, selectedRoast } =
-  //             userDoc.data();
-  //           console.log("Current User Preferences:");
-  //           console.log("Cafe Drink:", cafeDrink);
-  //           console.log("Cafe Milk:", cafeMilk);
-  //           console.log("Cafe Temp:", cafeTemp);
-  //           console.log("Selected Roast:", selectedRoast);
-
-  //           // Step 4: Filter reviews where selectedRoast matches user's selectedRoast
-  //           const matchingRoastReviews = allReviews.filter(
-  //             (review) => review.selectedRoast === selectedRoast
-  //           );
-
-  //           // Step 5: Further filter reviews where selectedBev matches user's cafeDrink
-  //           const matchingBevReviews = matchingRoastReviews.filter(
-  //             (review) => review.selectedBev === cafeDrink
-  //           );
-
-  //           // Step 6: Further filter reviews where selectedTemp matches user's cafeTemp
-  //           const matchingTempReviews = matchingBevReviews.filter(
-  //             (review) => review.selectedTemp === cafeTemp
-  //           );
-
-  //           // Step 7: Remove duplicate shop IDs and retain one review per shop
-  //           const uniqueReviews = Array.from(
-  //             new Map(
-  //               matchingTempReviews.map((review) => [review.shop_id, review])
-  //             ).values()
-  //           );
-
-  //           // Step 8: Exclude reviews submitted by the current user
-  //           const filteredReviews = uniqueReviews.filter(
-  //             (review) => review.userID_submitting !== currentUser.uid
-  //           );
-
-  //           // Step 9: Filter out reviews with drinkRating < 4
-  //           const finalFilteredReviews = filteredReviews.filter(
-  //             (review) => review.drinkRating >= 4
-  //           );
-
-  //           // Update state with final filtered reviews
-  //           setFinalFilteredReviews(finalFilteredReviews);
-
-  //           setIsReccModalOpen(false);
-
-  //           // Step 10: Handle no recommendations case
-  //           if (finalFilteredReviews.length === 0) {
-  //             alert(
-  //               "Not enough shops with your preferences to make a recommendation. Sorry!"
-  //             );
-  //           } else {
-  //             setIsListModalOpen(true);
-  //             console.log("Final Recommendations:", finalFilteredReviews);
-
-  //             // Step 11: Fetch coffee shop details for the reviews
-  //             const shopDetailsPromises = finalFilteredReviews.map(
-  //               async (review) => {
-  //                 const shopDoc = await getDoc(
-  //                   doc(db, "CoffeeShops", review.shop_id)
-  //                 );
-  //                 if (shopDoc.exists()) {
-  //                   return { shop_id: review.shop_id, ...shopDoc.data() };
-  //                 }
-  //                 return null;
-  //               }
-  //             );
-
-  //             // Resolve all promises and filter out null results
-  //             const coffeeShops = (
-  //               await Promise.all(shopDetailsPromises)
-  //             ).filter(Boolean);
-
-  //             console.log(
-  //               "Coffee Shop Details for Recommendations:",
-  //               coffeeShops
-  //             );
-  //           }
-  //         } else {
-  //           console.log("No user data found for the current user.");
-  //         }
-  //       }
-  //     } else {
-  //       console.log("No coffee shops found for the given city and state.");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error);
-  //   }
-  // };
-
   const handleSubmit = async () => {
     console.log("User input:", coffeeCity, coffeeState);
 
@@ -310,102 +179,78 @@ export const Profile = () => {
 
       if (!shopSnapshot.empty) {
         const shopIds = [];
-        const shopDetails = {}; // To store shop details by shop_id
+        const shopDetails = {};
 
         shopSnapshot.forEach((doc) => {
           shopIds.push(doc.id);
-          shopDetails[doc.id] = { ...doc.data() }; // Store the full shop data
+          shopDetails[doc.id] = { ...doc.data() };
         });
 
         console.log("Matching shop IDs:", shopIds);
 
-        // Step 2: Fetch all reviews for the matching shop IDs
-        const reviewPromises = shopIds.map(async (shopId) => {
-          const reviewQuery = query(
-            collection(db, "ShopReviews"),
-            where("shop_id", "==", shopId)
-          );
-          const reviewSnapshot = await getDocs(reviewQuery);
-          const reviews = [];
-          reviewSnapshot.forEach((doc) => {
-            const reviewData = { id: doc.id, ...doc.data() };
+        // Step 2: Fetch all reviews for the matching shop IDs in a single query
+        const reviewQuery = query(
+          collection(db, "ShopReviews"),
+          where("shop_id", "in", shopIds)
+        );
+        const reviewSnapshot = await getDocs(reviewQuery);
 
-            // Merge shop details into each review
-            if (shopDetails[reviewData.shop_id]) {
-              reviewData.shop_name = shopDetails[reviewData.shop_id].shop_name;
-              reviewData.street_address =
-                shopDetails[reviewData.shop_id].street_address;
-              reviewData.city = shopDetails[reviewData.shop_id].city;
-              reviewData.state = shopDetails[reviewData.shop_id].state;
-            }
+        const allReviews = [];
+        reviewSnapshot.forEach((doc) => {
+          const reviewData = { id: doc.id, ...doc.data() };
+          const shop = shopDetails[reviewData.shop_id];
 
-            reviews.push(reviewData);
-          });
-          return reviews;
+          if (shop) {
+            reviewData.shop_name = shop.shop_name;
+            reviewData.street_address = shop.street_address;
+            reviewData.city = shop.city;
+            reviewData.state = shop.state;
+          }
+
+          allReviews.push(reviewData);
         });
 
-        // Wait for all review queries to complete
-        const allReviews = (await Promise.all(reviewPromises)).flat();
         console.log("All Matching Reviews:", allReviews);
 
-        // Continue with filtering logic
+        // Step 3: Filter reviews based on user preferences
         if (currentUser) {
           const userDoc = await getDoc(doc(db, "BrewUsers", currentUser.uid));
           if (userDoc.exists()) {
             const { cafeDrink, cafeMilk, cafeTemp, selectedRoast } =
               userDoc.data();
 
-            console.log("Current User Preferences:");
-            console.log("Cafe Drink:", cafeDrink);
-            console.log("Cafe Milk:", cafeMilk);
-            console.log("Cafe Temp:", cafeTemp);
-            console.log("Selected Roast:", selectedRoast);
+            console.log("Current User Preferences:", {
+              cafeDrink,
+              cafeMilk,
+              cafeTemp,
+              selectedRoast,
+            });
 
-            // Step 4: Filter reviews where selectedRoast matches user's selectedRoast
-            const matchingRoastReviews = allReviews.filter(
-              (review) => review.selectedRoast === selectedRoast
-            );
+            const finalFilteredReviews = allReviews
+              .filter(
+                (review) =>
+                  review.selectedRoast === selectedRoast &&
+                  review.selectedBev === cafeDrink &&
+                  review.selectedTemp === cafeTemp &&
+                  review.drinkRating >= 4 &&
+                  review.userID_submitting !== currentUser.uid
+              )
+              .reduce((unique, review) => {
+                if (!unique[review.shop_id]) unique[review.shop_id] = review;
+                return unique;
+              }, {});
 
-            // Step 5: Further filter reviews where selectedBev matches user's cafeDrink
-            const matchingBevReviews = matchingRoastReviews.filter(
-              (review) => review.selectedBev === cafeDrink
-            );
+            const recommendations = Object.values(finalFilteredReviews);
 
-            // Step 6: Further filter reviews where selectedTemp matches user's cafeTemp
-            const matchingTempReviews = matchingBevReviews.filter(
-              (review) => review.selectedTemp === cafeTemp
-            );
-
-            // Step 7: Remove duplicate shop IDs and retain one review per shop
-            const uniqueReviews = Array.from(
-              new Map(
-                matchingTempReviews.map((review) => [review.shop_id, review])
-              ).values()
-            );
-
-            // Step 8: Exclude reviews submitted by the current user
-            const filteredReviews = uniqueReviews.filter(
-              (review) => review.userID_submitting !== currentUser.uid
-            );
-
-            // Step 9: Filter out reviews with drinkRating < 4
-            const finalFilteredReviews = filteredReviews.filter(
-              (review) => review.drinkRating >= 4
-            );
-
-            // Update state with final filtered reviews
-            setFinalFilteredReviews(finalFilteredReviews);
-
-            setIsReccModalOpen(false);
-
-            // Step 10: Handle no recommendations case
-            if (finalFilteredReviews.length === 0) {
+            // Handle results
+            if (recommendations.length === 0) {
               alert(
                 "Not enough shops with your preferences to make a recommendation. Sorry!"
               );
             } else {
+              setFinalFilteredReviews(recommendations);
               setIsListModalOpen(true);
-              console.log("Final Recommendations:", finalFilteredReviews);
+              console.log("Final Recommendations:", recommendations);
             }
           } else {
             console.log("No user data found for the current user.");
