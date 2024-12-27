@@ -157,10 +157,6 @@ export const Profile = () => {
     setIsReccModalOpen(false);
   };
 
-  const handleOpenListModal = () => {
-    setIsListModalOpen(true);
-  };
-
   const handleCloseListModal = () => {
     setIsListModalOpen(false);
   };
