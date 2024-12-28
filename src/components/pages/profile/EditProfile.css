@@ -53,7 +53,7 @@
 
 .edit-profile button {
   padding: 0.8rem;
-  background-color: #6a4d4d;
+  background-color: #806d5b;
   color: white;
   border: none;
   border-radius: 5px;
@@ -63,7 +63,7 @@
 }
 
 .edit-profile button:hover {
-  background-color: #8b5a5a;
+  background-color: #b3a89d;
 }
 
 .edit-profile .beverage-grid {
@@ -91,7 +91,7 @@
 }
 
 .edit-profile .edit-profile-container h2 {
-  color: #6a4d4d;
+  color: #806d5b;
 }
 
 .edit-profile .question-boxes {
