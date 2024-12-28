@@ -14,6 +14,8 @@ function ViewShop({
 }) {
   const [photoViewer, setPhotoViewer] = useState({ isOpen: false, photos: [] });
   const [badges, setBadges] = useState({}); // Store badges for users
+  const [mostCommonCombinationDetails, setMostCommonCombinationDetails] =
+    useState(null);
   const isVertical = (width, height) => height > width;
 
   useEffect(() => {
@@ -67,6 +69,7 @@ function ViewShop({
     return null;
   };
 
+  // console.log("shop id", coffeeShop.shop_id);
   // Render badges based on user data
   const renderBadges = (userId) => {
     const userBadges = badges[userId];
@@ -90,6 +93,52 @@ function ViewShop({
   const closePhotoViewer = () => {
     setPhotoViewer({ isOpen: false, photos: [] });
   };
+
+  useEffect(() => {
+    const findMostCommonCombination = (reviews) => {
+      // Filter reviews with drinkRating >= 4
+      const highRatedReviews = reviews.filter(
+        (review) => review.drinkRating >= 4
+      );
+
+      // Create combined strings and count matches
+      const combinedStrings = highRatedReviews.map(
+        (review) =>
+          `${review.selectedBev} ${review.selectedTemp} ${review.selectedMilk} ${review.selectedRoast} ${review.selectedProcess} ${review.flavoring}`
+      );
+
+      const matchCount = combinedStrings.reduce((acc, string) => {
+        acc[string] = (acc[string] || 0) + 1;
+        return acc;
+      }, {});
+
+      // Find the most common string
+      const mostCommonString = Object.keys(matchCount).reduce((a, b) =>
+        matchCount[a] > matchCount[b] ? a : b
+      );
+
+      // Split the most common string back into details
+      const [
+        selectedBev,
+        selectedTemp,
+        selectedMilk,
+        selectedRoast,
+        selectedProcess,
+        flavoring,
+      ] = mostCommonString.split(" ");
+
+      return {
+        selectedBev,
+        selectedTemp,
+        selectedMilk,
+        selectedRoast,
+        selectedProcess,
+        flavoring: flavoring === "true", // Convert back to boolean
+      };
+    };
+
+    setMostCommonCombinationDetails(findMostCommonCombination(shopReviews));
+  }, [shopReviews]);
 
   if (!coffeeShop) {
     return (
@@ -177,9 +226,21 @@ function ViewShop({
           <p>
             <strong>Typical Roast Style:</strong> {coffeeShop.roast_style}
           </p>
-          <p>
-            <strong>Most Popular Beverage:</strong>{" "}
-          </p>
+
+          {mostCommonCombinationDetails ? (
+            <p>
+              <strong>Most popular drink based on reviews:</strong>
+              <br /> A {mostCommonCombinationDetails.selectedTemp}{" "}
+              {mostCommonCombinationDetails.selectedMilk}{" "}
+              {mostCommonCombinationDetails.selectedMilk !== "Black" && "Milk"}{" "}
+              {mostCommonCombinationDetails.selectedBev} that is a{" "}
+              {mostCommonCombinationDetails.selectedRoast} Roast and{" "}
+              {mostCommonCombinationDetails.selectedProcess} processed{" "}
+              {mostCommonCombinationDetails.flavoring ? "with flavoring" : " "}
+            </p>
+          ) : (
+            <p>Loading...</p>
+          )}
 
           <div className="options-available">
             <h2>Options Available</h2>
