@@ -83,7 +83,9 @@ export const Profile = () => {
     navigator.clipboard
       .writeText(followLink)
       .then(() => {
-        alert("Follow link copied to clipboard!");
+        alert(
+          "Follow link copied to clipboard! Send to your friends so they can follow you!"
+        );
       })
       .catch((error) => {
         console.error("Error copying link:", error);
@@ -238,6 +240,8 @@ export const Profile = () => {
 
             const recommendations = Object.values(finalFilteredReviews);
 
+            setIsReccModalOpen(false);
+
             // Handle results
             if (recommendations.length === 0) {
               alert(
@@ -245,6 +249,7 @@ export const Profile = () => {
               );
             } else {
               setFinalFilteredReviews(recommendations);
+
               setIsListModalOpen(true);
               console.log("Final Recommendations:", recommendations);
             }
@@ -270,9 +275,16 @@ export const Profile = () => {
                 {profileData.firstName} {profileData.lastName}
               </strong>
             </h2>
-            <button onClick={handleOpenReccModal}>
-              Get Custom Coffee Shop reccomendations
-            </button>
+            <div className="profile_buttons">
+              <button onClick={handleOpenReccModal} id="custom_button">
+                Custom Coffee Shop Recc
+              </button>
+              <br />
+              <button onClick={copyFollowLink} id="custom_button">
+                Copy Follow Link
+              </button>
+            </div>
+
             {isReccModalOpen && (
               <div className="modal-overlay">
                 <div className="modal">
@@ -360,7 +372,7 @@ export const Profile = () => {
                 </div>
               </div>
             )}
-            <button onClick={copyFollowLink}>Copy Follow Link</button>
+
             <p>
               <strong>Favorite Cafe Drink:</strong> A {profileData.cafeTemp}{" "}
               {profileData.cafeMilk}{" "}

@@ -3,11 +3,14 @@ import { useNavigate } from "react-router-dom";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { db } from "../utils/auth/firebase";
-import "./FollowerFeed.css"; // Ensure you have the relevant styles
+import "./FollowerFeed.css";
 
 const FollowerFeed = () => {
   const [friends, setFriends] = useState([]);
-  const [feedItems, setFeedItems] = useState([]); // Unified feed for reviews and shops
+  const [feedItems, setFeedItems] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const postsPerPage = 10; // Number of posts per page
+
   const auth = getAuth();
   const currentUser = auth.currentUser;
   const navigate = useNavigate();
@@ -23,7 +26,7 @@ const FollowerFeed = () => {
           const querySnapshot = await getDocs(q);
 
           if (!querySnapshot.empty) {
-            const friendsDoc = querySnapshot.docs[0]; // Assuming one document per user
+            const friendsDoc = querySnapshot.docs[0];
             const friendsData = friendsDoc.data();
 
             if (friendsData.friends && Array.isArray(friendsData.friends)) {
@@ -54,9 +57,7 @@ const FollowerFeed = () => {
           const thirtyDaysAgo = new Date();
           thirtyDaysAgo.setDate(now.getDate() - 30);
 
-          // Fetch reviews and shops for each friend ID
           for (const friendId of friends) {
-            // Fetch reviews
             const reviewQuery = query(
               reviewRef,
               where("userID_submitting", "==", friendId)
@@ -65,7 +66,6 @@ const FollowerFeed = () => {
 
             reviewSnapshot.forEach((doc) => {
               const reviewData = doc.data();
-
               if (
                 reviewData.timestamp &&
                 typeof reviewData.timestamp.toMillis === "function" &&
@@ -79,7 +79,6 @@ const FollowerFeed = () => {
               }
             });
 
-            // Fetch coffee shops
             const shopQuery = query(
               shopsRef,
               where("userID_submitting", "==", friendId)
@@ -88,7 +87,6 @@ const FollowerFeed = () => {
 
             shopSnapshot.forEach((doc) => {
               const shopData = doc.data();
-
               if (
                 shopData.timestamp &&
                 typeof shopData.timestamp.toMillis === "function" &&
@@ -103,7 +101,6 @@ const FollowerFeed = () => {
             });
           }
 
-          // Sort combined feed items by timestamp in descending order
           feedList.sort(
             (a, b) => b.timestamp.toMillis() - a.timestamp.toMillis()
           );
@@ -123,11 +120,25 @@ const FollowerFeed = () => {
     });
   };
 
+  // Pagination logic
+  const indexOfLastPost = currentPage * postsPerPage;
+  const indexOfFirstPost = indexOfLastPost - postsPerPage;
+  const currentPosts = feedItems.slice(indexOfFirstPost, indexOfLastPost);
+  const totalPages = Math.ceil(feedItems.length / postsPerPage);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) setCurrentPage((prevPage) => prevPage + 1);
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) setCurrentPage((prevPage) => prevPage - 1);
+  };
+
   return (
     <div className="follower-feed">
       <h2>Friends' Activity (Last 30 Days)</h2>
-      {feedItems.length > 0 ? (
-        feedItems.map((item) => (
+      {currentPosts.length > 0 ? (
+        currentPosts.map((item) => (
           <div key={item.id} className={`feed-item ${item.type}-item`}>
             {item.type === "review" ? (
               <div className="review-section">
@@ -141,7 +152,12 @@ const FollowerFeed = () => {
                         item.user_name_submitting
                       )
                     }
-                    style={{ cursor: "pointer", color: "blue" }}
+                    style={{
+                      cursor: "pointer",
+                      color: "black",
+                      textDecoration: "underline",
+                      fontStyle: "italic",
+                    }}
                   >
                     {item.user_name_submitting}
                   </strong>
@@ -206,6 +222,24 @@ const FollowerFeed = () => {
         ))
       ) : (
         <p>No activity found from your friends in the last 30 days.</p>
+      )}
+
+      {/* Pagination Controls */}
+      {feedItems.length > postsPerPage && (
+        <div className="pagination">
+          <button onClick={handlePrevPage} disabled={currentPage === 1}>
+            Previous
+          </button>
+          <span>
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={handleNextPage}
+            disabled={currentPage === totalPages}
+          >
+            Next
+          </button>
+        </div>
       )}
     </div>
   );

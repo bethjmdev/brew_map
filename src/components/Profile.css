@@ -90,6 +90,24 @@
   justify-content: space-around;
 }
 
+.profile_buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#custom_button {
+  background-color: #806d5b;
+  color: white;
+  width: 15rem;
+}
+
+#custom_button:hover {
+  background-color: #4f3e31;
+  color: white;
+}
+
 /* Button styling */
 button {
   padding: 10px 15px;

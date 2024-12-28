@@ -326,13 +326,14 @@ function ViewShop({
                     )
                   }
                 >
-                  <strong>{review.user_name_submitting}</strong>
+                  <strong>
+                    <i>
+                      <u>{review.user_name_submitting}</u>
+                    </i>
+                  </strong>
                 </p>
 
-                <strong></strong>
-                <p>
-                  <i> {renderBadges(review.userID_submitting)}</i>
-                </p>
+                <p>{renderBadges(review.userID_submitting)}</p>
                 <br />
                 <p>
                   <strong>Favorite drink</strong>
