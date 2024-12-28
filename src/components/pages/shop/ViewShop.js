@@ -94,52 +94,95 @@ function ViewShop({
     setPhotoViewer({ isOpen: false, photos: [] });
   };
 
+  const printHighRatedReviews = (reviews) => {
+    if (!reviews || reviews.length === 0) {
+      console.log("No reviews available.");
+      return;
+    }
+
+    const highRatedReviews = reviews.filter(
+      (review) => review.drinkRating >= 4
+    );
+
+    if (highRatedReviews.length === 0) {
+      console.log("No reviews with a rating of 4 or higher.");
+    } else {
+      console.log("High-rated reviews:");
+      highRatedReviews.forEach((review, index) => {
+        console.log(`Review ${index + 1}:`, review);
+      });
+    }
+  };
+
+  const findMostCommonReviewString = (reviews) => {
+    if (!reviews || reviews.length === 0) {
+      console.log("No reviews available.");
+      return;
+    }
+
+    const highRatedReviews = reviews.filter(
+      (review) => review.drinkRating >= 4
+    );
+
+    if (highRatedReviews.length === 0) {
+      console.log("No reviews with a rating of 4 or higher.");
+      return;
+    }
+
+    // Combine fields into normalized strings
+    const combinedStrings = highRatedReviews.map((review) => {
+      const selectedTemp =
+        review.selectedTemp?.toLowerCase().trim() || "unknown";
+      const selectedMilk =
+        review.selectedMilk?.toLowerCase().trim() || "unknown";
+      const selectedBev = review.selectedBev?.toLowerCase().trim() || "unknown";
+      const selectedRoast =
+        review.selectedRoast?.toLowerCase().trim() || "unknown";
+      const selectedProcess =
+        review.selectedProcess?.toLowerCase().trim() || "unknown";
+
+      return `${selectedTemp} ${selectedMilk} ${selectedBev} ${selectedRoast} ${selectedProcess}`;
+    });
+
+    // Check if all strings are "unknown unknown unknown unknown unknown"
+    if (
+      combinedStrings.every(
+        (string) => string === "unknown unknown unknown unknown unknown"
+      )
+    ) {
+      console.log("No top-rated drink.");
+      return;
+    }
+
+    // Count occurrences of each string
+    const countMap = combinedStrings.reduce((acc, string) => {
+      acc[string] = (acc[string] || 0) + 1;
+      return acc;
+    }, {});
+
+    // Find the highest occurrence
+    const maxCount = Math.max(...Object.values(countMap));
+    const mostCommonStrings = Object.keys(countMap).filter(
+      (string) => countMap[string] === maxCount
+    );
+
+    // Randomly select one if there's a tie
+    const selectedString =
+      mostCommonStrings.length > 1
+        ? mostCommonStrings[
+            Math.floor(Math.random() * mostCommonStrings.length)
+          ]
+        : mostCommonStrings[0];
+
+    console.log("Most common drink:", selectedString);
+  };
+
+  // Example of using this function in your ViewShop component
   useEffect(() => {
-    const findMostCommonCombination = (reviews) => {
-      // Filter reviews with drinkRating >= 4
-      const highRatedReviews = reviews.filter(
-        (review) => review.drinkRating >= 4
-      );
-
-      // Create combined strings and count matches
-      const combinedStrings = highRatedReviews.map(
-        (review) =>
-          `${review.selectedBev} ${review.selectedTemp} ${review.selectedMilk} ${review.selectedRoast} ${review.selectedProcess} ${review.flavoring}`
-      );
-
-      const matchCount = combinedStrings.reduce((acc, string) => {
-        acc[string] = (acc[string] || 0) + 1;
-        return acc;
-      }, {});
-
-      // Find the most common string
-      const mostCommonString = Object.keys(matchCount).reduce((a, b) =>
-        matchCount[a] > matchCount[b] ? a : b
-      );
-
-      // Split the most common string back into details
-      const [
-        selectedBev,
-        selectedTemp,
-        selectedMilk,
-        selectedRoast,
-        selectedProcess,
-        flavoring,
-      ] = mostCommonString.split(" ");
-
-      return {
-        selectedBev,
-        selectedTemp,
-        selectedMilk,
-        selectedRoast,
-        selectedProcess,
-        flavoring: flavoring === "true", // Convert back to boolean
-      };
-    };
-
-    setMostCommonCombinationDetails(findMostCommonCombination(shopReviews));
+    findMostCommonReviewString(shopReviews);
   }, [shopReviews]);
 
+  //--------------------
   if (!coffeeShop) {
     return (
       <div className="view-shop">
@@ -227,7 +270,7 @@ function ViewShop({
             <strong>Typical Roast Style:</strong> {coffeeShop.roast_style}
           </p>
 
-          {mostCommonCombinationDetails ? (
+          {/* {mostCommonCombinationDetails ? (
             <p>
               <strong>Most popular drink based on reviews:</strong>
               <br /> A {mostCommonCombinationDetails.selectedTemp}{" "}
@@ -240,7 +283,7 @@ function ViewShop({
             </p>
           ) : (
             <p>Loading...</p>
-          )}
+          )} */}
 
           <div className="options-available">
             <h2>Options Available</h2>
