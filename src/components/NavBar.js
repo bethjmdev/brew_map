@@ -71,19 +71,12 @@ function NavBar() {
         </div>
       )}
 
-      {location.pathname !== "/feed" && (
-        <FontAwesomeIcon
-          icon={faComments}
-          onClick={goToFeed}
-          className="add-icon"
-        />
-      )}
-
       <FontAwesomeIcon
         icon={faCirclePlus}
         className="add-icon"
         onClick={handleAddClick}
       />
+
       <div onClick={handleUserClick} className="user-icon-container">
         <FontAwesomeIcon icon={faUser} className="user-icon" />
         {showLogout && (
@@ -98,6 +91,13 @@ function NavBar() {
           </div>
         )}
       </div>
+      {location.pathname !== "/feed" && (
+        <FontAwesomeIcon
+          icon={faComments}
+          onClick={goToFeed}
+          className="add-icon"
+        />
+      )}
       {[
         "/profile",
         "/editprofile",
