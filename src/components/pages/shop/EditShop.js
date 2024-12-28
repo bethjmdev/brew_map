@@ -180,50 +180,282 @@ const EditShop = ({ navigate }) => {
   };
 
   return (
-    <div className="edit-shop">
-      <div className="edit-shop-container">
-        <h3>Edit Coffee Shop</h3>
+    // <div className="edit-shop">
+    //   <div className="edit-shop-container">
+    //     <h3>Edit Coffee Shop</h3>
+    //     <ToastContainer position="top-right" />
+
+    //     <div className="filter-section">
+    //       <select value={state} onChange={(e) => setState(e.target.value)}>
+    //         <option value="">Select State</option>
+    //         {states.map((state) => (
+    //           <option key={state} value={state}>
+    //             {state}
+    //           </option>
+    //         ))}
+    //       </select>
+
+    //       {state && (
+    //         <select value={city} onChange={(e) => setCity(e.target.value)}>
+    //           <option value="">Select City</option>
+    //           {cities.map((city) => (
+    //             <option key={city} value={city}>
+    //               {city}
+    //             </option>
+    //           ))}
+    //         </select>
+    //       )}
+
+    //       {state && city && shops.length > 0 && (
+    //         <select
+    //           value={shopId}
+    //           onChange={(e) => selectShop(e.target.value)}
+    //           className="dropdown-style"
+    //         >
+    //           <option value="">Select Shop</option>
+    //           {shops.map((shop) => (
+    //             <option key={shop.id} value={shop.id}>
+    //               {shop.shop_name}: {shop.street_address}
+    //             </option>
+    //           ))}
+    //         </select>
+    //       )}
+    //     </div>
+
+    //     {shopId && shopData && (
+    //       <form onSubmit={handleSubmit} className="edit-shop-form">
+    //         <input
+    //           type="text"
+    //           placeholder="Shop Name"
+    //           value={shopData.shop_name}
+    //           onChange={(e) =>
+    //             setShopData({ ...shopData, shop_name: e.target.value })
+    //           }
+    //         />
+    //         <input
+    //           type="text"
+    //           placeholder="Street Address"
+    //           value={shopData.street_address}
+    //           onChange={(e) =>
+    //             setShopData({ ...shopData, street_address: e.target.value })
+    //           }
+    //         />
+    //         <label>
+    //           Roasts Own Beans:
+    //           <br />
+    //           <br />
+    //           <button
+    //             type="button"
+    //             className={shopData.roasts_own_beans ? "active-button" : ""}
+    //             onClick={() =>
+    //               setShopData({ ...shopData, roasts_own_beans: true })
+    //             }
+    //           >
+    //             Yes
+    //           </button>
+    //           <button
+    //             type="button"
+    //             className={!shopData.roasts_own_beans ? "active-button" : ""}
+    //             onClick={() =>
+    //               setShopData({ ...shopData, roasts_own_beans: false })
+    //             }
+    //           >
+    //             No
+    //           </button>
+    //         </label>
+    //         <input
+    //           type="text"
+    //           placeholder="Hours"
+    //           value={shopData.hours}
+    //           onChange={(e) =>
+    //             setShopData({ ...shopData, hours: e.target.value })
+    //           }
+    //         />
+    //         <input
+    //           type="text"
+    //           placeholder="Website"
+    //           value={shopData.website}
+    //           onChange={(e) =>
+    //             setShopData({ ...shopData, website: e.target.value })
+    //           }
+    //         />
+
+    //         <label>Types of Beverages:</label>
+    //         <br />
+    //         <div className="beverage-grid">
+    //           {beverageOptions.map((beverage) => (
+    //             <label key={beverage}>
+    //               <input
+    //                 type="checkbox"
+    //                 checked={
+    //                   shopData.types_of_beverages?.includes(beverage) || false
+    //                 }
+    //                 onChange={() =>
+    //                   handleCheckboxChange("types_of_beverages", beverage)
+    //                 }
+    //               />
+    //               {beverage}
+    //             </label>
+    //           ))}
+    //         </div>
+    //         <label>Typical Roast Style:</label>
+    //         <select
+    //           value={shopData.roast_style || ""}
+    //           onChange={(e) =>
+    //             setShopData({
+    //               ...shopData,
+    //               roast_style: e.target.value,
+    //             })
+    //           }
+    //         >
+    //           <option value="">Select Roast Style</option>
+    //           {roastOptions.map((roast) => (
+    //             <option key={roast} value={roast}>
+    //               {roast}
+    //             </option>
+    //           ))}
+    //         </select>
+    //         <label>
+    //           Dairy Free Options:
+    //           <br />
+    //           <br />
+    //           <button
+    //             type="button"
+    //             className={shopData.dairy_free_options ? "active-button" : ""}
+    //             onClick={() =>
+    //               setShopData({ ...shopData, dairy_free_options: true })
+    //             }
+    //           >
+    //             Yes
+    //           </button>
+    //           <button
+    //             type="button"
+    //             className={!shopData.dairy_free_options ? "active-button" : ""}
+    //             onClick={() =>
+    //               setShopData({ ...shopData, dairy_free_options: false })
+    //             }
+    //           >
+    //             No
+    //           </button>
+    //         </label>
+    //         <label>
+    //           Gluten Friendly:
+    //           <br />
+    //           <br />
+    //           <button
+    //             type="button"
+    //             className={shopData.gluten_friendly ? "active-button" : ""}
+    //             onClick={() =>
+    //               setShopData({ ...shopData, gluten_friendly: true })
+    //             }
+    //           >
+    //             Yes
+    //           </button>
+    //           <button
+    //             type="button"
+    //             className={!shopData.gluten_friendly ? "active-button" : ""}
+    //             onClick={() =>
+    //               setShopData({ ...shopData, gluten_friendly: false })
+    //             }
+    //           >
+    //             No
+    //           </button>
+    //         </label>
+    //         <label>
+    //           Meal Options:
+    //           <br />
+    //           <br />
+    //           <button
+    //             type="button"
+    //             className={shopData.meal_options ? "active-button" : ""}
+    //             onClick={() => setShopData({ ...shopData, meal_options: true })}
+    //           >
+    //             Yes
+    //           </button>
+    //           <button
+    //             type="button"
+    //             className={!shopData.meal_options ? "active-button" : ""}
+    //             onClick={() =>
+    //               setShopData({ ...shopData, meal_options: false })
+    //             }
+    //           >
+    //             No
+    //           </button>
+    //         </label>
+    //         <label>
+    //           Bakery Options:
+    //           <br />
+    //           <br />
+    //           <button
+    //             type="button"
+    //             className={shopData.bakery_options ? "active-button" : ""}
+    //             onClick={() =>
+    //               setShopData({ ...shopData, bakery_options: true })
+    //             }
+    //           >
+    //             Yes
+    //           </button>
+    //           <button
+    //             type="button"
+    //             className={!shopData.bakery_options ? "active-button" : ""}
+    //             onClick={() =>
+    //               setShopData({ ...shopData, bakery_options: false })
+    //             }
+    //           >
+    //             No
+    //           </button>
+    //         </label>
+    //         <SubmitButton text="Save Changes" type="submit" />
+    //       </form>
+    //     )}
+    //   </div>
+    // </div>
+    <div className="add-shop">
+      <div className="add-shop-container">
+        <h2>Edit Coffee Shop</h2>
         <ToastContainer position="top-right" />
 
-        <div className="filter-section">
-          <select value={state} onChange={(e) => setState(e.target.value)}>
-            <option value="">Select State</option>
-            {states.map((state) => (
-              <option key={state} value={state}>
-                {state}
-              </option>
-            ))}
-          </select>
-
-          {state && (
-            <select value={city} onChange={(e) => setCity(e.target.value)}>
-              <option value="">Select City</option>
-              {cities.map((city) => (
-                <option key={city} value={city}>
-                  {city}
+        {!state || !city || !shopId ? (
+          <div className="filter-section">
+            <select value={state} onChange={(e) => setState(e.target.value)}>
+              <option value="">Select State</option>
+              {states.map((state) => (
+                <option key={state} value={state}>
+                  {state}
                 </option>
               ))}
             </select>
-          )}
 
-          {state && city && shops.length > 0 && (
-            <select
-              value={shopId}
-              onChange={(e) => selectShop(e.target.value)}
-              className="dropdown-style"
-            >
-              <option value="">Select Shop</option>
-              {shops.map((shop) => (
-                <option key={shop.id} value={shop.id}>
-                  {shop.shop_name}: {shop.street_address}
-                </option>
-              ))}
-            </select>
-          )}
-        </div>
+            {state && (
+              <select value={city} onChange={(e) => setCity(e.target.value)}>
+                <option value="">Select City</option>
+                {cities.map((city) => (
+                  <option key={city} value={city}>
+                    {city}
+                  </option>
+                ))}
+              </select>
+            )}
+
+            {state && city && shops.length > 0 && (
+              <select
+                value={shopId}
+                onChange={(e) => selectShop(e.target.value)}
+                className="dropdown-style"
+              >
+                <option value="">Select Shop</option>
+                {shops.map((shop) => (
+                  <option key={shop.id} value={shop.id}>
+                    {shop.shop_name}: {shop.street_address}
+                  </option>
+                ))}
+              </select>
+            )}
+          </div>
+        ) : null}
 
         {shopId && shopData && (
-          <form onSubmit={handleSubmit} className="edit-shop-form">
+          <form onSubmit={handleSubmit} className="add-shop-form">
             <input
               type="text"
               placeholder="Shop Name"
@@ -231,6 +463,7 @@ const EditShop = ({ navigate }) => {
               onChange={(e) =>
                 setShopData({ ...shopData, shop_name: e.target.value })
               }
+              className="add-shop-input-text"
             />
             <input
               type="text"
@@ -239,8 +472,10 @@ const EditShop = ({ navigate }) => {
               onChange={(e) =>
                 setShopData({ ...shopData, street_address: e.target.value })
               }
+              className="add-shop-input-text"
             />
-            <label>
+
+            <label className="y-n-box">
               Roasts Own Beans:
               <br />
               <br />
@@ -270,6 +505,7 @@ const EditShop = ({ navigate }) => {
               onChange={(e) =>
                 setShopData({ ...shopData, hours: e.target.value })
               }
+              className="add-shop-input-text"
             />
             <input
               type="text"
@@ -278,10 +514,9 @@ const EditShop = ({ navigate }) => {
               onChange={(e) =>
                 setShopData({ ...shopData, website: e.target.value })
               }
+              className="add-shop-input-text"
             />
-
             <label>Types of Beverages:</label>
-            <br />
             <div className="beverage-grid">
               {beverageOptions.map((beverage) => (
                 <label key={beverage}>
@@ -298,113 +533,26 @@ const EditShop = ({ navigate }) => {
                 </label>
               ))}
             </div>
-            <label>Typical Roast Style:</label>
-            <select
-              value={shopData.roast_style || ""}
-              onChange={(e) =>
-                setShopData({
-                  ...shopData,
-                  roast_style: e.target.value,
-                })
-              }
-            >
-              <option value="">Select Roast Style</option>
-              {roastOptions.map((roast) => (
-                <option key={roast} value={roast}>
-                  {roast}
-                </option>
-              ))}
-            </select>
-            <label>
-              Dairy Free Options:
+            <div className="roast-style">
+              <label>Typical Roast Style:</label>
               <br />
-              <br />
-              <button
-                type="button"
-                className={shopData.dairy_free_options ? "active-button" : ""}
-                onClick={() =>
-                  setShopData({ ...shopData, dairy_free_options: true })
+              <select
+                value={shopData.roast_style || ""}
+                onChange={(e) =>
+                  setShopData({
+                    ...shopData,
+                    roast_style: e.target.value,
+                  })
                 }
               >
-                Yes
-              </button>
-              <button
-                type="button"
-                className={!shopData.dairy_free_options ? "active-button" : ""}
-                onClick={() =>
-                  setShopData({ ...shopData, dairy_free_options: false })
-                }
-              >
-                No
-              </button>
-            </label>
-            <label>
-              Gluten Friendly:
-              <br />
-              <br />
-              <button
-                type="button"
-                className={shopData.gluten_friendly ? "active-button" : ""}
-                onClick={() =>
-                  setShopData({ ...shopData, gluten_friendly: true })
-                }
-              >
-                Yes
-              </button>
-              <button
-                type="button"
-                className={!shopData.gluten_friendly ? "active-button" : ""}
-                onClick={() =>
-                  setShopData({ ...shopData, gluten_friendly: false })
-                }
-              >
-                No
-              </button>
-            </label>
-            <label>
-              Meal Options:
-              <br />
-              <br />
-              <button
-                type="button"
-                className={shopData.meal_options ? "active-button" : ""}
-                onClick={() => setShopData({ ...shopData, meal_options: true })}
-              >
-                Yes
-              </button>
-              <button
-                type="button"
-                className={!shopData.meal_options ? "active-button" : ""}
-                onClick={() =>
-                  setShopData({ ...shopData, meal_options: false })
-                }
-              >
-                No
-              </button>
-            </label>
-            <label>
-              Bakery Options:
-              <br />
-              <br />
-              <button
-                type="button"
-                className={shopData.bakery_options ? "active-button" : ""}
-                onClick={() =>
-                  setShopData({ ...shopData, bakery_options: true })
-                }
-              >
-                Yes
-              </button>
-              <button
-                type="button"
-                className={!shopData.bakery_options ? "active-button" : ""}
-                onClick={() =>
-                  setShopData({ ...shopData, bakery_options: false })
-                }
-              >
-                No
-              </button>
-            </label>
+                <option value="">Select Roast Style</option>
+                {roastOptions.map((roast) => (
+                  <option key={roast} value={roast}>
+                    {roast}
+                  </option>
+                ))}
+              </select>
+            </div>
             <SubmitButton text="Save Changes" type="submit" />
           </form>
         )}
