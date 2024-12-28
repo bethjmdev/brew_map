@@ -139,6 +139,14 @@ function ViewShop({
 
         <div className="about-coffee-shop">
           <p>
+            {coffeeShop.about && (
+              <p>
+                <strong>About: </strong>
+                {coffeeShop.about}
+              </p>
+            )}
+          </p>
+          <p>
             <strong>Address:</strong>
             {coffeeShop.street_address} {coffeeShop.city}, {coffeeShop.state}
           </p>
@@ -216,20 +224,6 @@ function ViewShop({
           {shopReviews && shopReviews.length > 0 ? (
             shopReviews.map((review) => (
               <div key={review.id} className="shop-ind-review">
-                {/* OLD */}
-                {/* <p id="reviewer-name">
-                  <strong>{review.user_name_submitting}</strong>
-                </p> */}
-                {/* NEW */}
-                {/* <p
-                  id="reviewer-name"
-                  onClick={() =>
-                    navigate(`/otheruser/${review.userID_submitting}`)
-                  }
-                >
-                  <strong>{review.user_name_submitting}</strong>
-                </p> */}
-
                 <p
                   id="reviewer-name"
                   onClick={() =>

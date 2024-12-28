@@ -217,18 +217,13 @@ const AddShop = ({ navigate }) => {
     // setTypicalFlavorNotes
   ] = useState([]);
   const [typicalRoastStyle, setTypicalRoastStyle] = useState("");
-  const [
-    popularBev,
-    // setPopularBev
-  ] = useState("");
-  const [
-    beansAvailable,
-    // setBeansAvailable
-  ] = useState([]);
+  const [popularBev] = useState("");
+  const [beansAvailable] = useState([]);
   const [dairyFreeOptions, setDairyFreeOptions] = useState(false);
   const [glutenFriendly, setGlutenFriendly] = useState(false);
   const [mealOptions, setMealOptions] = useState(false);
   const [bakeryOptions, setBakeryOptions] = useState(false);
+  const [about, setAbout] = useState("");
 
   const beverageOptions = [
     "Cold Brew",
@@ -545,6 +540,7 @@ const AddShop = ({ navigate }) => {
         bakery_options: bakeryOptions,
         beans_available: beansAvailable,
         timestamp: serverTimestamp(),
+        about,
       });
 
       await setDoc(doc(db, "Coordinates", shopId), {
@@ -611,6 +607,14 @@ const AddShop = ({ navigate }) => {
             placeholder="State"
             value={state}
             onChange={handleStateChange}
+            required
+            className="add-shop-input-text"
+          />
+          <input
+            type="text"
+            placeholder="Small blurb about the coffee shop. Optional."
+            value={about}
+            onChange={(e) => setAbout(e.target.value)}
             required
             className="add-shop-input-text"
           />
