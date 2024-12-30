@@ -371,76 +371,79 @@ function ViewShop({
         <div className="shop-review-section">
           <h2>Shop Reviews</h2>
           {shopReviews && shopReviews.length > 0 ? (
-            shopReviews.map((review) => (
-              <div key={review.id} className="shop-ind-review">
-                <p
-                  id="reviewer-name"
-                  onClick={() =>
-                    navigate(
-                      `/otheruser/${review.userID_submitting.slice(-4)}-${
-                        review.user_name_submitting
-                      }`,
-                      {
-                        state: { userId: review.userID_submitting },
-                      }
-                    )
-                  }
-                >
-                  <strong>
-                    <i>
-                      <u>{review.user_name_submitting}</u>
-                    </i>
-                  </strong>
-                </p>
+            shopReviews
+              .sort((a, b) => b.timestamp.toDate() - a.timestamp.toDate()) // Sort reviews by timestamp
+              .map((review) => (
+                <div key={review.id} className="shop-ind-review">
+                  <p
+                    id="reviewer-name"
+                    onClick={() =>
+                      navigate(
+                        `/otheruser/${review.userID_submitting.slice(-4)}-${
+                          review.user_name_submitting
+                        }`,
+                        {
+                          state: { userId: review.userID_submitting },
+                        }
+                      )
+                    }
+                  >
+                    <strong>
+                      <i>
+                        <u>{review.user_name_submitting}</u>
+                      </i>
+                    </strong>
+                  </p>
 
-                <p>{renderBadges(review.userID_submitting)}</p>
-                <br />
-                <p>
-                  <strong>Favorite drink</strong>
-                  <br />A {review.user_fav_temp} {""}
-                  {review.user_fav_milk}{" "}
-                  {review.user_fav_milk !== "Black" && "Milk"}{" "}
-                  {review.user_fav_drink} that is {review.user_fav_roast} roast
-                </p>
-                <p>
-                  <strong>Ordered</strong>
-                  <br /> A {review.selectedTemp} {review.selectedBev}{" "}
-                  {review.selectedMilk}{" "}
-                  {review.selectedMilk !== "Black" && "Milk"} that was a{" "}
-                  {review.selectedRoast} roast and {review.selectedProcess}{" "}
-                  processed {review.flavoring ? "with flavoring" : " "}
-                </p>
-                <p className="ratings-profile">
-                  <strong>Drink Rating</strong>{" "}
-                  <CoffeeCups rating={review.drinkRating} maxCups={5} />
-                </p>
+                  <p>{renderBadges(review.userID_submitting)}</p>
+                  <br />
+                  <p>
+                    <strong>Favorite drink</strong>
+                    <br />A {review.user_fav_temp} {""}
+                    {review.user_fav_milk}{" "}
+                    {review.user_fav_milk !== "Black" && "Milk"}{" "}
+                    {review.user_fav_drink} that is {review.user_fav_roast}{" "}
+                    roast
+                  </p>
+                  <p>
+                    <strong>Ordered</strong>
+                    <br /> A {review.selectedTemp} {review.selectedBev}{" "}
+                    {review.selectedMilk}{" "}
+                    {review.selectedMilk !== "Black" && "Milk"} that was a{" "}
+                    {review.selectedRoast} roast and {review.selectedProcess}{" "}
+                    processed {review.flavoring ? "with flavoring" : " "}
+                  </p>
+                  <p className="ratings-profile">
+                    <strong>Drink Rating</strong>{" "}
+                    <CoffeeCups rating={review.drinkRating} maxCups={5} />
+                  </p>
 
-                <p className="ratings-profile">
-                  <strong>Shop Rating</strong>{" "}
-                  <CoffeeCups rating={review.shopRating} maxCups={5} />
-                </p>
+                  <p className="ratings-profile">
+                    <strong>Shop Rating</strong>{" "}
+                    <CoffeeCups rating={review.shopRating} maxCups={5} />
+                  </p>
 
-                <p className="ratings-profile">
-                  <strong>Staff Rating</strong>{" "}
-                  <CoffeeCups rating={review.staffRating} maxCups={5} />
-                </p>
+                  <p className="ratings-profile">
+                    <strong>Staff Rating</strong>{" "}
+                    <CoffeeCups rating={review.staffRating} maxCups={5} />
+                  </p>
 
-                {review.photo_urls.length !== 0 ? (
-                  <a onClick={() => openPhotoViewer(review.photo_urls)}>
-                    View photos
-                  </a>
-                ) : (
-                  " "
-                )}
+                  {review.photo_urls.length !== 0 ? (
+                    <a onClick={() => openPhotoViewer(review.photo_urls)}>
+                      View photos
+                    </a>
+                  ) : (
+                    " "
+                  )}
 
-                <p>
-                  <strong>
-                    Review <br />
-                  </strong>
-                  {review.review}
-                </p>
-              </div>
-            ))
+                  <p>
+                    <strong>
+                      Review <br />
+                    </strong>
+                    {review.review}
+                  </p>
+                </div>
+              ))
           ) : (
             <h2 style={{ width: "80%" }}>
               No reviews, be the first person to leave one
