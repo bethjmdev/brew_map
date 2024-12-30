@@ -30,6 +30,7 @@ function ShopImages({ coffeeShop, openPhotoViewer }) {
                       height: "2rem",
                       width: "2rem",
                       paddingLeft: "1rem",
+                      backgroundColor: "#806D5B",
                     }}
                   />
                 </a>
@@ -46,9 +47,10 @@ function ShopImages({ coffeeShop, openPhotoViewer }) {
               alignItems: "center",
               height: "10rem",
               marginLeft: "1rem",
+              // backgroundColor: "#806D5B",
             }}
           >
-            Be the first to upload a photo *add a button to upload photo*
+            No photo's to view. Upload a review to add a photo
           </div>
         )}
       </div>
