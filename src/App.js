@@ -117,7 +117,6 @@ function MainContent() {
         />
         <Route
           path="/beans/:identifier"
-          // path="/beans"
           element={
             <PrivateRoute component={<AddBeans navigate={navigate} />} />
           }
@@ -133,7 +132,7 @@ function PrivateRoute({ component }) {
   const { currentUser, isLoading } = useUserStore();
 
   if (isLoading) {
-    return <div>Loading!!!!</div>; // Display a loading spinner or message while loading
+    return <div>Loading!!!!</div>;
   }
 
   return currentUser ? component : <Navigate to="/login" />;
