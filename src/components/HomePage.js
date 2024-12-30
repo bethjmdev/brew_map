@@ -17,19 +17,6 @@ const HomePage = ({ navigate }) => {
   const [searchQuery, setSearchQuery] = useState(""); // new state for search query
 
   //fetches long, lat, shop id's and name from coordinates collection
-  // useEffect(() => {
-  //   const fetchCoordinates = async () => {
-  //     const querySnapshot = await getDocs(collection(db, "Coordinates"));
-  //     const pins = querySnapshot.docs.map((doc) => ({
-  //       id: doc.id,
-  //       ...doc.data(),
-  //     }));
-  //     setCoordinates(pins);
-  //   };
-  //   fetchCoordinates();
-  // }, []);
-
-  //fetches long, lat, shop id's and name from coordinates collection
   useEffect(() => {
     const fetchCoordinates = async () => {
       const querySnapshot = await getDocs(collection(db, "Coordinates"));
@@ -41,22 +28,6 @@ const HomePage = ({ navigate }) => {
     };
     fetchCoordinates();
   }, []);
-
-  //manages search bar
-  // const handleSearch = (cityName) => {
-  //   if (!window.google) return;
-  //   const geocoder = new window.google.maps.Geocoder();
-  //   geocoder.geocode({ address: cityName }, (results, status) => {
-  //     if (status === "OK" && results[0]) {
-  //       const { lat, lng } = results[0].geometry.location;
-  //       setCenter({ lat: lat(), lng: lng() });
-  //       setZoom(15);
-  //       setSearchQuery(cityName);
-  //     } else {
-  //       alert("City not found.");
-  //     }
-  //   });
-  // };
 
   //manages search bar
   const handleSearch = (cityName) => {
@@ -113,8 +84,6 @@ const HomePage = ({ navigate }) => {
   };
 
   return (
-    // <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API}>
-
     <>
       <SearchBar onSearch={handleSearch} />
       <Map
@@ -134,7 +103,6 @@ const HomePage = ({ navigate }) => {
         />
       )}
     </>
-    // </LoadScript>
   );
 };
 
