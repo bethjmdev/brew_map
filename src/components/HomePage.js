@@ -12,22 +12,9 @@ const HomePage = ({ navigate }) => {
   const [isVisible, setIsVisible] = useState(false);
   const [coordinates, setCoordinates] = useState([]); // state to hold coordinates
   const [coffeeShop, setCoffeeShop] = useState(null); // state to hold shop details
-  const [coffeeBags, setCoffeeBags] = useState([]);
+  const [coffeeBeans, setcoffeeBeans] = useState([]);
   const [shopReviews, setShopReviews] = useState(null);
   const [searchQuery, setSearchQuery] = useState(""); // new state for search query
-
-  //fetches long, lat, shop id's and name from coordinates collection
-  // useEffect(() => {
-  //   const fetchCoordinates = async () => {
-  //     const querySnapshot = await getDocs(collection(db, "Coordinates"));
-  //     const pins = querySnapshot.docs.map((doc) => ({
-  //       id: doc.id,
-  //       ...doc.data(),
-  //     }));
-  //     setCoordinates(pins);
-  //   };
-  //   fetchCoordinates();
-  // }, []);
 
   //fetches long, lat, shop id's and name from coordinates collection
   useEffect(() => {
@@ -41,22 +28,6 @@ const HomePage = ({ navigate }) => {
     };
     fetchCoordinates();
   }, []);
-
-  //manages search bar
-  // const handleSearch = (cityName) => {
-  //   if (!window.google) return;
-  //   const geocoder = new window.google.maps.Geocoder();
-  //   geocoder.geocode({ address: cityName }, (results, status) => {
-  //     if (status === "OK" && results[0]) {
-  //       const { lat, lng } = results[0].geometry.location;
-  //       setCenter({ lat: lat(), lng: lng() });
-  //       setZoom(15);
-  //       setSearchQuery(cityName);
-  //     } else {
-  //       alert("City not found.");
-  //     }
-  //   });
-  // };
 
   //manages search bar
   const handleSearch = (cityName) => {
@@ -95,26 +66,24 @@ const HomePage = ({ navigate }) => {
   //shows coffee show info when shop is clicked
   const showCoffeeShow = (id) => {
     setIsVisible(!isVisible);
-    console.log("Shop ID:", id); // Log the shop ID here
+    // console.log("Shop ID:", id); // Log the shop ID here
     getShopDetails(id);
     getCoffeeShopReviews(id);
-    getCoffeeBags(id);
+    getcoffeeBeans(id);
   };
 
   //get the coffee bags availablle at the shop
-  const getCoffeeBags = async (id) => {
+  const getcoffeeBeans = async (id) => {
     console.log("Fetching coffee bags for shop ID:", id); // Confirm the ID
-    const querySnapshot = await getDocs(collection(db, "CoffeeBags"));
+    const querySnapshot = await getDocs(collection(db, "CoffeeBeans"));
     const bags = querySnapshot.docs
       .map((doc) => ({ id: doc.id, ...doc.data() }))
       .filter((doc) => doc.shop_id === id); // Adjust to match reviews by shop_id field
     console.log("Fetched bags:", bags); // Log fetched reviews
-    setCoffeeBags(bags);
+    setcoffeeBeans(bags);
   };
 
   return (
-    // <LoadScript googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API}>
-
     <>
       <SearchBar onSearch={handleSearch} />
       <Map
@@ -130,11 +99,10 @@ const HomePage = ({ navigate }) => {
           coffeeShop={coffeeShop}
           shopReviews={shopReviews}
           navigate={navigate}
-          coffeeBags={coffeeBags}
+          coffeeBeans={coffeeBeans}
         />
       )}
     </>
-    // </LoadScript>
   );
 };
 

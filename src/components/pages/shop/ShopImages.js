@@ -48,7 +48,7 @@ function ShopImages({ coffeeShop, openPhotoViewer }) {
               marginLeft: "1rem",
             }}
           >
-            Be the first to upload a photo
+            Be the first to upload a photo *add a button to upload photo*
           </div>
         )}
       </div>

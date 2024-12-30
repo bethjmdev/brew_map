@@ -9,18 +9,20 @@ function ViewShop({
   showCoffeeShow,
   coffeeShop,
   shopReviews,
-  coffeeBags,
+  coffeeBeans,
   navigate,
 }) {
   const [photoViewer, setPhotoViewer] = useState({ isOpen: false, photos: [] });
   const [badges, setBadges] = useState({}); // Store badges for users
   const [mostCommonDrink, setMostCommonDrink] = useState("");
 
+  const [freqNotes, setFreqNotes] = useState([]);
+
   const isVertical = (width, height) => height > width;
 
-  useEffect(() => {
-    console.log("shopReviews updated:", shopReviews);
-  }, [shopReviews]);
+  // useEffect(() => {
+  //   console.log("shopReviews updated:", shopReviews);
+  // }, [shopReviews]);
 
   // Fetch BrewBadges data and store in a dictionary for quick lookup
   useEffect(() => {
@@ -173,6 +175,38 @@ function ViewShop({
     reassembleMostCommonDrink(shopReviews);
   }, [shopReviews]);
 
+  // useEffect(() => {
+  //   if (coffeeBeans) {
+  //     const combinedNotes = coffeeBeans
+  //       .flatMap((bag) => bag.beans.map((bean) => bean.notes.split(", ")))
+  //       .flat();
+
+  //     console.log("Combined Notes:", combinedNotes);
+  //   }
+  // }, [coffeeBeans]);
+
+  useEffect(() => {
+    if (coffeeBeans) {
+      const combinedNotes = coffeeBeans
+        .flatMap((bag) => bag.beans.map((bean) => bean.notes.split(", ")))
+        .flat();
+
+      // Count frequencies
+      const frequencyMap = combinedNotes.reduce((acc, note) => {
+        acc[note] = (acc[note] || 0) + 1;
+        return acc;
+      }, {});
+
+      // Sort by frequency and get top 3
+      const top3Notes = Object.entries(frequencyMap)
+        .sort((a, b) => b[1] - a[1]) // Sort by count descending
+        .slice(0, 3) // Take top 3
+        .map(([note]) => note); // Extract note names
+
+      setFreqNotes(top3Notes);
+    }
+  }, [coffeeBeans]);
+
   //--------------------
   if (!coffeeShop) {
     return (
@@ -253,10 +287,26 @@ function ViewShop({
               </span>
             ))}
           </p>
+
           <p>
             <strong>Typical Flavor Notes:</strong>{" "}
-            {coffeeShop.typical_flavor_notes}
+            {freqNotes && freqNotes.length > 0 ? (
+              freqNotes.map((note, index) => (
+                <span key={index}>
+                  {note}
+                  {index < freqNotes.length - 1 && ", "}
+                </span>
+              ))
+            ) : (
+              <>
+                <p>
+                  Common notes are based on user-added beans. Be the first to
+                  add beans.
+                </p>
+              </>
+            )}
           </p>
+
           <p>
             <strong>Typical Roast Style:</strong> {coffeeShop.roast_style}
           </p>
@@ -291,96 +341,109 @@ function ViewShop({
           </div>
           <div className="options-available">
             <h2>Beans Available</h2>
+            <button
+              onClick={() => navigate(`/beans/${coffeeShop.shop_id}`)}
+              className="add-beans-button"
+            >
+              Add or Edit Beans
+            </button>
 
-            <ul>
-              {coffeeBags.flatMap((coffee) =>
-                coffee.coffee_bags.map((name) => (
-                  <li key={name}>
-                    {name
-                      .split(" ")
-                      .map(
-                        (word) => word.charAt(0).toUpperCase() + word.slice(1)
-                      )
-                      .join(" ")}
-                  </li>
-                ))
-              )}
-            </ul>
+            {coffeeBeans && coffeeBeans.length > 0 ? (
+              <div>
+                {coffeeBeans.map((bag, index) => (
+                  <div key={index}>
+                    <ul>
+                      {bag.beans.map((bean, beanIndex) => (
+                        <li key={beanIndex}>
+                          <strong>{bean.name}:</strong> {bean.roast},{" "}
+                          {bean.origin}, <i>tastes like {bean.notes}</i>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div>No beans added yet! Be the first to add some</div>
+            )}
           </div>
         </div>
         <div className="shop-review-section">
           <h2>Shop Reviews</h2>
           {shopReviews && shopReviews.length > 0 ? (
-            shopReviews.map((review) => (
-              <div key={review.id} className="shop-ind-review">
-                <p
-                  id="reviewer-name"
-                  onClick={() =>
-                    navigate(
-                      `/otheruser/${review.userID_submitting.slice(-4)}-${
-                        review.user_name_submitting
-                      }`,
-                      {
-                        state: { userId: review.userID_submitting },
-                      }
-                    )
-                  }
-                >
-                  <strong>
-                    <i>
-                      <u>{review.user_name_submitting}</u>
-                    </i>
-                  </strong>
-                </p>
+            shopReviews
+              .sort((a, b) => b.timestamp.toDate() - a.timestamp.toDate()) // Sort reviews by timestamp
+              .map((review) => (
+                <div key={review.id} className="shop-ind-review">
+                  <p
+                    id="reviewer-name"
+                    onClick={() =>
+                      navigate(
+                        `/otheruser/${review.userID_submitting.slice(-4)}-${
+                          review.user_name_submitting
+                        }`,
+                        {
+                          state: { userId: review.userID_submitting },
+                        }
+                      )
+                    }
+                  >
+                    <strong>
+                      <i>
+                        <u>{review.user_name_submitting}</u>
+                      </i>
+                    </strong>
+                  </p>
 
-                <p>{renderBadges(review.userID_submitting)}</p>
-                <br />
-                <p>
-                  <strong>Favorite drink</strong>
-                  <br />A {review.user_fav_temp} {""}
-                  {review.user_fav_milk}{" "}
-                  {review.user_fav_milk !== "Black" && "Milk"}{" "}
-                  {review.user_fav_drink} that is {review.user_fav_roast} roast
-                </p>
-                <p>
-                  <strong>Ordered</strong>
-                  <br /> A {review.selectedTemp} {review.selectedBev}{" "}
-                  {review.selectedMilk}{" "}
-                  {review.selectedMilk !== "Black" && "Milk"} that was a{" "}
-                  {review.selectedRoast} roast and {review.selectedProcess}{" "}
-                  processed {review.flavoring ? "with flavoring" : " "}
-                </p>
-                <p className="ratings-profile">
-                  <strong>Drink Rating</strong>{" "}
-                  <CoffeeCups rating={review.drinkRating} maxCups={5} />
-                </p>
+                  <p>{renderBadges(review.userID_submitting)}</p>
+                  <br />
+                  <p>
+                    <strong>Favorite drink</strong>
+                    <br />A {review.user_fav_temp} {""}
+                    {review.user_fav_milk}{" "}
+                    {review.user_fav_milk !== "Black" && "Milk"}{" "}
+                    {review.user_fav_drink} that is {review.user_fav_roast}{" "}
+                    roast
+                  </p>
+                  <p>
+                    <strong>Ordered</strong>
+                    <br /> A {review.selectedTemp} {review.selectedBev}{" "}
+                    {review.selectedMilk}{" "}
+                    {review.selectedMilk !== "Black" && "Milk"} that was a{" "}
+                    {review.selectedRoast} roast and {review.selectedProcess}{" "}
+                    processed {review.flavoring ? "with flavoring" : " "}
+                  </p>
+                  <p className="ratings-profile">
+                    <strong>Drink Rating</strong>{" "}
+                    <CoffeeCups rating={review.drinkRating} maxCups={5} />
+                  </p>
 
-                <p className="ratings-profile">
-                  <strong>Shop Rating</strong>{" "}
-                  <CoffeeCups rating={review.shopRating} maxCups={5} />
-                </p>
+                  <p className="ratings-profile">
+                    <strong>Shop Rating</strong>{" "}
+                    <CoffeeCups rating={review.shopRating} maxCups={5} />
+                  </p>
 
-                <p className="ratings-profile">
-                  <strong>Staff Rating</strong>{" "}
-                  <CoffeeCups rating={review.staffRating} maxCups={5} />
-                </p>
+                  <p className="ratings-profile">
+                    <strong>Staff Rating</strong>{" "}
+                    <CoffeeCups rating={review.staffRating} maxCups={5} />
+                  </p>
 
-                {review.photo_urls ? (
-                  <a onClick={() => openPhotoViewer(review.photo_urls)}>
-                    View photos
-                  </a>
-                ) : (
-                  " "
-                )}
+                  {review.photo_urls.length !== 0 ? (
+                    <a onClick={() => openPhotoViewer(review.photo_urls)}>
+                      View photos
+                    </a>
+                  ) : (
+                    " "
+                  )}
 
-                <p>
-                  <strong>
-                    Review <br />
-                  </strong>
-                  {review.review}
-                </p>
-              </div>
-            ))
+                  <p>
+                    <strong>
+                      Review <br />
+                    </strong>
+                    {review.review}
+                  </p>
+                </div>
+              ))
           ) : (
             <h2 style={{ width: "80%" }}>
               No reviews, be the first person to leave one

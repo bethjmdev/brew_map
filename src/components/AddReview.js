@@ -31,7 +31,6 @@ function AddReview({ navigate }) {
   //this is for firebase images
   const [images, setImages] = useState([]);
   const [imageUrls, setImageUrls] = useState([]);
-
   const [isUploading, setIsUploading] = useState(false);
 
   const storage = getStorage();
@@ -196,6 +195,31 @@ function AddReview({ navigate }) {
     }
   };
 
+  const resetForm = () => {
+    setSelectedBev("");
+    setSelectedMilk("");
+    setSelectedTemp("");
+    setSelectedRoast("");
+    setSelectedProcess("");
+    setFlavoring("");
+    setDrinkRating("");
+    setShopRating("");
+    setStaffRating("");
+    setReview("");
+    setShopId(""); // Clear shop selection
+    setImages([]);
+    setImageUrls([]);
+    setSelectedShop({
+      shop_name: "",
+      shop_id: "",
+      userID_submitting: "",
+      user_name_submitting: "",
+      firstName: "",
+      lastName: "",
+      cafeDrink: "",
+    });
+  };
+
   // const submitReview = async () => {
   //   try {
   //     // Upload images and get their URLs
@@ -218,7 +242,7 @@ function AddReview({ navigate }) {
   //       selectedShop.userID_submitting
   //     }-${reviewCount + 1}`;
 
-  //     // Include image URLs in the review data
+  //     // Prepare review data
   //     const reviewData = {
   //       review_id: documentId,
   //       selectedBev,
@@ -240,66 +264,42 @@ function AddReview({ navigate }) {
   //       user_fav_milk: selectedShop.cafeMilk,
   //       user_fav_roast: selectedShop.selectedRoast,
   //       user_fav_process: selectedShop.selectedProcess,
-  //       photo_urls: urls, // Save image URLs here
+  //       photo_urls: urls, // Save image URLs
+  //       timestamp: serverTimestamp(),
   //     };
 
-  //     // Save the review to Firestore with the custom document ID
+  //     // Save the review to Firestore
   //     await setDoc(doc(shopReviewsRef, documentId), reviewData);
 
-  //     // Update the CoffeeShops table with the image URLs
+  //     // Update the CoffeeShops collection with the new image URLs
   //     const shopDocRef = doc(db, "CoffeeShops", selectedShop.shop_id);
   //     const shopDoc = await getDoc(shopDocRef);
   //     if (shopDoc.exists()) {
   //       const currentPhotos = shopDoc.data().photos || [];
   //       const updatedPhotos = [...new Set([...currentPhotos, ...urls])]; // Avoid duplicates
-  //       await setDoc(
-  //         shopDocRef,
-  //         { photos: updatedPhotos },
-  //         { merge: true } // Merge to avoid overwriting other fields
-  //       );
+  //       await updateDoc(shopDocRef, { photos: updatedPhotos });
   //     } else {
   //       console.error("Selected shop document does not exist.");
   //     }
 
-  //     console.log("Review submitted and photos updated successfully!");
-  //     alert("Review submitted successfully");
+  //     console.log("Review submitted successfully!");
+  //     alert("Review submitted successfully!");
 
   //     // Clear all fields
-  //     setSelectedBev("");
-  //     setSelectedMilk("");
-  //     setSelectedTemp("");
-  //     setSelectedRoast("");
-  //     setSelectedProcess("");
-  //     setFlavoring("");
-  //     setDrinkRating("");
-  //     setShopRating("");
-  //     setStaffRating("");
-  //     setReview("");
-  //     setShopId(""); // Clear shop selection
-  //     setImages([]);
-  //     setImageUrls([]);
-  //     setSelectedShop({
-  //       shop_name: "",
-  //       shop_id: "",
-  //       userID_submitting: "",
-  //       user_name_submitting: "",
-  //       firstName: "",
-  //       lastName: "",
-  //       cafeDrink: "",
-  //     });
-
+  //     resetForm();
   //     navigate("/home");
   //   } catch (error) {
   //     console.error("Error submitting review:", error);
   //   }
   // };
 
-  //NEW
   const submitReview = async () => {
     try {
+      // Initialize image URLs to an empty array
       let urls = [];
+
+      // If images are provided, upload them
       if (images.length > 0) {
-        // Upload images only if there are images selected
         urls = await uploadImages();
       }
 
@@ -316,7 +316,7 @@ function AddReview({ navigate }) {
         selectedShop.userID_submitting
       }-${reviewCount + 1}`;
 
-      // Include image URLs in the review data
+      // Prepare review data
       const reviewData = {
         review_id: documentId,
         selectedBev,
@@ -338,71 +338,80 @@ function AddReview({ navigate }) {
         user_fav_milk: selectedShop.cafeMilk,
         user_fav_roast: selectedShop.selectedRoast,
         user_fav_process: selectedShop.selectedProcess,
-        photo_urls: urls, // Save image URLs here, even if empty
+        photo_urls: urls, // Save image URLs (empty if no images uploaded)
         timestamp: serverTimestamp(),
       };
 
-      // Save the review to Firestore with the custom document ID
+      // Save the review to Firestore
       await setDoc(doc(shopReviewsRef, documentId), reviewData);
 
-      // Update the CoffeeShops table with the image URLs if any
+      // Update the CoffeeShops collection with the new image URLs if any
       if (urls.length > 0) {
         const shopDocRef = doc(db, "CoffeeShops", selectedShop.shop_id);
         const shopDoc = await getDoc(shopDocRef);
         if (shopDoc.exists()) {
           const currentPhotos = shopDoc.data().photos || [];
           const updatedPhotos = [...new Set([...currentPhotos, ...urls])]; // Avoid duplicates
-          await setDoc(
-            shopDocRef,
-            { photos: updatedPhotos },
-            { merge: true } // Merge to avoid overwriting other fields
-          );
+          await updateDoc(shopDocRef, { photos: updatedPhotos });
         } else {
           console.error("Selected shop document does not exist.");
         }
       }
 
       console.log("Review submitted successfully!");
-      alert("Review submitted successfully");
+      alert("Review submitted successfully!");
 
       // Clear all fields
-      setSelectedBev("");
-      setSelectedMilk("");
-      setSelectedTemp("");
-      setSelectedRoast("");
-      setSelectedProcess("");
-      setFlavoring("");
-      setDrinkRating("");
-      setShopRating("");
-      setStaffRating("");
-      setReview("");
-      setShopId(""); // Clear shop selection
-      setImages([]);
-      setImageUrls([]);
-      setSelectedShop({
-        shop_name: "",
-        shop_id: "",
-        userID_submitting: "",
-        user_name_submitting: "",
-        firstName: "",
-        lastName: "",
-        cafeDrink: "",
-      });
-
+      resetForm();
       navigate("/home");
     } catch (error) {
       console.error("Error submitting review:", error);
     }
-
-    //this isnt quite right, but its getting to the right spot
-    await updateDoc(doc(db, "BrewBadges", currentUser.uid), {
-      reviews: increment(1),
-    });
   };
 
   const handleImageChange = (e) => {
     const selectedFiles = Array.from(e.target.files);
     setImages((prev) => [...prev, ...selectedFiles]);
+  };
+
+  const uploadImages = async () => {
+    if (images.length === 0) {
+      return [];
+    }
+
+    setIsUploading(true);
+
+    try {
+      const uploadPromises = images.map((image) => {
+        const storageRef = ref(storage, `reviews/${Date.now()}-${image.name}`);
+        const uploadTask = uploadBytesResumable(storageRef, image);
+
+        return new Promise((resolve, reject) => {
+          uploadTask.on(
+            "state_changed",
+            null,
+            (error) => {
+              console.error("Error uploading image:", error);
+              reject(error);
+            },
+            async () => {
+              const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+              resolve(downloadURL);
+            }
+          );
+        });
+      });
+
+      const urls = await Promise.all(uploadPromises);
+      console.log("Uploaded image URLs:", urls);
+      return urls;
+    } catch (error) {
+      console.error("Error uploading images:", error);
+      alert("Error uploading one or more images.");
+      return [];
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   // const uploadImages = async () => {
@@ -449,52 +458,52 @@ function AddReview({ navigate }) {
   // };
 
   //NEW
-  const uploadImages = async () => {
-    if (images.length === 0) {
-      // Return an empty array if no images are selected
-      return [];
-    }
+  // const uploadImages = async () => {
+  // if (images.length === 0) {
+  //   // Return an empty array if no images are selected
+  //   return [];
+  // }
 
-    setIsUploading(true);
+  // setIsUploading(true);
 
-    const uploadPromises = images.map((image) => {
-      const storageRef = ref(storage, `reviews/${Date.now()}-${image.name}`);
-      const uploadTask = uploadBytesResumable(storageRef, image);
+  //   const uploadPromises = images.map((image) => {
+  //     const storageRef = ref(storage, `reviews/${Date.now()}-${image.name}`);
+  //     const uploadTask = uploadBytesResumable(storageRef, image);
 
-      return new Promise((resolve, reject) => {
-        uploadTask.on(
-          "state_changed",
-          null,
-          (error) => {
-            console.error("Error uploading image:", error);
-            reject(error);
-          },
-          async () => {
-            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-            resolve(downloadURL);
-          }
-        );
-      });
-    });
+  //     return new Promise((resolve, reject) => {
+  //       uploadTask.on(
+  //         "state_changed",
+  //         null,
+  //         (error) => {
+  //           console.error("Error uploading image:", error);
+  //           reject(error);
+  //         },
+  //         async () => {
+  //           const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+  //           resolve(downloadURL);
+  //         }
+  //       );
+  //     });
+  //   });
 
-    const urls = await Promise.all(uploadPromises)
-      .then((urls) => {
-        setIsUploading(false); // Set uploading state to false after completion
-        return urls;
-      })
-      .catch((error) => {
-        setIsUploading(false); // Reset uploading state on error
-        console.error("Error uploading one or more images:", error);
-        return [];
-      });
+  //   const urls = await Promise.all(uploadPromises)
+  //     .then((urls) => {
+  //       setIsUploading(false); // Set uploading state to false after completion
+  //       return urls;
+  //     })
+  //     .catch((error) => {
+  //       setIsUploading(false); // Reset uploading state on error
+  //       console.error("Error uploading one or more images:", error);
+  //       return [];
+  //     });
 
-    //this isnt quite right, but its getting to the right spot
-    await updateDoc(doc(db, "BrewBadges", currentUser.uid), {
-      photos: increment(1),
-    });
+  //   //this isnt quite right, but its getting to the right spot
+  //   await updateDoc(doc(db, "BrewBadges", currentUser.uid), {
+  //     photos: increment(1),
+  //   });
 
-    return urls;
-  };
+  //   return urls;
+  // };
 
   return (
     <div className="add-review">

@@ -106,6 +106,7 @@ function NavBar() {
         "/editshop",
         "/feed",
         "/otheruser/",
+        "/beans/",
       ].includes(location.pathname) && (
         <FontAwesomeIcon icon={faMap} className="map-icon" onClick={goToMap} />
       )}
