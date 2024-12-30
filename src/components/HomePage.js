@@ -66,7 +66,7 @@ const HomePage = ({ navigate }) => {
   //shows coffee show info when shop is clicked
   const showCoffeeShow = (id) => {
     setIsVisible(!isVisible);
-    console.log("Shop ID:", id); // Log the shop ID here
+    // console.log("Shop ID:", id); // Log the shop ID here
     getShopDetails(id);
     getCoffeeShopReviews(id);
     getcoffeeBeans(id);
@@ -82,8 +82,6 @@ const HomePage = ({ navigate }) => {
     console.log("Fetched bags:", bags); // Log fetched reviews
     setcoffeeBeans(bags);
   };
-
-  console.log(coffeeBeans);
 
   return (
     <>

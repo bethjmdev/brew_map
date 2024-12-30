@@ -143,7 +143,7 @@ function AddBeans({ navigate }) {
               </select>
             </label>
             <label>
-              Beans Notes:
+              Flavor Notes (use "," between each ex. peach, pear, apple)
               <textarea
                 value={bean.notes}
                 onChange={(e) => updateBean(index, "notes", e.target.value)}

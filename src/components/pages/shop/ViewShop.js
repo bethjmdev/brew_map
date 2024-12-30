@@ -16,11 +16,13 @@ function ViewShop({
   const [badges, setBadges] = useState({}); // Store badges for users
   const [mostCommonDrink, setMostCommonDrink] = useState("");
 
+  const [freqNotes, setFreqNotes] = useState([]);
+
   const isVertical = (width, height) => height > width;
 
-  useEffect(() => {
-    console.log("shopReviews updated:", shopReviews);
-  }, [shopReviews]);
+  // useEffect(() => {
+  //   console.log("shopReviews updated:", shopReviews);
+  // }, [shopReviews]);
 
   // Fetch BrewBadges data and store in a dictionary for quick lookup
   useEffect(() => {
@@ -173,6 +175,38 @@ function ViewShop({
     reassembleMostCommonDrink(shopReviews);
   }, [shopReviews]);
 
+  // useEffect(() => {
+  //   if (coffeeBeans) {
+  //     const combinedNotes = coffeeBeans
+  //       .flatMap((bag) => bag.beans.map((bean) => bean.notes.split(", ")))
+  //       .flat();
+
+  //     console.log("Combined Notes:", combinedNotes);
+  //   }
+  // }, [coffeeBeans]);
+
+  useEffect(() => {
+    if (coffeeBeans) {
+      const combinedNotes = coffeeBeans
+        .flatMap((bag) => bag.beans.map((bean) => bean.notes.split(", ")))
+        .flat();
+
+      // Count frequencies
+      const frequencyMap = combinedNotes.reduce((acc, note) => {
+        acc[note] = (acc[note] || 0) + 1;
+        return acc;
+      }, {});
+
+      // Sort by frequency and get top 3
+      const top3Notes = Object.entries(frequencyMap)
+        .sort((a, b) => b[1] - a[1]) // Sort by count descending
+        .slice(0, 3) // Take top 3
+        .map(([note]) => note); // Extract note names
+
+      setFreqNotes(top3Notes);
+    }
+  }, [coffeeBeans]);
+
   //--------------------
   if (!coffeeShop) {
     return (
@@ -253,10 +287,17 @@ function ViewShop({
               </span>
             ))}
           </p>
+
           <p>
             <strong>Typical Flavor Notes:</strong>{" "}
-            {coffeeShop.typical_flavor_notes}
+            {freqNotes.map((note, index) => (
+              <span key={index}>
+                {note}
+                {index < freqNotes.length - 1 && ", "}
+              </span>
+            ))}
           </p>
+
           <p>
             <strong>Typical Roast Style:</strong> {coffeeShop.roast_style}
           </p>
@@ -297,21 +338,6 @@ function ViewShop({
             >
               Add or Edit Beans
             </button>
-            {/* 
-            <div>
-              {coffeeBeans.map((bag, index) => (
-                <div key={index}>
-                  <ul>
-                    {bag.beans.map((bean, beanIndex) => (
-                      <li key={beanIndex}>
-                        <strong>{bean.name}:</strong> {bean.roast},{" "}
-                        {bean.origin}, <i>tastes like {bean.notes}</i>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))}
-            </div> */}
 
             {coffeeBeans && coffeeBeans.length > 0 ? (
               <div>
