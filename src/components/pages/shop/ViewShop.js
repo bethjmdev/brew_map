@@ -425,7 +425,7 @@ function ViewShop({
                   <CoffeeCups rating={review.staffRating} maxCups={5} />
                 </p>
 
-                {review.photo_urls ? (
+                {review.photo_urls.length !== 0 ? (
                   <a onClick={() => openPhotoViewer(review.photo_urls)}>
                     View photos
                   </a>
