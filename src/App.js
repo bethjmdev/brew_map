@@ -22,6 +22,7 @@ import EditProfile from "./components/pages/profile/EditProfile";
 import EditShop from "./components/pages/shop/EditShop";
 import OtherUser from "./components/OtherUser";
 import FollowerFeed from "./components/FollowerFeed";
+import AddBeans from "./components/pages/shop/AddBeans";
 // import DummyData from "./components/DummyData";
 
 function App() {
@@ -112,6 +113,13 @@ function MainContent() {
           path="/feed"
           element={
             <PrivateRoute component={<FollowerFeed navigate={navigate} />} />
+          }
+        />
+        <Route
+          path="/beans/:identifier"
+          // path="/beans"
+          element={
+            <PrivateRoute component={<AddBeans navigate={navigate} />} />
           }
         />
         <Route path="/login" element={<Login navigate={navigate} />} />

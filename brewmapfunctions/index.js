@@ -1,265 +1,99 @@
 // import { onDocumentCreated } from "firebase-functions/v2/firestore";
 // import fetch from "node-fetch";
-// import admin from "firebase-admin";
-
-// admin.initializeApp();
-
-// // Helper function to fetch with headers
-// const fetchWithHeaders = async (url) => {
-//   return fetch(url, {
-//     headers: {
-//       "User-Agent":
-//         "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-//       Accept:
-//         "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-//       "Accept-Language": "en-US,en;q=0.5",
-//     },
-//   });
-// };
 
 // export const logWebsite = onDocumentCreated(
 //   "CoffeeShopWebsites/{shopId}",
 //   async (event) => {
 //     const data = event.data;
 
-//     const shopId = event.params.shopId; // Extract shopId from the Firestore document path
-//     let website = data.get("website");
-//     const shopName = data.get("shop_name"); // Optional, passed from the React side
-
+//     const website = data.get("website");
 //     console.log(`Website submitted: ${website}`);
-//     console.log(`Shop ID: ${shopId}`);
-//     console.log(`Shop Name: ${shopName || "Not provided"}`);
 
-//     // Add protocol if missing
-//     if (!/^https?:\/\//i.test(website)) {
-//       website = `https://${website}`;
-//       console.log(`Updated Website URL with protocol: ${website}`);
+//     if (!website) {
+//       console.error(
+//         "Website is undefined. Please check the Firestore document structure."
+//       );
+//       return null;
 //     }
 
 //     try {
-//       // Fetch the main website's HTML content with headers
-//       const response = await fetchWithHeaders(website);
+//       // Fetch the main website's HTML content
+//       const response = await fetch(website);
 //       if (!response.ok) {
 //         console.error(
 //           `Failed to fetch the website: ${website} with status: ${response.status}`
 //         );
-
-//         // Add to Firestore for 403 errors
-//         if (response.status === 403) {
-//           await admin
-//             .firestore()
-//             .collection("CoffeeBags")
-//             .add({
-//               shop_id: shopId,
-//               shop_name: shopName || "Unknown Shop",
-//               website: website,
-//               coffee_bags: [
-//                 "Website owner will not allow access to bags, sorry!",
-//               ],
-//               date_added: admin.firestore.FieldValue.serverTimestamp(),
-//             });
-//           console.log("Added default message to CoffeeBags for 403 error.");
-//         }
 //         return null;
 //       }
 
-//       const html = await response.text();
+//       const html = await response.text(); // Get the HTML content
 //       console.log("Successfully fetched main website content.");
 
-//       // Check for a direct link to "Coffee" or "All Coffee" (Single Step)
+//       // Search for links with keywords like "Coffee" (e.g., "All Coffee") or "Shop"
 //       const coffeeLinkMatch = html.match(
 //         /<a[^>]*href="([^"]*)"[^>]*>\s*.*?coffee.*?<\/a>/i
 //       );
-//       if (coffeeLinkMatch) {
-//         // Direct link found
-//         const coffeeLink = coffeeLinkMatch[1].startsWith("http")
-//           ? coffeeLinkMatch[1]
-//           : new URL(coffeeLinkMatch[1], website).href;
-//         console.log(`Found direct link to coffee page: ${coffeeLink}`);
-//         await processCoffeePage(coffeeLink, shopId, shopName, website);
-//         return;
-//       }
-
-//       // If no direct link, look for a "Shop" or "Coffee" link (Two or Three Steps: Step 1)
-//       const shopOrCoffeeLinkMatch = html.match(
-//         /<a[^>]*href="([^"]*)"[^>]*>\s*.*?(shop|coffee).*?<\/a>/i
+//       const shopLinkMatch = html.match(
+//         /<a[^>]*href="([^"]*)"[^>]*>\s*.*?shop.*?<\/a>/i
 //       );
-//       if (!shopOrCoffeeLinkMatch) {
-//         console.log(
-//           "No 'Shop' or 'Coffee' link found on the main page. Adding default message to Firestore."
-//         );
 
-//         // Add to Firestore if no shop or coffee link is found
-//         await admin
-//           .firestore()
-//           .collection("CoffeeBags")
-//           .add({
-//             shop_id: shopId,
-//             shop_name: shopName || "Unknown Shop",
-//             website: website,
-//             coffee_bags: [
-//               "The coffee bags are not listed no the website. If you feel passionate about getting the bags listed please go to and call the shop for a list, then email the list shop name and shop address to bethjmdev@gmail.com",
-//             ],
-//             date_added: admin.firestore.FieldValue.serverTimestamp(),
-//           });
-//         console.log(
-//           "Added default message to CoffeeBags: Bags not listed on website."
-//         );
+//       // Prioritize Coffee > Shop
+//       const targetLink = coffeeLinkMatch
+//         ? coffeeLinkMatch[1]
+//         : shopLinkMatch
+//         ? shopLinkMatch[1]
+//         : null;
+
+//       if (!targetLink) {
+//         console.log("No Coffee or Shop link found on the main page.");
 //         return null;
 //       }
 
-//       const shopOrCoffeeLink = shopOrCoffeeLinkMatch[1].startsWith("http")
-//         ? shopOrCoffeeLinkMatch[1]
-//         : new URL(shopOrCoffeeLinkMatch[1], website).href;
-//       console.log(`Found intermediate link (Shop/Coffee): ${shopOrCoffeeLink}`);
+//       // Resolve relative URLs if necessary
+//       const targetUrl = targetLink.startsWith("http")
+//         ? targetLink
+//         : new URL(targetLink, website).href;
+//       console.log(`Found target link: ${targetUrl}`);
 
-//       // Fetch the intermediate page (Step 2) with headers
-//       const intermediateResponse = await fetchWithHeaders(shopOrCoffeeLink);
-//       if (!intermediateResponse.ok) {
+//       // Fetch the target page's HTML content
+//       const targetResponse = await fetch(targetUrl);
+//       if (!targetResponse.ok) {
 //         console.error(
-//           `Failed to fetch the intermediate page: ${shopOrCoffeeLink} with status: ${intermediateResponse.status}`
+//           `Failed to fetch the target page: ${targetUrl} with status: ${targetResponse.status}`
 //         );
 //         return null;
 //       }
 
-//       const intermediateHtml = await intermediateResponse.text();
-//       console.log("Successfully fetched the intermediate page content.");
+//       const targetHtml = await targetResponse.text(); // Get the HTML content of the target page
+//       console.log("Successfully fetched target page content.");
 
-//       // Look for "Coffee", "All Coffee", or "Coffees" link (Two Steps: Step 2 or Three Steps: Step 2)
-//       const coffeeOrAllCoffeeLinkMatch = intermediateHtml.match(
-//         /<a[^>]*href="([^"]*)"[^>]*>\s*.*?(coffee).*?<\/a>/i
-//       );
-//       if (coffeeOrAllCoffeeLinkMatch) {
-//         // Found coffee or all coffee link
-//         const coffeeListingUrl = coffeeOrAllCoffeeLinkMatch[1].startsWith(
-//           "http"
-//         )
-//           ? coffeeOrAllCoffeeLinkMatch[1]
-//           : new URL(coffeeOrAllCoffeeLinkMatch[1], shopOrCoffeeLink).href;
-//         console.log(`Found link to coffee listing page: ${coffeeListingUrl}`);
-//         await processCoffeePage(coffeeListingUrl, shopId, shopName, website);
-//         return;
-//       }
+//       // Scrape details from the target page
+//       const titleMatch = targetHtml.match(/<title>(.*?)<\/title>/i);
+//       const pageTitle = titleMatch ? titleMatch[1] : "No title found";
+//       console.log(`Target Page Title: ${pageTitle}`);
 
-//       // If still no link, perform a third step specifically for "All Coffee" or "All Coffees" (Three Steps: Step 3)
-//       const deeperCoffeeLinkMatch = intermediateHtml.match(
-//         /<a[^>]*href="([^"]*)"[^>]*>\s*.*?(all coffee|all coffees).*?<\/a>/i
+//       const descriptionMatch = targetHtml.match(
+//         /<meta name="description" content="(.*?)"/i
 //       );
-//       if (!deeperCoffeeLinkMatch) {
-//         console.log(
-//           "No deeper 'All Coffee' or 'All Coffees' link found on the intermediate page."
-//         );
-//         return null;
-//       }
+//       const metaDescription = descriptionMatch
+//         ? descriptionMatch[1]
+//         : "No meta description found";
+//       console.log(`Target Meta Description: ${metaDescription}`);
 
-//       const deeperCoffeeListingUrl = deeperCoffeeLinkMatch[1].startsWith("http")
-//         ? deeperCoffeeLinkMatch[1]
-//         : new URL(deeperCoffeeLinkMatch[1], shopOrCoffeeLink).href;
-//       console.log(
-//         `Found deeper link to 'All Coffee' or 'All Coffees': ${deeperCoffeeListingUrl}`
+//       const h1Matches = targetHtml.match(/<h1>(.*?)<\/h1>/gi) || [];
+//       const h1Headings = h1Matches.map((h1) => h1.replace(/<\/?h1>/gi, ""));
+//       console.log(`Target H1 Headings: ${h1Headings.join(", ")}`);
+
+//       const productLinks =
+//         targetHtml.match(/<a[^>]*href="([^"]*product[^"]*)"/gi) || [];
+//       const productUrls = productLinks.map(
+//         (link) => link.match(/href="([^"]*)"/)[1]
 //       );
-//       await processCoffeePage(
-//         deeperCoffeeListingUrl,
-//         shopId,
-//         shopName,
-//         website
-//       );
+//       console.log("Product Links on Target Page:", productUrls);
 //     } catch (error) {
 //       console.error(`Error scraping the website ${website}:`, error);
-
-//       // Add default message to CoffeeBags in case of general error
-//       await admin
-//         .firestore()
-//         .collection("CoffeeBags")
-//         .add({
-//           shop_id: shopId,
-//           shop_name: shopName || "Unknown Shop",
-//           website: website,
-//           coffee_bags: [
-//             "Website owner will not allow my bot to access the listed bags, sorry! If you feel passionate about having the bags manually entered you can send a list of bags and the shop address to bethjmdev@gmail.com",
-//           ],
-//           date_added: admin.firestore.FieldValue.serverTimestamp(),
-//         });
-//       console.log("Added default message to CoffeeBags for general error.");
 //     }
 
 //     return null; // Always return a promise or null in Cloud Functions
 //   }
 // );
-
-// // Helper function to process coffee listing page
-// async function processCoffeePage(url, shopId, shopName, website) {
-//   try {
-//     const response = await fetchWithHeaders(url);
-//     if (!response.ok) {
-//       console.error(
-//         `Failed to fetch the coffee listing page: ${url} with status: ${response.status}`
-//       );
-//       return;
-//     }
-
-//     const html = await response.text();
-//     console.log("Successfully fetched the coffee listing page content.");
-
-//     const productLinks =
-//       html.match(/<a[^>]*href="([^"]*product[^"]*)"/gi) || [];
-//     const productUrls = productLinks.map(
-//       (link) => link.match(/href="([^"]*)"/)[1]
-//     );
-
-//     // Extract and format coffee names
-//     const coffeeNames = [
-//       ...new Set(
-//         productUrls.map((url) => url.split("/").pop().replace(/-/g, " "))
-//       ),
-//     ];
-
-//     // Filter out unwanted names containing specific keywords
-//     const filteredCoffeeNames = coffeeNames.filter((name) => {
-//       const lowerName = name.toLowerCase();
-//       return (
-//         !lowerName.includes("gift card") && !lowerName.includes("subscribe")
-//       );
-//     });
-
-//     console.log("Filtered Coffee Names:", filteredCoffeeNames);
-
-//     // Save data to Firestore
-//     await admin
-//       .firestore()
-//       .collection("CoffeeBags")
-//       .add({
-//         shop_id: shopId,
-//         shop_name: shopName || "Unknown Shop",
-//         website: website,
-//         coffee_bags: filteredCoffeeNames,
-//         date_added: admin.firestore.FieldValue.serverTimestamp(), // Current timestamp
-//       });
-
-//     console.log("Data successfully saved to CoffeeBags collection.");
-//   } catch (error) {
-//     console.error(`Error processing the coffee listing page: ${url}`, error);
-//   }
-// }
-
-// //================
-// //================
-// //================
-// //================
-// //================// //================
-// //================
-// //================
-// //================
-// //================// //================
-// //================
-// //================
-// //================
-// //================
-
-import admin from "firebase-admin";
-import { logWebsite } from "./logWebsite.js";
-
-admin.initializeApp();
-
-// Export all functions
-export { logWebsite };

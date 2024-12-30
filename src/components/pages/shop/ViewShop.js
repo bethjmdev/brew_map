@@ -291,6 +291,9 @@ function ViewShop({
           </div>
           <div className="options-available">
             <h2>Beans Available</h2>
+            <button onClick={() => navigate(`/beans/${coffeeShop.shop_id}`)}>
+              Add or Edit Beans
+            </button>
 
             <ul>
               {coffeeBags.flatMap((coffee) =>

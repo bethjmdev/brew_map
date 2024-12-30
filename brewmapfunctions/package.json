@@ -5,7 +5,8 @@
   "dependencies": {
     "firebase-admin": "^13.0.2",
     "firebase-functions": "^6.2.0",
-    "node-fetch": "^3.3.2"
+    "node-fetch": "^3.3.2",
+    "puppeteer": "^23.11.1"
   },
   "scripts": {
     "lint": "echo 'No lint rules defined'",
