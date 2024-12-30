@@ -9,7 +9,7 @@ function ViewShop({
   showCoffeeShow,
   coffeeShop,
   shopReviews,
-  coffeeBags,
+  coffeeBeans,
   navigate,
 }) {
   const [photoViewer, setPhotoViewer] = useState({ isOpen: false, photos: [] });
@@ -291,24 +291,46 @@ function ViewShop({
           </div>
           <div className="options-available">
             <h2>Beans Available</h2>
-            <button onClick={() => navigate(`/beans/${coffeeShop.shop_id}`)}>
+            <button
+              onClick={() => navigate(`/beans/${coffeeShop.shop_id}`)}
+              className="add-beans-button"
+            >
               Add or Edit Beans
             </button>
+            {/* 
+            <div>
+              {coffeeBeans.map((bag, index) => (
+                <div key={index}>
+                  <ul>
+                    {bag.beans.map((bean, beanIndex) => (
+                      <li key={beanIndex}>
+                        <strong>{bean.name}:</strong> {bean.roast},{" "}
+                        {bean.origin}, <i>tastes like {bean.notes}</i>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div> */}
 
-            <ul>
-              {coffeeBags.flatMap((coffee) =>
-                coffee.coffee_bags.map((name) => (
-                  <li key={name}>
-                    {name
-                      .split(" ")
-                      .map(
-                        (word) => word.charAt(0).toUpperCase() + word.slice(1)
-                      )
-                      .join(" ")}
-                  </li>
-                ))
-              )}
-            </ul>
+            {coffeeBeans && coffeeBeans.length > 0 ? (
+              <div>
+                {coffeeBeans.map((bag, index) => (
+                  <div key={index}>
+                    <ul>
+                      {bag.beans.map((bean, beanIndex) => (
+                        <li key={beanIndex}>
+                          <strong>{bean.name}:</strong> {bean.roast},{" "}
+                          {bean.origin}, <i>tastes like {bean.notes}</i>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div>No beans added yet! Be the first to add some</div>
+            )}
           </div>
         </div>
         <div className="shop-review-section">

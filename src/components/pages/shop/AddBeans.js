@@ -199,7 +199,7 @@ function AddBeans({ navigate }) {
             cursor: "pointer",
           }}
         >
-          Add More
+          Add More Beans
         </button>
         <button
           type="button"

@@ -42,20 +42,16 @@
 }
 
 .add-beans .beans-entry input {
-  width: 90%;
+  width: 95%;
 }
 
-/* .remove-beans-button,
-.add-beans-button,
-.save-beans-button {
-  background-color: var(--latte-brown);
-  color: var(--white);
-  padding: 0.75rem 1rem;
-  border-radius: 0.5rem;
-  border: none;
-  width: 100%;
-  cursor: pointer;
-} */
+.add-beans .add-beans-select {
+  width: 99%;
+}
+
+.add-beans .add-beans-textarea {
+  width: 95%;
+}
 
 .remove-beans-button {
   background-color: #f3709f;
