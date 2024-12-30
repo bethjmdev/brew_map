@@ -290,12 +290,21 @@ function ViewShop({
 
           <p>
             <strong>Typical Flavor Notes:</strong>{" "}
-            {freqNotes.map((note, index) => (
-              <span key={index}>
-                {note}
-                {index < freqNotes.length - 1 && ", "}
-              </span>
-            ))}
+            {freqNotes && freqNotes.length > 0 ? (
+              freqNotes.map((note, index) => (
+                <span key={index}>
+                  {note}
+                  {index < freqNotes.length - 1 && ", "}
+                </span>
+              ))
+            ) : (
+              <>
+                <p>
+                  Common notes are based on user-added beans. Be the first to
+                  add beans.
+                </p>
+              </>
+            )}
           </p>
 
           <p>
