@@ -73,10 +73,15 @@
 
 /* Mobile adjustments */
 @media (max-width: 768px) {
+  .landingpage-container {
+    /* height: unset; */
+    overflow: scroll;
+  }
+
   /* Header */
   .landingpage-container h3 {
     text-align: center;
-    margin-top: 10rem;
+    margin-top: 1.5rem;
     color: white;
     font-size: 3rem;
   }
@@ -84,16 +89,18 @@
   /* Icon container */
   .icon-container {
     width: 16rem;
-    margin-top: 3.5rem;
+    margin-top: 1rem;
     flex-wrap: wrap;
     justify-content: space-between;
   }
 
   /* Icon wrapper for each section */
   .icon-wrapper {
-    margin-top: 2rem;
+    margin-top: 1rem;
     margin-left: 1rem;
     margin-right: 1rem;
+    width: 15rem;
+    flex-direction: column;
   }
 
   .icon {
