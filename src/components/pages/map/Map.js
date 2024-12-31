@@ -52,8 +52,8 @@ const Map = ({ searchQuery, coordinates, showCoffeeShow }) => {
   if (loadError) return <div>Error loading maps</div>;
 
   const truncateName = (shop_name) => {
-    return shop_name && shop_name.length > 19
-      ? shop_name.substring(0, 19) + "..."
+    return shop_name && shop_name.length > 15
+      ? shop_name.substring(0, 15) + "..."
       : shop_name;
   };
 
@@ -87,6 +87,7 @@ const Map = ({ searchQuery, coordinates, showCoffeeShow }) => {
                   borderRadius: "8px",
                   boxShadow: "0 2px 5px rgba(0, 0, 0, 0.3)",
                   transform: "translate(20px, -50px)",
+                  // color: "green",
                 }}
                 onClick={() => showCoffeeShow(pin.id)}
               >
