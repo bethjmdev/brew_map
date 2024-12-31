@@ -1,6 +1,6 @@
 // import { onDocumentCreated } from "firebase-functions/v2/firestore";
 // import fetch from "node-fetch";
-
+//sdcsdcs
 // export const logWebsite = onDocumentCreated(
 //   "CoffeeShopWebsites/{shopId}",
 //   async (event) => {
