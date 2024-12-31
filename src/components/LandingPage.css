@@ -64,10 +64,11 @@
   color: #4f3e31;
 }
 
-.landingpage .icon-wrapper p {
+.landingpage-container .icon-wrapper p {
   margin-top: 0.5rem;
   color: white;
-  font-size: 2rem;
+  font-size: 1.5rem;
+  font-weight: bold;
 }
 
 /* Mobile adjustments */
