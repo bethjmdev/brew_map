@@ -220,79 +220,6 @@ function AddReview({ navigate }) {
     });
   };
 
-  // const submitReview = async () => {
-  //   try {
-  //     // Upload images and get their URLs
-  //     const urls = await uploadImages();
-  //     if (urls.length === 0) {
-  //       alert("No images were uploaded.");
-  //       return;
-  //     }
-
-  //     const shopReviewsRef = collection(db, "ShopReviews");
-
-  //     // Fetch existing reviews for the shop to calculate the document ID
-  //     const shopReviewQuerySnapshot = await getDocs(shopReviewsRef);
-  //     const reviewCount = shopReviewQuerySnapshot.docs.filter(
-  //       (doc) => doc.data().shop_id === selectedShop.shop_id
-  //     ).length;
-
-  //     // Create the custom document ID
-  //     const documentId = `${selectedShop.shop_id}-${
-  //       selectedShop.userID_submitting
-  //     }-${reviewCount + 1}`;
-
-  //     // Prepare review data
-  //     const reviewData = {
-  //       review_id: documentId,
-  //       selectedBev,
-  //       selectedMilk,
-  //       selectedTemp,
-  //       selectedRoast,
-  //       selectedProcess,
-  //       flavoring,
-  //       drinkRating,
-  //       shopRating,
-  //       staffRating,
-  //       review,
-  //       shop_id: selectedShop.shop_id,
-  //       userID_submitting: selectedShop.userID_submitting,
-  //       shop_name: selectedShop.shop_name,
-  //       user_name_submitting: selectedShop.user_name_submitting,
-  //       user_fav_drink: selectedShop.cafeDrink,
-  //       user_fav_temp: selectedShop.cafeTemp,
-  //       user_fav_milk: selectedShop.cafeMilk,
-  //       user_fav_roast: selectedShop.selectedRoast,
-  //       user_fav_process: selectedShop.selectedProcess,
-  //       photo_urls: urls, // Save image URLs
-  //       timestamp: serverTimestamp(),
-  //     };
-
-  //     // Save the review to Firestore
-  //     await setDoc(doc(shopReviewsRef, documentId), reviewData);
-
-  //     // Update the CoffeeShops collection with the new image URLs
-  //     const shopDocRef = doc(db, "CoffeeShops", selectedShop.shop_id);
-  //     const shopDoc = await getDoc(shopDocRef);
-  //     if (shopDoc.exists()) {
-  //       const currentPhotos = shopDoc.data().photos || [];
-  //       const updatedPhotos = [...new Set([...currentPhotos, ...urls])]; // Avoid duplicates
-  //       await updateDoc(shopDocRef, { photos: updatedPhotos });
-  //     } else {
-  //       console.error("Selected shop document does not exist.");
-  //     }
-
-  //     console.log("Review submitted successfully!");
-  //     alert("Review submitted successfully!");
-
-  //     // Clear all fields
-  //     resetForm();
-  //     navigate("/home");
-  //   } catch (error) {
-  //     console.error("Error submitting review:", error);
-  //   }
-  // };
-
   const submitReview = async () => {
     try {
       // Initialize image URLs to an empty array
@@ -345,6 +272,10 @@ function AddReview({ navigate }) {
       // Save the review to Firestore
       await setDoc(doc(shopReviewsRef, documentId), reviewData);
 
+      await updateDoc(doc(db, "BrewBadges", currentUser.uid), {
+        reviews: increment(1),
+      });
+
       // Update the CoffeeShops collection with the new image URLs if any
       if (urls.length > 0) {
         const shopDocRef = doc(db, "CoffeeShops", selectedShop.shop_id);
@@ -380,6 +311,10 @@ function AddReview({ navigate }) {
     }
 
     setIsUploading(true);
+
+    await updateDoc(doc(db, "BrewBadges", currentUser.uid), {
+      photos: increment(1),
+    });
 
     try {
       const uploadPromises = images.map((image) => {
