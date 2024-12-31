@@ -7,6 +7,7 @@ import {
   where,
   limit,
   getDocs,
+  orderBy,
 } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { db } from "../utils/auth/firebase";
@@ -398,7 +399,7 @@ export const Profile = () => {
         </p>
 
         <h2>Reviews</h2>
-        {reviews.length > 0 ? (
+        {/* {reviews.length > 0 ? (
           reviews.map((review) => (
             <div key={review.id} className="review-section">
               <h3>{review.shop_name}</h3>
@@ -421,6 +422,41 @@ export const Profile = () => {
               </p>
             </div>
           ))
+        ) : (
+          <p>No reviews found.</p>
+        )} */}
+
+        <h2>Reviews</h2>
+        {reviews.length > 0 ? (
+          [...reviews]
+            .sort((a, b) => {
+              const dateA = a.timestamp.toDate(); // Convert Firestore Timestamp to Date
+              const dateB = b.timestamp.toDate(); // Convert Firestore Timestamp to Date
+              return dateB - dateA; // Sort by date in descending order
+            })
+            .map((review) => (
+              <div key={review.id} className="review-section">
+                <h3>{review.shop_name}</h3>
+                <p>
+                  Ordered a {review.selectedTemp} {review.selectedMilk}{" "}
+                  {review.selectedMilk !== "Black" && "Milk"}{" "}
+                  {review.selectedBev}
+                </p>
+                <p>{review.review}</p>
+                <p className="ratings-profile">
+                  <strong>Drink Rating</strong>{" "}
+                  <CoffeeCups rating={review.drinkRating} maxCups={5} />
+                </p>
+                <p className="ratings-profile">
+                  <strong>Shop Rating</strong>{" "}
+                  <CoffeeCups rating={review.shopRating} maxCups={5} />
+                </p>
+                <p className="ratings-profile">
+                  <strong>Staff Rating</strong>{" "}
+                  <CoffeeCups rating={review.staffRating} maxCups={5} />
+                </p>
+              </div>
+            ))
         ) : (
           <p>No reviews found.</p>
         )}
