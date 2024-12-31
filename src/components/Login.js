@@ -16,8 +16,6 @@ const Login = ({ navigate }) => {
   const [password, setPassword] = useState("");
   const { currentUser } = useUserStore();
 
-
-
   //   useEffect(() => {
   //   if (!currentUser) {
   //     alert("You need to log in.");

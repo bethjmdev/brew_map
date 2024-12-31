@@ -27,15 +27,13 @@ export const LandingPage = ({ navigate }) => {
   return (
     <div className="landingpage-container">
       <h3>Welcome to BrewMap</h3>
-      <p id="header-p">
-        Find new coffee shops easily, leave reviews, interact with friends
-      </p>
+      <p>Find new coffee shops easily, leave reviews, interact with friends</p>
 
       <div className="icon-container">
-        <div className="icon-wrapper" onClick={navToLogin}>
+        {/* <div className="icon-wrapper" onClick={navToLogin}>
           <FontAwesomeIcon icon={faUser} className="icon" />
           <p>Sign in/up</p>
-        </div>
+        </div> */}
         <div className="icon-wrapper">
           <FontAwesomeIcon icon={faMap} className="icon" onClick={viewMap} />
           <p>View Map</p>
