@@ -400,10 +400,13 @@ const AddShop = ({ navigate }) => {
       return;
     }
 
+    const cityUpperCase = city.toUpperCase();
+    const stateUpperCase = state.toUpperCase();
+
     const addressExists = await checkExistingShop(
       streetAddress,
-      city.toUpperCase(),
-      state.toUpperCase()
+      cityUpperCase,
+      stateUpperCase
     );
 
     if (addressExists) {
@@ -425,10 +428,10 @@ const AddShop = ({ navigate }) => {
         shop_id: shopId,
         userID_submitting: currentUser.uid,
         user_name_submitting:
-          profileData.firstName + " " + profileData.firstName,
+          profileData.firstName + " " + profileData.lastName,
         street_address: streetAddress,
-        city,
-        state,
+        city: cityUpperCase,
+        state: stateUpperCase,
         roasts_own_beans: roastsOwnBeans,
         hours,
         website,
