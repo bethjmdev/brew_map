@@ -27,6 +27,9 @@ export const LandingPage = ({ navigate }) => {
   return (
     <div className="landingpage-container">
       <h3>Welcome to BrewMap</h3>
+      <p id="header-p">
+        Find new coffee shops easily, leave reviews, interact with friends
+      </p>
 
       <div className="icon-container">
         <div className="icon-wrapper" onClick={navToLogin}>

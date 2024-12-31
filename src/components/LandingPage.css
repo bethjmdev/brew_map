@@ -35,6 +35,13 @@
   font-size: 5rem;
 }
 
+.landingpage-container p {
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  font-size: 1.5rem;
+}
+
 /* Icon container */
 .icon-container {
   display: flex;
@@ -75,7 +82,8 @@
 @media (max-width: 768px) {
   .landingpage-container {
     /* height: unset; */
-    overflow: scroll;
+    /* overflow: scroll; */
+    height: 125vh;
   }
 
   /* Header */
