@@ -61,8 +61,6 @@
   outline: none;
   padding: 0;
   padding-left: 0.5rem;
-  background: none;
-  appearance: none;
 }
 
 @media (max-width: 768px) {
