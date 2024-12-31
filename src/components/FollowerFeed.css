@@ -8,7 +8,7 @@
   padding: 15px 10px;
   margin-bottom: 10px;
   border-bottom: 1px solid #ddd;
-  background-color: transparent; /* Remove box background */
+  background-color: #fefefe; /* Matching background */
 }
 
 .feed-item:last-child {
@@ -20,6 +20,12 @@
   font-size: 1.2em;
   font-weight: bold;
   color: #333;
+}
+
+.shop-section {
+  background-color: rgba(128, 109, 91, 0.6);
+  padding: 1rem;
+  border-radius: 1rem;
 }
 
 .review-section p,
@@ -45,7 +51,7 @@
 }
 
 a {
-  color: #0073e6;
+  /* color: #0073e6; */
   text-decoration: none;
 }
 
