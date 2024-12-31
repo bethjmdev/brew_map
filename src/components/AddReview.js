@@ -228,6 +228,9 @@ function AddReview({ navigate }) {
       // If images are provided, upload them
       if (images.length > 0) {
         urls = await uploadImages();
+        await updateDoc(doc(db, "BrewBadges", currentUser.uid), {
+          photos: increment(1),
+        });
       }
 
       const shopReviewsRef = collection(db, "ShopReviews");
@@ -312,10 +315,6 @@ function AddReview({ navigate }) {
 
     setIsUploading(true);
 
-    await updateDoc(doc(db, "BrewBadges", currentUser.uid), {
-      photos: increment(1),
-    });
-
     try {
       const uploadPromises = images.map((image) => {
         const storageRef = ref(storage, `reviews/${Date.now()}-${image.name}`);
@@ -348,97 +347,6 @@ function AddReview({ navigate }) {
       setIsUploading(false);
     }
   };
-
-  // const uploadImages = async () => {
-  //   if (images.length === 0) {
-  //     alert("Please select images first.");
-  //     return [];
-  //   }
-
-  //   setIsUploading(true);
-
-  //   const uploadPromises = images.map((image) => {
-  //     const storageRef = ref(storage, `reviews/${Date.now()}-${image.name}`);
-  //     const uploadTask = uploadBytesResumable(storageRef, image);
-
-  //     return new Promise((resolve, reject) => {
-  //       uploadTask.on(
-  //         "state_changed",
-  //         null,
-  //         (error) => {
-  //           console.error("Error uploading image:", error);
-  //           reject(error);
-  //         },
-  //         async () => {
-  //           const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-  //           resolve(downloadURL);
-  //         }
-  //       );
-  //     });
-  //   });
-
-  //   const urls = await Promise.all(uploadPromises)
-  //     .then((urls) => {
-  //       setIsUploading(false); // Set uploading state to false after completion
-  //       return urls;
-  //     })
-  //     .catch((error) => {
-  //       setIsUploading(false); // Reset uploading state on error
-  //       console.error("Error uploading one or more images:", error);
-  //       alert("Error uploading images.");
-  //       return [];
-  //     });
-
-  //   return urls;
-  // };
-
-  //NEW
-  // const uploadImages = async () => {
-  // if (images.length === 0) {
-  //   // Return an empty array if no images are selected
-  //   return [];
-  // }
-
-  // setIsUploading(true);
-
-  //   const uploadPromises = images.map((image) => {
-  //     const storageRef = ref(storage, `reviews/${Date.now()}-${image.name}`);
-  //     const uploadTask = uploadBytesResumable(storageRef, image);
-
-  //     return new Promise((resolve, reject) => {
-  //       uploadTask.on(
-  //         "state_changed",
-  //         null,
-  //         (error) => {
-  //           console.error("Error uploading image:", error);
-  //           reject(error);
-  //         },
-  //         async () => {
-  //           const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
-  //           resolve(downloadURL);
-  //         }
-  //       );
-  //     });
-  //   });
-
-  //   const urls = await Promise.all(uploadPromises)
-  //     .then((urls) => {
-  //       setIsUploading(false); // Set uploading state to false after completion
-  //       return urls;
-  //     })
-  //     .catch((error) => {
-  //       setIsUploading(false); // Reset uploading state on error
-  //       console.error("Error uploading one or more images:", error);
-  //       return [];
-  //     });
-
-  //   //this isnt quite right, but its getting to the right spot
-  //   await updateDoc(doc(db, "BrewBadges", currentUser.uid), {
-  //     photos: increment(1),
-  //   });
-
-  //   return urls;
-  // };
 
   return (
     <div className="add-review">
