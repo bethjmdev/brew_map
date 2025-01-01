@@ -61,15 +61,18 @@ function AddReview({ navigate }) {
   const beverageOptions = [
     "Cold Brew",
     "Latte",
-    "Macchiato",
-    "French press",
-    "Areopress",
-    "Drip coffee",
-    "Pour over",
+    "Macchiatto",
+    "French Press",
+    "Aeropress",
+    "Drip Coffee",
+    "Pour Over",
     "Cortado",
     "Espresso",
     "Flat White",
     "Americano",
+    "Other",
+    "Moka Pot",
+    "Cappuccino",
     "Other",
   ];
 

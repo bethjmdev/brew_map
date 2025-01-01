@@ -41,6 +41,7 @@ const Signup = ({ navigate }) => {
     "Americano",
     "Other",
     "Moka Pot",
+    "Cappuccino",
   ];
   const tempOptions = ["Hot", "Cold"];
   const milkOptions = [
