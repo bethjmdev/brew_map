@@ -240,7 +240,6 @@ const AddShop = ({ navigate }) => {
     "Other",
     "Moka Pot",
     "Cappuccino",
-    "Other",
   ];
 
   const roastOptions = ["light", "medium", "dark"];

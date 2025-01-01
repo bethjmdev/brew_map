@@ -37,6 +37,8 @@ const EditProfile = ({ navigate }) => {
     "Espresso",
     "Flat White",
     "Americano",
+    "Moka Pot",
+    "Cappuccino",
     "Other",
   ];
   const tempOptions = ["Hot", "Cold"];
