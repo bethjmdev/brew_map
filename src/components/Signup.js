@@ -56,43 +56,43 @@ const Signup = ({ navigate }) => {
 
   const selections = [
     {
-      label: "Roast Preference",
+      label: "What is your roast preference",
       options: roastOptions,
       selectedValue: selectedRoast,
       onChange: setSelectedRoast,
     },
     {
-      label: "Cafe Drink",
+      label: "What drink do you order at a cafe?",
       options: drinkOptions,
       selectedValue: cafeDrink,
       onChange: setCafeDrink,
     },
     {
-      label: "Cafe Milk",
+      label: "What milk do you order at a cafe?",
       options: milkOptions,
       selectedValue: cafeMilk,
       onChange: setCafeMilk,
     },
     {
-      label: "Cafe Temperature",
+      label: "What temp drink do you order at a cafe?",
       options: tempOptions,
       selectedValue: cafeTemp,
       onChange: setCafeTemp,
     },
     {
-      label: "Home Drink",
+      label: "What drink do you make at home?",
       options: drinkOptions,
       selectedValue: homeDrink,
       onChange: setHomeDrink,
     },
     {
-      label: "Home Milk",
+      label: "What milk do you use at home?",
       options: milkOptions,
       selectedValue: homeMilk,
       onChange: setHomeMilk,
     },
     {
-      label: "Home Temperature",
+      label: "What temp drink do you have at home?",
       options: tempOptions,
       selectedValue: homeTemp,
       onChange: setHomeTemp,
