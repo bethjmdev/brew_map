@@ -1,60 +1,87 @@
 .follower-feed {
-  margin: 20px;
-  padding: 10px;
-  background-color: #fefefe;
+  margin: var(--spacing-xl);
+  padding: var(--spacing-lg);
+  background: var(--white);
+  border-radius: var(--border-radius-xl);
+  box-shadow: var(--shadow-md);
+  border: 2px solid var(--coffee-milk);
 }
 
 .feed-item {
-  padding: 15px 10px;
-  margin-bottom: 10px;
-  border-bottom: 1px solid #ddd;
-  background-color: #fefefe; /* Matching background */
+  padding: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+  background: var(--white);
+  border: 2px solid var(--coffee-milk);
+  border-radius: var(--border-radius-lg);
+  transition: all var(--transition-normal);
+  box-shadow: var(--shadow-sm);
+}
+
+.feed-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  border-color: var(--primary);
 }
 
 .feed-item:last-child {
-  border-bottom: none; /* No border for the last item */
+  margin-bottom: 0;
 }
 
 .review-section .shop-name,
 .shop-section .shop-name {
-  font-size: 1.2em;
-  font-weight: bold;
-  color: #333;
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: var(--spacing-sm);
 }
 
 .shop-section {
-  background-color: rgba(128, 109, 91, 0.6);
-  padding: 1rem;
-  border-radius: 1rem;
+  background: linear-gradient(135deg, var(--coffee-milk) 0%, var(--coffee-foam) 100%);
+  padding: var(--spacing-lg);
+  border-radius: var(--border-radius-lg);
+  border: 2px solid var(--coffee-milk);
+  margin-top: var(--spacing-md);
 }
 
 .review-section p,
 .shop-section p {
-  margin: 5px 0;
-  line-height: 1.5;
+  margin: var(--spacing-sm) 0;
+  line-height: 1.6;
+  color: var(--black);
 }
 
 .ratings p {
-  margin: 4px 0;
-  font-size: 0.9em;
+  margin: var(--spacing-xs) 0;
+  font-size: var(--font-size-sm);
+  color: var(--grey);
 }
 
 .personal-review {
   font-style: italic;
-  color: #555;
+  color: var(--dark-grey);
+  background: var(--coffee-foam);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--border-radius-md);
+  border-left: 4px solid var(--primary);
+  margin-top: var(--spacing-sm);
 }
 
 .timestamp {
-  font-size: 0.8em;
-  color: #888;
+  font-size: var(--font-size-xs);
+  color: var(--grey);
   text-align: right;
+  margin-top: var(--spacing-sm);
 }
 
 a {
-  /* color: #0073e6; */
+  color: var(--primary);
   text-decoration: none;
+  font-weight: 500;
+  transition: all var(--transition-fast);
 }
 
 a:hover {
+  color: var(--primary-dark);
   text-decoration: underline;
+  transform: translateX(2px);
 }

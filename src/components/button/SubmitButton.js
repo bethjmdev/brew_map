@@ -13,16 +13,18 @@ const styles = {
   button: {
     width: "12rem",
     height: "2.8rem",
-    backgroundColor: colors.latte_brown,
-    color: colors.white,
-    fontSize: "1.3rem",
+    background: "linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%)",
+    color: "var(--white)",
+    fontSize: "var(--font-size-lg)",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    border: "none",
-    borderRadius: "25px",
+    border: "2px solid var(--primary)",
+    borderRadius: "var(--border-radius-full)",
     cursor: "pointer",
-    boxShadow: `-1px 1px 0px ${colors.espresso_brown}`, // Left and bottom shadow
+    boxShadow: "var(--shadow-button)",
+    fontWeight: "500",
+    transition: "all var(--transition-normal)",
   },
 };
 

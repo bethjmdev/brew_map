@@ -18,8 +18,11 @@ const CoffeeCups = ({ rating, maxCups = 5 }) => {
           key={index}
           icon={faCoffee}
           style={{
-            color: cup === "filled" ? "black" : "grey",
-            margin: "0 5px",
+            color: cup === "filled" ? "var(--primary)" : "var(--coffee-milk)",
+            margin: "0 3px",
+            fontSize: "1.2rem",
+            transition: "all 0.2s ease",
+            filter: cup === "filled" ? "drop-shadow(0 2px 4px rgba(128, 109, 91, 0.3))" : "none",
           }}
         />
       ))}

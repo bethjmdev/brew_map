@@ -2,86 +2,165 @@
   position: relative;
   width: 100vw;
   min-height: 100vh;
-  background-color: #f4f4f4;
-  padding: 1rem;
+  background: linear-gradient(135deg, var(--coffee-cream) 0%, var(--coffee-milk) 100%);
+  padding: var(--spacing-xl);
   box-sizing: border-box;
-  /* display: flex; */
+  display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .add-review-container {
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  /* width: 70%; */
-  padding: 2rem;
+  background: var(--white);
+  border-radius: var(--border-radius-xl);
+  box-shadow: var(--shadow-lg);
+  width: 90%;
+  max-width: 40rem;
+  padding: var(--spacing-2xl);
+  border: 2px solid var(--coffee-milk);
+  animation: fadeInUp 0.6s ease-out;
 }
 
 .select-drop-down {
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100vh;
-  margin-bottom: 50px;
+  margin-bottom: var(--spacing-xl);
 }
 
 .select-drop-down select {
-  width: 20rem;
-  margin-bottom: 1.5rem;
+  width: 100%;
+  max-width: 20rem;
+  margin-bottom: var(--spacing-lg);
+  height: 3rem;
+  border: 2px solid var(--coffee-milk);
+  border-radius: var(--border-radius-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--white);
+  color: var(--black);
+  font-size: var(--font-size-base);
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+}
+
+.select-drop-down select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(128, 109, 91, 0.1), var(--shadow-md);
 }
 
 .add-review .beverage-options {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
 }
 
 .add-review .beverage-options label {
   display: flex;
   align-items: center;
   justify-content: flex-start;
+  padding: var(--spacing-sm);
+  background: var(--coffee-milk);
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border: 2px solid transparent;
+}
+
+.add-review .beverage-options label:hover {
+  background: var(--coffee-foam);
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
 }
 
 .add-review h2 {
   text-align: center;
+  color: var(--primary);
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  margin-bottom: var(--spacing-xl);
 }
 
 .add-review .active-button {
-  background-color: var(--espresso-brown);
-  color: #fff;
-  padding: 0.75rem 1rem;
-  border-radius: 0.5rem;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+  color: var(--white);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--border-radius-md);
   width: 100%;
+  border: 2px solid var(--primary);
+  font-weight: 500;
+  transition: all var(--transition-normal);
+  box-shadow: var(--shadow-button);
+}
+
+.add-review .active-button:hover {
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-button-hover);
 }
 
 .add-review button {
-  background-color: var(--latte-brown);
+  background: linear-gradient(135deg, var(--latte-brown) 0%, var(--primary-light) 100%);
   color: var(--white);
-  padding: 0.75rem 1rem;
-  border-radius: 0.5rem;
-  border: none;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--border-radius-md);
+  border: 2px solid var(--latte-brown);
   width: 100%;
-  margin-bottom: 1rem;
+  margin-bottom: var(--spacing-lg);
+  font-weight: 500;
+  transition: all var(--transition-normal);
+  box-shadow: var(--shadow-button);
+}
+
+.add-review button:hover {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-button-hover);
 }
 
 .add-review .personal-review {
-  width: 30rem;
-  border-radius: 15px;
-  padding-left: 2rem;
-  padding-top: 1rem;
+  width: 100%;
+  max-width: 30rem;
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
+  border: 2px solid var(--coffee-milk);
+  background: var(--white);
+  color: var(--black);
+  font-size: var(--font-size-base);
+  line-height: 1.6;
+  resize: vertical;
+  min-height: 120px;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+}
+
+.add-review .personal-review:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(128, 109, 91, 0.1), var(--shadow-md);
 }
 
 @media (max-width: 760px) {
+  .add-review {
+    padding: var(--spacing-md);
+  }
+
+  .add-review-container {
+    padding: var(--spacing-xl);
+  }
+
   .add-review .beverage-options {
     grid-template-columns: 1fr 1fr;
+    gap: var(--spacing-sm);
   }
 
   .select-drop-down select {
-    width: 15rem;
+    max-width: 15rem;
   }
 
   .add-review .personal-review {
-    width: 17rem;
+    max-width: 17rem;
   }
 }

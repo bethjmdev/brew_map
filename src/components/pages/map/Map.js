@@ -81,24 +81,44 @@ const Map = ({ searchQuery, coordinates, showCoffeeShow }) => {
             >
               <div
                 style={{
-                  background: "white",
-                  width: "8rem",
-                  height: "3rem",
-                  borderRadius: "8px",
-                  boxShadow: "0 2px 5px rgba(0, 0, 0, 0.3)",
+                  background: "linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%)",
+                  width: "10rem",
+                  minHeight: "4rem",
+                  borderRadius: "12px",
+                  boxShadow: "0 8px 24px rgba(128, 109, 91, 0.3), 0 4px 12px rgba(0, 0, 0, 0.1)",
                   transform: "translate(20px, -50px)",
-                  // color: "green",
+                  border: "2px solid #f0ebe5",
+                  cursor: "pointer",
+                  transition: "all 0.3s ease",
+                  padding: "0.75rem",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  backdropFilter: "blur(10px)",
                 }}
                 onClick={() => showCoffeeShow(pin.id)}
+                onMouseEnter={(e) => {
+                  e.target.style.transform = "translate(20px, -50px) scale(1.05)";
+                  e.target.style.boxShadow = "0 12px 32px rgba(128, 109, 91, 0.4), 0 6px 16px rgba(0, 0, 0, 0.15)";
+                  e.target.style.borderColor = "#806d5b";
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = "translate(20px, -50px) scale(1)";
+                  e.target.style.boxShadow = "0 8px 24px rgba(128, 109, 91, 0.3), 0 4px 12px rgba(0, 0, 0, 0.1)";
+                  e.target.style.borderColor = "#f0ebe5";
+                }}
               >
                 <p
                   style={{
                     textAlign: "left",
-                    lineHeight: "1rem",
-                    marginLeft: ".5rem",
-                    paddingTop: ".5rem",
-                    fontWeight: "bold",
-                    fontSize: ".7rem",
+                    lineHeight: "1.2rem",
+                    margin: "0 0 0.25rem 0",
+                    fontWeight: "700",
+                    fontSize: "0.8rem",
+                    color: "#806d5b",
+                    textOverflow: "ellipsis",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
                   }}
                 >
                   {pin.shop_name ? truncateName(pin.shop_name) : ""}
@@ -106,8 +126,14 @@ const Map = ({ searchQuery, coordinates, showCoffeeShow }) => {
                 <p
                   style={{
                     textAlign: "left",
-                    lineHeight: ".3rem",
-                    marginLeft: ".5rem",
+                    lineHeight: "1rem",
+                    margin: "0",
+                    fontSize: "0.7rem",
+                    color: "#6c757d",
+                    fontStyle: "italic",
+                    textOverflow: "ellipsis",
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
                   }}
                 >
                   {pin.roast_style}

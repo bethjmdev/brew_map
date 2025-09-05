@@ -1,13 +1,16 @@
 .auth_user {
   position: relative;
   width: 100vw;
-  height: 110vh;
-  background-color: #806d5b;
-  padding: 1rem;
+  min-height: 100vh;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  padding: var(--spacing-xl);
   box-sizing: border-box;
   background-image: url("../components/images/coffee_background.png");
   background-size: cover;
   background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .auth_user::before {
@@ -17,13 +20,30 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(128, 109, 91, 0.85);
+  background: linear-gradient(135deg, 
+    rgba(128, 109, 91, 0.9) 0%, 
+    rgba(79, 62, 49, 0.8) 50%,
+    rgba(128, 109, 91, 0.9) 100%);
   z-index: 1;
+}
+
+.auth_user::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+  z-index: 2;
+  pointer-events: none;
 }
 
 .auth_user > * {
   position: relative;
-  z-index: 2;
+  z-index: 3;
 }
 
 .auth_user .auth_user_container {
@@ -31,44 +51,91 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--border-radius-xl);
+  padding: var(--spacing-2xl);
+  box-shadow: var(--shadow-xl);
+  animation: fadeInUp 0.8s ease-out;
 }
 
 .auth_user h3 {
   color: var(--white);
-  font-size: 60px;
+  font-size: var(--font-size-4xl);
   text-align: center;
+  margin-bottom: var(--spacing-xl);
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  font-weight: 700;
 }
 
 .auth_user .login-form {
   display: flex;
   align-items: center;
   flex-direction: column;
-  width: 50rem;
+  width: 100%;
+  max-width: 28rem;
 }
 
 .auth_user .signin_form {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  margin-bottom: 2rem;
-  width: 400px;
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-xl);
+  width: 100%;
 }
 
 .auth_user .signin_form input {
-  height: 2rem;
-  border-radius: 10px;
-  border: none;
+  height: 3rem;
+  border-radius: var(--border-radius-md);
+  border: 2px solid rgba(255, 255, 255, 0.3);
   outline: none;
-  padding: 0;
-  padding-left: 0.5rem;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--black);
+  font-size: var(--font-size-base);
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+}
+
+.auth_user .signin_form input:focus {
+  border-color: var(--coffee-foam);
+  background: var(--white);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3), var(--shadow-md);
+}
+
+.auth_user .signin_form input::placeholder {
+  color: var(--grey);
 }
 
 @media (max-width: 768px) {
+  .auth_user {
+    padding: var(--spacing-md);
+  }
+
+  .auth_user .auth_user_container {
+    padding: var(--spacing-xl);
+  }
+
+  .auth_user h3 {
+    font-size: var(--font-size-3xl);
+  }
+
   .auth_user .login-form {
-    width: 20rem;
+    max-width: 20rem;
   }
 
   .auth_user .signin_form {
-    width: 20rem;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .auth_user h3 {
+    font-size: var(--font-size-2xl);
+  }
+
+  .auth_user .auth_user_container {
+    padding: var(--spacing-lg);
   }
 }
